@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { ArrowRight, Lock, BarChartBig, Users, Zap } from "lucide-react";
+import { ArrowRight, Lock, BarChartBig, Users, Zap, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -10,7 +10,7 @@ export default function HomePage() {
     <div className="space-y-16">
       {/* Hero Section */}
       <section className="relative text-center py-16 md:py-24 rounded-xl overflow-hidden bg-gradient-to-br from-primary/20 via-background to-accent/20 shadow-xl">
-        <div 
+        <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage: `
@@ -70,7 +70,7 @@ export default function HomePage() {
           />
         </div>
       </section>
-      
+
       {/* How it Works Section */}
       <section className="py-12">
         <h2 className="text-3xl font-bold text-center mb-12">Getting Started is Easy</h2>
