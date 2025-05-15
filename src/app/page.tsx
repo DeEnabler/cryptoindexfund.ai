@@ -10,17 +10,208 @@ export default function HomePage() {
     <div className="space-y-16">
       {/* Hero Section */}
       <section className="relative text-center py-16 md:py-24 rounded-xl overflow-hidden bg-gradient-to-br from-primary/10 via-background to-accent/10 shadow-xl">
-        <div
-          className="absolute inset-0" // Removed opacity class here
-          style={{
-            backgroundImage: `
-              linear-gradient(45deg, hsla(var(--foreground), 0.08) 1px, transparent 1px),
-              linear-gradient(-45deg, hsla(var(--foreground), 0.08) 1px, transparent 1px)
-            `,
-            backgroundSize: `30px 30px`,
-          }}
-          aria-hidden="true"
-        />
+        <div className="animated-grid-container" aria-hidden="true">
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 1, gridColumnStart: 1 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'top center', '--final-opacity': '0.2', opacity: 0, position: 'absolute' }}>
+              <path d="M126 0 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 1, gridColumnStart: 2 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'bottom center', '--final-opacity': '0.3', opacity: 0, position: 'absolute' }}>
+              <path d="M0 126 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 1, gridColumnStart: 3 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 1, gridColumnStart: 4 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 1, gridColumnStart: 5 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 2, gridColumnStart: 1 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'bottom center', '--final-opacity': '0.2', opacity: 0, position: 'absolute' }}>
+              <path d="M0 126 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 2, gridColumnStart: 2 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 2, gridColumnStart: 3 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'bottom center', '--final-opacity': '0.3', opacity: 0, position: 'absolute' }}>
+              <path d="M0 126 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'bottom center', '--final-opacity': '0.4', opacity: 0, position: 'absolute' }}>
+              <path d="M126 126 L0 126 L126 0 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 2, gridColumnStart: 4 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'top center', '--final-opacity': '0.4', opacity: 0, position: 'absolute' }}>
+              <path d="M126 0 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 2, gridColumnStart: 5 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'bottom center', '--final-opacity': '0.2', opacity: 0, position: 'absolute' }}>
+              <path d="M0 126 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 3, gridColumnStart: 1 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 3, gridColumnStart: 2 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'top center', '--final-opacity': '0.3', opacity: 0, position: 'absolute' }}>
+              <path d="M126 0 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'bottom center', '--final-opacity': '0.2', opacity: 0, position: 'absolute' }}>
+              <path d="M0 126 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 3, gridColumnStart: 3 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'top center', '--final-opacity': '0.5', opacity: 0, position: 'absolute' }}>
+              <path d="M126 0 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 3, gridColumnStart: 4 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 3, gridColumnStart: 5 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 4, gridColumnStart: 1 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 4, gridColumnStart: 2 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'top center', '--final-opacity': '0.2', opacity: 0, position: 'absolute' }}>
+              <path d="M126 0 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 4, gridColumnStart: 3 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 4, gridColumnStart: 4 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'bottom center', '--final-opacity': '0.3', opacity: 0, position: 'absolute' }}>
+              <path d="M0 126 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 4, gridColumnStart: 5 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 5, gridColumnStart: 1 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 5, gridColumnStart: 2 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 5, gridColumnStart: 3 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 5, gridColumnStart: 4 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'top center', '--final-opacity': '0.2', opacity: 0, position: 'absolute' }}>
+              <path d="M126 0 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 5, gridColumnStart: 5 }}>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' }}>
+              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
+            </svg>
+          </div>
+        </div>
         <div className="relative z-10">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight">
             <span className="block">Invest in the Future,</span>
