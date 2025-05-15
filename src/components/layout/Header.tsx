@@ -5,15 +5,14 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, CreditCard, TrendingUp, ShieldCheck, BookOpen, Zap, X } from "lucide-react";
+import { Menu, X, Home, Briefcase, Lightbulb, Rocket } from "lucide-react"; // Updated imports
 import { usePathname } from 'next/navigation';
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { href: "/", label: "Home", icon: Zap },
-  { href: "/fund-overview", label: "Fund Overview", icon: TrendingUp },
-  { href: "/transparency", label: "Transparency", icon: ShieldCheck },
-  { href: "/learn", label: "Learn", icon: BookOpen },
+  { href: "/", label: "Home", icon: Home },
+  { href: "/fund-overview", label: "Investment Products", icon: Briefcase },
+  { href: "/learn", label: "Research", icon: Lightbulb },
 ];
 
 export function Header() {
@@ -39,7 +38,7 @@ export function Header() {
           <div className="h-8 w-24 animate-pulse rounded-md bg-muted md:hidden"></div>
           <div className="hidden md:flex space-x-4 items-center">
             {navItems.map((item) => (
-               <div key={item.href} className="h-6 w-20 animate-pulse rounded-md bg-muted"></div>
+               <div key={item.href} className="h-6 w-28 animate-pulse rounded-md bg-muted"></div> // Adjusted width for longer text
             ))}
              <div className="h-10 w-32 animate-pulse rounded-md bg-muted"></div>
           </div>
@@ -53,14 +52,13 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
         <Link href="/" className="flex items-center space-x-2" onClick={() => setIsMobileMenuOpen(false)}>
-          {/* Placeholder for an abstract block/chain logo */}
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-8 w-8 text-primary">
             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
           </svg>
           <span className="font-bold text-2xl text-primary">TrustVest</span>
         </Link>
 
-        <nav className="hidden md:flex items-center space-x-2 lg:space-x-4">
+        <nav className="hidden md:flex items-center space-x-1 lg:space-x-2"> {/* Adjusted spacing for potentially longer items */}
           {navItems.map((item) => (
             <Link
               key={item.label}
@@ -76,9 +74,9 @@ export function Header() {
         </nav>
 
         <div className="flex items-center space-x-2">
-          <Button variant="outline" className="hidden md:flex items-center space-x-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-            <CreditCard className="h-5 w-5" />
-            <span>Connect Wallet</span>
+          <Button className="hidden md:flex items-center space-x-2 bg-primary hover:bg-primary/90 text-primary-foreground"> {/* Changed to primary button */}
+            <Rocket className="h-5 w-5" />
+            <span>Launch App</span>
           </Button>
 
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
@@ -110,9 +108,9 @@ export function Header() {
                     <span>{item.label}</span>
                   </Link>
                 ))}
-                 <Button variant="outline" className="w-full flex items-center space-x-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground py-6 text-lg mt-4">
-                    <CreditCard className="h-5 w-5" />
-                    <span>Connect Wallet</span>
+                 <Button className="w-full flex items-center space-x-2 bg-primary hover:bg-primary/90 text-primary-foreground py-6 text-lg mt-4"> {/* Changed to primary button */}
+                    <Rocket className="h-5 w-5" />
+                    <span>Launch App</span>
                  </Button>
               </nav>
             </SheetContent>
