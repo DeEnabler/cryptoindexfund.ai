@@ -9,24 +9,18 @@ export default function HomePage() {
   return (
     <div className="space-y-16">
       {/* Hero Section */}
-      <section className="relative text-center py-16 md:py-24 rounded-xl overflow-hidden bg-gradient-to-br from-primary/20 via-background to-accent/20 shadow-xl">
+      <section className="relative text-center py-16 md:py-24 rounded-xl overflow-hidden bg-gradient-to-br from-primary/10 via-background to-accent/10 shadow-xl">
         <div
-          className="absolute inset-0 opacity-[0.06]" // Increased opacity for pattern visibility
+          className="absolute inset-0 opacity-[0.15]" // Increased opacity for pattern visibility
           style={{
             backgroundImage: `
-              linear-gradient(45deg, hsl(var(--primary)) 0.5px, transparent 0.5px),
-              linear-gradient(-45deg, hsl(var(--primary)) 0.5px, transparent 0.5px),
-              linear-gradient(135deg, hsl(var(--accent)) 0.3px, transparent 0.3px),
-              linear-gradient(-135deg, hsl(var(--accent)) 0.3px, transparent 0.3px),
-              radial-gradient(circle at center, hsl(var(--primary)) 0.5px, transparent 0.8px),
-              radial-gradient(circle at 25% 75%, hsl(var(--accent)) 0.4px, transparent 0.7px),
-              radial-gradient(circle at 75% 25%, hsl(var(--accent)) 0.4px, transparent 0.7px)
+              linear-gradient(45deg, hsl(var(--primary)) 1px, transparent 1px),
+              linear-gradient(-45deg, hsl(var(--primary)) 1px, transparent 1px),
+              radial-gradient(circle at 25% 25%, hsl(var(--accent)) 0.8px, transparent 1.2px),
+              radial-gradient(circle at 75% 75%, hsl(var(--accent)) 0.8px, transparent 1.2px)
             `,
             backgroundSize: `
-              30px 30px,
-              30px 30px,
-              20px 20px,
-              20px 20px,
+              40px 40px,
               40px 40px,
               50px 50px,
               50px 50px
