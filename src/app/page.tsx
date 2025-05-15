@@ -11,20 +11,13 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="relative text-center py-16 md:py-24 rounded-xl overflow-hidden bg-gradient-to-br from-primary/10 via-background to-accent/10 shadow-xl">
         <div
-          className="absolute inset-0 opacity-[0.15]" // Increased opacity for pattern visibility
+          className="absolute inset-0" // Removed opacity class here
           style={{
             backgroundImage: `
-              linear-gradient(45deg, hsl(var(--primary)) 1px, transparent 1px),
-              linear-gradient(-45deg, hsl(var(--primary)) 1px, transparent 1px),
-              radial-gradient(circle at 25% 25%, hsl(var(--accent)) 0.8px, transparent 1.2px),
-              radial-gradient(circle at 75% 75%, hsl(var(--accent)) 0.8px, transparent 1.2px)
+              linear-gradient(45deg, hsla(var(--foreground), 0.08) 1px, transparent 1px),
+              linear-gradient(-45deg, hsla(var(--foreground), 0.08) 1px, transparent 1px)
             `,
-            backgroundSize: `
-              40px 40px,
-              40px 40px,
-              50px 50px,
-              50px 50px
-            `,
+            backgroundSize: `30px 30px`,
           }}
           aria-hidden="true"
         />
