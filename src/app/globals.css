@@ -17,7 +17,7 @@ body {
     --popover: 240 58% 32%; /* Popover Background */
     --popover-foreground: 0 0% 98%;
 
-    --primary: 285 40% 53%; /* Ethereum-inspired Purple */
+    --primary: 285 40% 45%; /* Ethereum-inspired Purple (Darker) */
     --primary-foreground: 0 0% 98%;
 
     --secondary: 278 80% 35%; /* A lighter shade of accent for secondary elements */
@@ -26,7 +26,7 @@ body {
     --muted: 240 50% 40%; /* Muted Background */
     --muted-foreground: 0 0% 65%; /* Muted Text */
 
-    --accent: 278 100% 25%; /* Complementary Indigo */
+    --accent: 278 90% 22%; /* Complementary Indigo (Darker & slightly less saturated) */
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 70% 50%; /* Destructive Red */
@@ -34,24 +34,24 @@ body {
 
     --border: 240 50% 35%; /* Border Color */
     --input: 240 50% 38%; /* Input Background */
-    --ring: 285 40% 53%; /* Ring color (Primary) */
+    --ring: 285 40% 45%; /* Ring color (Primary - Darker) */
 
     --radius: 0.5rem;
 
-    --chart-1: 285 40% 53%; /* Primary */
-    --chart-2: 278 100% 25%; /* Accent */
+    --chart-1: 285 40% 45%; /* Primary (Darker) */
+    --chart-2: 278 90% 22%; /* Accent (Darker) */
     --chart-3: 220 70% 60%; /* A lighter blue */
     --chart-4: 300 50% 65%; /* A lighter purple */
     --chart-5: 260 60% 55%; /* Another shade of purple/blue */
 
     --sidebar-background: 240 64% 25%; /* Darker sidebar */
     --sidebar-foreground: 0 0% 90%;
-    --sidebar-primary: 285 40% 53%;
+    --sidebar-primary: 285 40% 45%; /* Darker */
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 278 100% 25%;
+    --sidebar-accent: 278 90% 22%; /* Darker */
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 240 50% 33%;
-    --sidebar-ring: 285 40% 53%;
+    --sidebar-ring: 285 40% 45%; /* Darker */
   }
 
   /* Fallback for systems that prefer light mode but we force dark */
@@ -62,28 +62,28 @@ body {
     --card-foreground: 0 0% 98%;
     --popover: 240 58% 32%;
     --popover-foreground: 0 0% 98%;
-    --primary: 285 40% 53%;
+    --primary: 285 40% 45%; /* Darker */
     --primary-foreground: 0 0% 98%;
     --secondary: 278 80% 35%;
     --secondary-foreground: 0 0% 98%;
     --muted: 240 50% 40%;
     --muted-foreground: 0 0% 65%;
-    --accent: 278 100% 25%;
+    --accent: 278 90% 22%; /* Darker */
     --accent-foreground: 0 0% 98%;
     --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 98%;
     --border: 240 50% 35%;
     --input: 240 50% 38%;
-    --ring: 285 40% 53%;
+    --ring: 285 40% 45%; /* Darker */
     
     --sidebar-background: 240 64% 25%;
     --sidebar-foreground: 0 0% 90%;
-    --sidebar-primary: 285 40% 53%;
+    --sidebar-primary: 285 40% 45%; /* Darker */
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 278 100% 25%;
+    --sidebar-accent: 278 90% 22%; /* Darker */
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 240 50% 33%;
-    --sidebar-ring: 285 40% 53%;
+    --sidebar-ring: 285 40% 45%; /* Darker */
   }
 }
 
