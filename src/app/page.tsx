@@ -215,7 +215,7 @@ export default function HomePage() {
         <div className="relative z-10">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight">
             <span className="block">Invest in the Future,</span>
-            <span className="block text-primary">Trustlessly.</span>
+            <span className="block text-primary-foreground">Trustlessly.</span>
           </h1>
           <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-muted-foreground">
             TrustVest offers a decentralized crypto fund, bringing transparency and security to your investments. Join the financial revolution.
@@ -224,11 +224,6 @@ export default function HomePage() {
             <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
               <Link href="/fund-overview">
                 Explore Funds <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-            <Button asChild variant="outline" size="lg" className="border-accent text-accent hover:bg-accent hover:text-accent-foreground">
-              <Link href="/learn">
-                Learn More
               </Link>
             </Button>
           </div>
@@ -352,3 +347,4 @@ function StepCard({ step, title, description, icon }: StepCardProps) {
     </div>
   );
 }
+
