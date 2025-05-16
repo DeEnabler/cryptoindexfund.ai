@@ -3,13 +3,11 @@
 
 import type { PropsWithChildren } from 'react';
 import React, { createContext, useContext, useCallback } from 'react';
-import { useAccount, useDisconnect } from 'wagmi';
-// Import useConnectModal from @xellar/kit
-import { useConnectModal } from '@xellar/kit';
+// Removed wagmi and xellar/kit imports as the integration is temporarily disabled
 
 interface AuthContextUser {
   address?: `0x${string}`;
-  // Add other user properties from Xellar if needed
+  // Add other user properties if needed when re-integrating
 }
 
 interface AuthContextType {
@@ -23,33 +21,26 @@ interface AuthContextType {
 const XellarAuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const XellarAuthProvider: React.FC<PropsWithChildren<{}>> = ({ children }) => {
-  const { address, isConnected, isConnecting, isReconnecting } = useAccount();
-  const connectModal = useConnectModal(); // Get the connectModal object
-  const { disconnect } = useDisconnect();
-
-  const isLoadingState = isConnecting || isReconnecting;
+  // Mocked values since Xellar integration is disabled
+  const user: AuthContextUser | null = null;
+  const isLoading = false;
+  const isAuthenticated = false;
 
   const loginCallback = useCallback(() => {
-    if (connectModal?.open) {
-      connectModal.open(); // Call open method on the connectModal object
-    } else {
-      console.error("Xellar connect modal hook (useConnectModal) is not available or not correctly imported/initialized from @xellar/kit. Consult Xellar documentation.");
-      // Fallback alert or other UI indication if needed
-      alert("Connect wallet functionality is not available at the moment. Please ensure Xellar Kit is properly configured.");
-    }
-  }, [connectModal]);
+    console.warn("Launch App clicked: Xellar Wallet connection is temporarily disabled.");
+    alert("Wallet connection functionality is temporarily disabled pending domain setup. This feature will be re-enabled later.");
+  }, []);
 
   const logoutCallback = useCallback(() => {
-    disconnect();
-  }, [disconnect]);
-
-  const currentUser: AuthContextUser | null = isConnected && address ? { address } : null;
+    console.warn("Logout clicked: No active session as Xellar integration is disabled.");
+    // Potentially clear any local app state if needed, though not much to clear with a mock setup.
+  }, []);
 
   return (
     <XellarAuthContext.Provider value={{
-      user: currentUser,
-      isLoading: isLoadingState,
-      isAuthenticated: isConnected,
+      user,
+      isLoading,
+      isAuthenticated,
       login: loginCallback,
       logout: logoutCallback
     }}>
@@ -61,7 +52,17 @@ export const XellarAuthProvider: React.FC<PropsWithChildren<{}>> = ({ children }
 export const useXellarAuth = (): AuthContextType => {
   const context = useContext(XellarAuthContext);
   if (context === undefined) {
-    throw new Error('useXellarAuth must be used within a XellarAuthProvider, which itself must be nested within WagmiProvider, QueryClientProvider, and XellarKitProvider.');
+    // This error indicates a programming mistake – XellarAuthProvider is missing in the tree.
+    // AppProviders component should ensure XellarAuthProvider always wraps its children.
+    console.error('useXellarAuth must be used within a XellarAuthProvider.');
+    // Return a default state to prevent crashes if accessed incorrectly, though this shouldn't happen with proper provider setup.
+    return {
+        user: null,
+        isLoading: false,
+        isAuthenticated: false,
+        login: () => alert("Authentication system not properly initialized."),
+        logout: () => {}
+    };
   }
   return context;
 };
