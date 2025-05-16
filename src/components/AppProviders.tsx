@@ -4,19 +4,20 @@
 import type { PropsWithChildren } from 'react';
 import { WagmiProvider } from 'wagmi';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { XellarKitProvider, darkTheme } from '@xellar/kit'; // Added darkTheme import
-import { XellarProvider as CustomXellarProvider } from '@/contexts/XellarContext';
-import { wagmiConfig, queryClient } from '@/lib/xellarConfig';
+// Assuming AppKitProvider and darkTheme are from @reown/appkit
+import { AppKitProvider, darkTheme } from '@reown/appkit'; 
+import { XellarProvider as CustomXellarProvider } from '@/contexts/XellarContext'; // Renaming this context might be a good idea later
+import { wagmiConfig, queryClient } from '@/lib/xellarConfig'; // Path is fine, content of xellarConfig changed
 
 export function AppProviders({ children }: PropsWithChildren) {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <XellarKitProvider theme={darkTheme}> {/* Added theme prop */}
+        <AppKitProvider theme={darkTheme}> {/* Assuming AppKitProvider and theme prop */}
           <CustomXellarProvider>
             {children}
           </CustomXellarProvider>
-        </XellarKitProvider>
+        </AppKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
