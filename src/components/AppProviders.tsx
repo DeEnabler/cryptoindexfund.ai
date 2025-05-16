@@ -4,8 +4,9 @@
 import type { PropsWithChildren } from 'react';
 import { WagmiProvider } from 'wagmi';
 import { QueryClientProvider } from '@tanstack/react-query';
-// Updated to import AppKit and assume darkTheme might be handled differently or is a default
-import { AppKit } from '@reown/appkit'; 
+// AppKit from '@reown/appkit' is likely a class for SDK configuration or utility, not a Provider component.
+// We removed the direct import of AppKit as a component.
+// If specific initialization for AppKit is needed elsewhere, it should be done according to Reown's documentation.
 import { ReownAuthProvider } from '@/contexts/ReownAuthContext';
 import { wagmiConfig, queryClient } from '@/lib/reownConfig';
 
@@ -13,12 +14,9 @@ export function AppProviders({ children }: PropsWithChildren) {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        {/* Changed AppKitProvider to AppKit, removed theme prop for now */}
-        <AppKit> 
-          <ReownAuthProvider>
-            {children}
-          </ReownAuthProvider>
-        </AppKit>
+        <ReownAuthProvider>
+          {children}
+        </ReownAuthProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );

@@ -4,10 +4,9 @@
 import type { PropsWithChildren } from 'react';
 import React, { createContext, useContext, useCallback } from 'react';
 import { useAccount, useDisconnect } from 'wagmi';
-// Assuming useConnectModal is from @reown/appkit
-import { useConnectModal } from '@reown/appkit'; 
+// import { useConnectModal } from '@reown/appkit'; // This import is problematic as useConnectModal is not exported
 
-interface AuthContextUser { 
+interface AuthContextUser {
   address?: `0x${string}`;
 }
 
@@ -23,27 +22,30 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const ReownAuthProvider: React.FC<PropsWithChildren<{}>> = ({ children }) => {
   const { address, isConnected, isConnecting, isReconnecting } = useAccount();
-  const { open: openConnectModal } = useConnectModal(); // Hook from @reown/appkit
+  // const { open: openConnectModal } = useConnectModal(); // useConnectModal is not available from @reown/appkit
   const { disconnect } = useDisconnect();
 
   const isLoadingState = isConnecting || isReconnecting;
 
   const loginCallback = useCallback(() => {
-    if (openConnectModal) {
-      openConnectModal();
-    } else {
-      console.error("Reown connect modal is not available");
-    }
-  }, [openConnectModal]);
+    // if (openConnectModal) {
+    //   openConnectModal();
+    // } else {
+    //   console.error("Reown connect modal hook is not available or not correctly imported.");
+    // }
+    // TODO: Replace with the correct mechanism to open Reown's connection modal
+    console.log("Login clicked. Need to implement Reown connection modal trigger.");
+    alert("Connect wallet functionality needs to be updated with the correct Reown SDK usage. Please consult Reown documentation for opening the connection modal.");
+  }, []);
 
   const logoutCallback = useCallback(() => {
     disconnect();
   }, [disconnect]);
-  
+
   const currentUser: AuthContextUser | null = isConnected && address ? { address } : null;
 
   return (
-    <AuthContext.Provider value={{ 
+    <AuthContext.Provider value={{
       user: currentUser,
       isLoading: isLoadingState,
       isAuthenticated: isConnected,
