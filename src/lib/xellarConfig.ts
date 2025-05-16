@@ -1,10 +1,11 @@
 
 "use client";
 
+import type { Config } from 'wagmi';
 import { QueryClient } from '@tanstack/react-query';
 // Import defaultConfig from @xellar/kit
 import { defaultConfig } from '@xellar/kit';
-import { mainnet, sepolia, bsc, polygon } from 'wagmi/chains';
+import { polygonAmoy } from 'viem/chains'; // Updated to use polygonAmoy
 
 export const queryClient = new QueryClient();
 
@@ -29,7 +30,8 @@ export const wagmiConfig = defaultConfig({
   walletConnectProjectId: walletConnectProjectId!,
   // @ts-ignore Xellar Project ID
   xellarAppId: xellarProjectId!,
-  chains: [mainnet, sepolia, bsc, polygon], // Example chains, ensure these are supported by Xellar or configure as needed
+  chains: [polygonAmoy], // Updated to use polygonAmoy
   xellarEnv: "sandbox", // Or "production", verify with Xellar docs
   ssr: true, // For Next.js App Router
-});
+}) as Config; // Added type casting
+
