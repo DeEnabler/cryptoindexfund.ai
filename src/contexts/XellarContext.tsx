@@ -38,36 +38,35 @@ export const XellarProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =>
       try {
         // --- XELLAR SDK INITIALIZATION PLACEHOLDER ---
         // IMPORTANT: Replace this with actual Xellar SDK initialization.
-        // You'll need your Client ID from Xellar, likely stored in an environment variable.
-        const clientId = process.env.NEXT_PUBLIC_XELLAR_CLIENT_ID;
-        if (!clientId) {
-          console.error("Xellar Client ID is not configured. Please set NEXT_PUBLIC_XELLAR_CLIENT_ID in your .env.local file.");
+        const projectId = process.env.NEXT_PUBLIC_XELLAR_PROJECT_ID;
+        if (!projectId) {
+          console.error("Xellar Project ID is not configured. Please set NEXT_PUBLIC_XELLAR_PROJECT_ID in your .env file.");
           setIsLoading(false);
           return;
         }
 
-        // Example: const client = new XellarClient({ clientId });
+        // Example: const client = new XellarClient({ projectId });
         // await client.init(); // or similar initialization method
         // const currentUser = await client.getUser(); // or similar method to get current user
         
         // This is a placeholder for the Xellar client initialization.
         // Replace with actual Xellar SDK calls.
-        // const { XellarClient } = await import('@xellar/sdk'); // Dynamic import if needed
-        // const client = new XellarClient({ clientId });
+        // const { XellarSDK } = await import('@xellar/sdk'); // Assuming SDK named XellarSDK
+        // const client = new XellarSDK({ projectId }); // Use the correct initialization
         // setXellarClient(client);
 
         // Simulate client loading and checking for an existing session
-        console.log("Initializing Xellar SDK (placeholder)... Client ID:", clientId);
+        console.log("Initializing Xellar SDK (placeholder)... Project ID:", projectId);
         // This is a mock client and user for demonstration. Replace with actual SDK usage.
         const mockClient = { 
-          login: async () => { console.log("Xellar login called (placeholder)"); return { address: "0x123...", email: "user@example.com" }; },
+          login: async () => { console.log("Xellar login called (placeholder)"); return { address: "0xABC...", email: "testuser@example.com" }; },
           logout: async () => { console.log("Xellar logout called (placeholder)"); },
           getUser: async () => { console.log("Xellar getUser called (placeholder)"); return null; } // Simulate no user initially
         };
         setXellarClient(mockClient as XellarClientType);
         
         // Check if user is already logged in (SDK might handle this internally or provide a method)
-        // const existingUser = await mockClient.getUser();
+        // const existingUser = await mockClient.getUser(); // This is a placeholder
         // if (existingUser) {
         //   setUser(existingUser);
         // }
