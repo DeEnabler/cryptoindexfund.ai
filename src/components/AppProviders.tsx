@@ -3,20 +3,21 @@
 
 import type { PropsWithChildren } from 'react';
 import { WagmiProvider } from 'wagmi';
-import { QueryClientProvider } from '@tanstack/react-query';
-// AppKit from '@reown/appkit' is likely a class for SDK configuration or utility, not a Provider component.
-// We removed the direct import of AppKit as a component.
-// If specific initialization for AppKit is needed elsewhere, it should be done according to Reown's documentation.
-import { ReownAuthProvider } from '@/contexts/ReownAuthContext';
-import { wagmiConfig, queryClient } from '@/lib/reownConfig';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+// Assuming XellarKitProvider and darkTheme are from @xellar/kit
+import { XellarKitProvider, darkTheme } from '@xellar/kit';
+import { XellarAuthProvider } from '@/contexts/XellarContext'; // Updated import
+import { wagmiConfig, queryClient } from '@/lib/xellarConfig'; // Updated import
 
 export function AppProviders({ children }: PropsWithChildren) {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <ReownAuthProvider>
-          {children}
-        </ReownAuthProvider>
+        <XellarKitProvider theme={darkTheme}> {/* XellarKitProvider might take config or rely on Wagmi's context. Theme is a guess. */}
+          <XellarAuthProvider>
+            {children}
+          </XellarAuthProvider>
+        </XellarKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );

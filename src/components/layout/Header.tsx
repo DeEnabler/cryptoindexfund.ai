@@ -5,10 +5,10 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, X, Home, Briefcase, Lightbulb, Rocket, LogOut, UserCircle } from "lucide-react"; // Removed Wallet icon as it's covered by UserCircle/Rocket
+import { Menu, X, Home, Briefcase, Lightbulb, Rocket, LogOut, UserCircle } from "lucide-react";
 import { usePathname } from 'next/navigation';
 import { cn } from "@/lib/utils";
-import { useReownAuth } from "@/contexts/ReownAuthContext"; // Updated import
+import { useXellarAuth } from "@/contexts/XellarContext"; // Updated import
 
 const navItems = [
   { href: "/", label: "Home", icon: Home },
@@ -20,7 +20,7 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
-  const { user, login, logout, isAuthenticated, isLoading } = useReownAuth(); // Updated hook
+  const { user, login, logout, isAuthenticated, isLoading } = useXellarAuth(); // Updated hook
 
   useEffect(() => {
     setIsMounted(true);
