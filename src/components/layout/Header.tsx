@@ -5,9 +5,10 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, X, Home, Briefcase, Lightbulb, Rocket } from "lucide-react"; // Updated imports
+import { Menu, X, Home, Briefcase, Lightbulb, Rocket, LogOut, UserCircle, Wallet } from "lucide-react";
 import { usePathname } from 'next/navigation';
 import { cn } from "@/lib/utils";
+import { useXellar } from "@/contexts/XellarContext"; // Import useXellar
 
 const navItems = [
   { href: "/", label: "Home", icon: Home },
@@ -19,13 +20,65 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
+  const { user, login, logout, isAuthenticated, isLoading } = useXellar(); // Get Xellar state and functions
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
 
-  if (!isMounted) {
+  const handleAuthAction = () => {
+    if (isAuthenticated) {
+      logout();
+    } else {
+      login();
+    }
+  };
+
+  const renderAuthButtonContent = () => {
+    if (isLoading) {
+      return <span>Loading...</span>;
+    }
+    if (isAuthenticated && user?.address) {
+      const shortAddress = `${user.address.substring(0, 6)}...${user.address.substring(user.address.length - 4)}`;
+      return (
+        <>
+          <UserCircle className="h-5 w-5" />
+          <span>{shortAddress}</span>
+          <LogOut className="h-5 w-5 ml-2 opacity-70 hover:opacity-100" title="Logout" />
+        </>
+      );
+    }
+    return (
+      <>
+        <Wallet className="h-5 w-5" />
+        <span>Connect Wallet</span>
+      </>
+    );
+  };
+   const renderMobileAuthButtonContent = () => {
+    if (isLoading) {
+      return <span>Loading...</span>;
+    }
+    if (isAuthenticated && user?.address) {
+      const shortAddress = `${user.address.substring(0, 6)}...${user.address.substring(user.address.length - 4)}`;
+      return (
+        <>
+          <UserCircle className="h-5 w-5" />
+          <span>{shortAddress} (Logout)</span>
+        </>
+      );
+    }
+    return (
+      <>
+        <Wallet className="h-5 w-5" />
+        <span>Connect Wallet</span>
+      </>
+    );
+  };
+
+
+  if (!isMounted) { // Basic skeleton while waiting for client-side mount
     return (
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
@@ -38,7 +91,7 @@ export function Header() {
           <div className="h-8 w-24 animate-pulse rounded-md bg-muted md:hidden"></div>
           <div className="hidden md:flex space-x-4 items-center">
             {navItems.map((item) => (
-               <div key={item.href} className="h-6 w-28 animate-pulse rounded-md bg-muted"></div> // Adjusted width for longer text
+               <div key={item.href} className="h-6 w-28 animate-pulse rounded-md bg-muted"></div>
             ))}
              <div className="h-10 w-32 animate-pulse rounded-md bg-muted"></div>
           </div>
@@ -58,7 +111,7 @@ export function Header() {
           <span className="font-bold text-2xl text-primary">TrustVest</span>
         </Link>
 
-        <nav className="hidden md:flex items-center space-x-1 lg:space-x-2"> {/* Adjusted spacing for potentially longer items */}
+        <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
           {navItems.map((item) => (
             <Link
               key={item.label}
@@ -74,9 +127,12 @@ export function Header() {
         </nav>
 
         <div className="flex items-center space-x-2">
-          <Button className="hidden md:flex items-center space-x-2 bg-primary hover:bg-primary/90 text-primary-foreground"> {/* Changed to primary button */}
-            <Rocket className="h-5 w-5" />
-            <span>Launch App</span>
+          <Button
+            onClick={handleAuthAction}
+            disabled={isLoading}
+            className="hidden md:flex items-center space-x-2 bg-primary hover:bg-primary/90 text-primary-foreground"
+          >
+            {renderAuthButtonContent()}
           </Button>
 
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
@@ -108,9 +164,15 @@ export function Header() {
                     <span>{item.label}</span>
                   </Link>
                 ))}
-                 <Button className="w-full flex items-center space-x-2 bg-primary hover:bg-primary/90 text-primary-foreground py-6 text-lg mt-4"> {/* Changed to primary button */}
-                    <Rocket className="h-5 w-5" />
-                    <span>Launch App</span>
+                 <Button
+                    onClick={() => {
+                        handleAuthAction();
+                        setIsMobileMenuOpen(false);
+                    }}
+                    disabled={isLoading}
+                    className="w-full flex items-center space-x-2 bg-primary hover:bg-primary/90 text-primary-foreground py-6 text-lg mt-4"
+                  >
+                   {renderMobileAuthButtonContent()}
                  </Button>
               </nav>
             </SheetContent>
