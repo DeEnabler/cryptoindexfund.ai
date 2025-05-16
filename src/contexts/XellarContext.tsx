@@ -2,131 +2,50 @@
 "use client";
 
 import type { PropsWithChildren } from 'react';
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useCallback } from 'react';
+import { useAccount, useDisconnect } from 'wagmi';
+import { useConnectModal } from '@xellar/kit';
 
-// --- XELLAR SDK PLACEHOLDERS ---
-// IMPORTANT: Replace these with actual imports and types from Xellar's SDK documentation.
-// For example: import { XellarClient, XellarUser } from '@xellar/sdk';
-type XellarClientType = any; // Placeholder: Replace with XellarClient type e.g. XellarClient
-type XellarUserType = { // Placeholder: Replace with XellarUser type or the structure Xellar returns
-  address?: string;
-  email?: string;
-  // ... other user properties
-};
-// --- END OF XELLAR SDK PLACEHOLDERS ---
-
+interface XellarContextUser {
+  address?: `0x${string}`;
+  // Potentially other user properties from Xellar/Wagmi if needed
+}
 
 interface XellarContextType {
-  xellarClient: XellarClientType | null;
-  user: XellarUserType | null;
+  user: XellarContextUser | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: () => Promise<void>;
-  logout: () => Promise<void>;
+  login: () => void;
+  logout: () => void;
 }
 
 const XellarContext = createContext<XellarContextType | undefined>(undefined);
 
 export const XellarProvider: React.FC<PropsWithChildren<{}>> = ({ children }) => {
-  const [xellarClient, setXellarClient] = useState<XellarClientType | null>(null);
-  const [user, setUser] = useState<XellarUserType | null>(null);
-  const [isLoading, setIsLoading] = useState(true); // Initially true to handle async client init
+  const { address, isConnected, isConnecting, isReconnecting } = useAccount();
+  const { open: openConnectModal } = useConnectModal();
+  const { disconnect } = useDisconnect();
 
-  useEffect(() => {
-    const initializeXellar = async () => {
-      setIsLoading(true);
-      try {
-        // --- XELLAR SDK INITIALIZATION PLACEHOLDER ---
-        // IMPORTANT: Replace this with actual Xellar SDK initialization.
-        const projectId = process.env.NEXT_PUBLIC_XELLAR_PROJECT_ID;
-        if (!projectId) {
-          console.error("Xellar Project ID is not configured. Please set NEXT_PUBLIC_XELLAR_PROJECT_ID in your .env file.");
-          setIsLoading(false);
-          return;
-        }
+  const isLoadingState = isConnecting || isReconnecting;
 
-        // Example: const client = new XellarClient({ projectId });
-        // await client.init(); // or similar initialization method
-        // const currentUser = await client.getUser(); // or similar method to get current user
-        
-        // This is a placeholder for the Xellar client initialization.
-        // Replace with actual Xellar SDK calls.
-        // const { XellarSDK } = await import('@xellar/sdk'); // Assuming SDK named XellarSDK
-        // const client = new XellarSDK({ projectId }); // Use the correct initialization
-        // setXellarClient(client);
+  const loginCallback = useCallback(() => {
+    openConnectModal();
+  }, [openConnectModal]);
 
-        // Simulate client loading and checking for an existing session
-        console.log("Initializing Xellar SDK (placeholder)... Project ID:", projectId);
-        // This is a mock client and user for demonstration. Replace with actual SDK usage.
-        const mockClient = { 
-          login: async () => { console.log("Xellar login called (placeholder)"); return { address: "0xABC...", email: "testuser@example.com" }; },
-          logout: async () => { console.log("Xellar logout called (placeholder)"); },
-          getUser: async () => { console.log("Xellar getUser called (placeholder)"); return null; } // Simulate no user initially
-        };
-        setXellarClient(mockClient as XellarClientType);
-        
-        // Check if user is already logged in (SDK might handle this internally or provide a method)
-        // const existingUser = await mockClient.getUser(); // This is a placeholder
-        // if (existingUser) {
-        //   setUser(existingUser);
-        // }
-        // --- END OF XELLAR SDK INITIALIZATION PLACEHOLDER ---
-
-      } catch (error) {
-        console.error("Failed to initialize Xellar SDK:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    initializeXellar();
-  }, []);
-
-  const login = useCallback(async () => {
-    if (!xellarClient) {
-      console.error("Xellar client not initialized.");
-      return;
-    }
-    setIsLoading(true);
-    try {
-      // --- XELLAR SDK LOGIN PLACEHOLDER ---
-      // IMPORTANT: Replace this with the actual Xellar login function.
-      // Example: const loggedInUser = await xellarClient.login();
-      const loggedInUser = await xellarClient.login(); // Using the mock client's method
-      setUser(loggedInUser as XellarUserType);
-      // --- END OF XELLAR SDK LOGIN PLACEHOLDER ---
-    } catch (error) {
-      console.error("Xellar login failed:", error);
-      setUser(null);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [xellarClient]);
-
-  const logout = useCallback(async () => {
-    if (!xellarClient) {
-      console.error("Xellar client not initialized.");
-      return;
-    }
-    setIsLoading(true);
-    try {
-      // --- XELLAR SDK LOGOUT PLACEHOLDER ---
-      // IMPORTANT: Replace this with the actual Xellar logout function.
-      // Example: await xellarClient.logout();
-      await xellarClient.logout(); // Using the mock client's method
-      setUser(null);
-      // --- END OF XELLAR SDK LOGOUT PLACEHOLDER ---
-    } catch (error) {
-      console.error("Xellar logout failed:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [xellarClient]);
-
-  const isAuthenticated = !!user && !!user.address;
+  const logoutCallback = useCallback(() => {
+    disconnect();
+  }, [disconnect]);
+  
+  const currentUser: XellarContextUser | null = isConnected && address ? { address } : null;
 
   return (
-    <XellarContext.Provider value={{ xellarClient, user, isLoading, isAuthenticated, login, logout }}>
+    <XellarContext.Provider value={{ 
+      user: currentUser,
+      isLoading: isLoadingState,
+      isAuthenticated: isConnected,
+      login: loginCallback,
+      logout: logoutCallback
+    }}>
       {children}
     </XellarContext.Provider>
   );
@@ -135,7 +54,7 @@ export const XellarProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =>
 export const useXellar = (): XellarContextType => {
   const context = useContext(XellarContext);
   if (context === undefined) {
-    throw new Error('useXellar must be used within a XellarProvider');
+    throw new Error('useXellar must be used within a XellarProvider, which itself must be nested within XellarKitProvider, WagmiProvider, and QueryClientProvider.');
   }
   return context;
 };

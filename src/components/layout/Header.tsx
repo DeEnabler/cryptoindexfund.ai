@@ -8,7 +8,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, X, Home, Briefcase, Lightbulb, Rocket, LogOut, UserCircle, Wallet } from "lucide-react";
 import { usePathname } from 'next/navigation';
 import { cn } from "@/lib/utils";
-import { useXellar } from "@/contexts/XellarContext"; // Import useXellar
+import { useXellar } from "@/contexts/XellarContext";
 
 const navItems = [
   { href: "/", label: "Home", icon: Home },
@@ -20,7 +20,7 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
-  const { user, login, logout, isAuthenticated, isLoading } = useXellar(); // Get Xellar state and functions
+  const { user, login, logout, isAuthenticated, isLoading } = useXellar();
 
   useEffect(() => {
     setIsMounted(true);
@@ -36,8 +36,8 @@ export function Header() {
   };
 
   const renderAuthButtonContent = () => {
-    if (isLoading) {
-      return <span>Loading...</span>;
+    if (!isMounted || isLoading) { // Show loading if not mounted or Xellar is loading
+      return <div className="flex items-center space-x-2"><div className="h-5 w-5 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent"></div><span>Loading...</span></div>;
     }
     if (isAuthenticated && user?.address) {
       const shortAddress = `${user.address.substring(0, 6)}...${user.address.substring(user.address.length - 4)}`;
@@ -45,20 +45,21 @@ export function Header() {
         <>
           <UserCircle className="h-5 w-5" />
           <span>{shortAddress}</span>
-          <LogOut className="h-5 w-5 ml-2 opacity-70 hover:opacity-100" title="Logout" />
+          <LogOut className="h-5 w-5 ml-1 opacity-70 hover:opacity-100 cursor-pointer" title="Logout" onClick={(e) => { e.stopPropagation(); logout(); }} />
         </>
       );
     }
     return (
       <>
-        <Wallet className="h-5 w-5" />
-        <span>Connect Wallet</span>
+        <Rocket className="h-5 w-5" />
+        <span>Launch App</span>
       </>
     );
   };
+
    const renderMobileAuthButtonContent = () => {
-    if (isLoading) {
-      return <span>Loading...</span>;
+    if (!isMounted || isLoading) {
+      return <div className="flex items-center space-x-2"><div className="h-5 w-5 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent"></div><span>Loading...</span></div>;
     }
     if (isAuthenticated && user?.address) {
       const shortAddress = `${user.address.substring(0, 6)}...${user.address.substring(user.address.length - 4)}`;
@@ -71,14 +72,14 @@ export function Header() {
     }
     return (
       <>
-        <Wallet className="h-5 w-5" />
-        <span>Connect Wallet</span>
+        <Rocket className="h-5 w-5" />
+        <span>Launch App</span>
       </>
     );
   };
 
 
-  if (!isMounted) { // Basic skeleton while waiting for client-side mount
+  if (!isMounted) {
     return (
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
@@ -121,6 +122,7 @@ export function Header() {
                 pathname === item.href ? "bg-accent text-accent-foreground" : "text-foreground/80"
               )}
             >
+               <item.icon className="inline h-4 w-4 mr-1.5 mb-0.5" />
               {item.label}
             </Link>
           ))}
@@ -129,8 +131,8 @@ export function Header() {
         <div className="flex items-center space-x-2">
           <Button
             onClick={handleAuthAction}
-            disabled={isLoading}
-            className="hidden md:flex items-center space-x-2 bg-primary hover:bg-primary/90 text-primary-foreground"
+            disabled={isLoading && !isAuthenticated} // Disable if loading and not already authenticated
+            className="hidden md:flex items-center space-x-2 bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-150 ease-in-out group"
           >
             {renderAuthButtonContent()}
           </Button>
@@ -169,8 +171,8 @@ export function Header() {
                         handleAuthAction();
                         setIsMobileMenuOpen(false);
                     }}
-                    disabled={isLoading}
-                    className="w-full flex items-center space-x-2 bg-primary hover:bg-primary/90 text-primary-foreground py-6 text-lg mt-4"
+                    disabled={isLoading && !isAuthenticated}
+                    className="w-full flex items-center justify-center space-x-2 bg-primary hover:bg-primary/90 text-primary-foreground py-6 text-lg mt-4"
                   >
                    {renderMobileAuthButtonContent()}
                  </Button>
