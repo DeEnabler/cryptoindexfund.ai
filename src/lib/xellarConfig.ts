@@ -2,7 +2,7 @@
 "use client"; // Ensure this file can use process.env for client-side vars
 
 import { QueryClient } from '@tanstack/react-query';
-import { defaultConfig as xellarDefaultConfig } from '@xellar/kit';
+import { defaultConfig as xellarDefaultConfig } from '@xellar/kit'; // Renamed for clarity, it's Xellar's default config
 import { mainnet, sepolia, bsc, polygon } from 'wagmi/chains'; // Added more common chains
 
 export const queryClient = new QueryClient();
@@ -10,12 +10,15 @@ export const queryClient = new QueryClient();
 const walletConnectProjectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
 const xellarProjectId = process.env.NEXT_PUBLIC_XELLAR_PROJECT_ID;
 
+// For debugging: Log the values being used
+console.log("[Xellar Config] WalletConnect Project ID being used:", walletConnectProjectId);
+console.log("[Xellar Config] Xellar Project ID being used:", xellarProjectId);
+
+
 if (!walletConnectProjectId || walletConnectProjectId === "your_wallet_connect_project_id_here") {
   console.warn("NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID is not set or is a placeholder. Xellar/WalletConnect might not work correctly. Get ID from https://cloud.walletconnect.com/");
 }
 if (!xellarProjectId) {
-  // This check should ideally prevent the app from running if the ID is missing.
-  // For now, we'll log an error, but in a real app, you might throw or handle differently.
   console.error("CRITICAL: NEXT_PUBLIC_XELLAR_PROJECT_ID is not set in .env file. Xellar features will not work.");
 }
 
@@ -29,4 +32,3 @@ export const wagmiConfig = xellarDefaultConfig({
   chains: [mainnet, sepolia, bsc, polygon], // Example chains, configure as needed
   ssr: true, // For Next.js App Router
 });
-
