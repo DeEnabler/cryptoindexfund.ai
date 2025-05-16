@@ -2,8 +2,8 @@
 "use client";
 
 import { QueryClient } from '@tanstack/react-query';
-// Assuming defaultConfig for wagmi is from @xellar/kit
-import { defaultConfig as xellarDefaultConfig } from '@xellar/kit';
+// Import getDefaultConfig from @xellar/kit
+import { getDefaultConfig } from '@xellar/kit';
 import { mainnet, sepolia, bsc, polygon } from 'wagmi/chains';
 
 export const queryClient = new QueryClient();
@@ -22,16 +22,14 @@ if (!xellarProjectId) {
   console.error("CRITICAL: NEXT_PUBLIC_XELLAR_PROJECT_ID is not set in .env file. Xellar Kit features will likely not work.");
 }
 
-// This uses Xellar's defaultConfig to create the Wagmi config.
-// You MUST verify the parameters accepted by xellarDefaultConfig from their documentation.
-export const wagmiConfig = xellarDefaultConfig({
+// Use getDefaultConfig from @xellar/kit
+export const wagmiConfig = getDefaultConfig({
   appName: "TrustVest",
   // @ts-ignore WalletConnect Project ID might be undefined if not set, Xellar's defaultConfig should handle this gracefully or error.
   walletConnectProjectId: walletConnectProjectId!,
   // @ts-ignore Xellar Project ID, assuming it's called xellarAppId by their config
   xellarAppId: xellarProjectId!,
-  // You may need to specify chains here if not defaulted by xellarDefaultConfig
-  chains: [mainnet, sepolia, bsc, polygon], // Example chains
+  chains: [mainnet, sepolia, bsc, polygon], // Example chains, ensure these are supported by Xellar or configure as needed
   xellarEnv: "sandbox", // Or "production", verify with Xellar docs
   ssr: true, // For Next.js App Router
 });

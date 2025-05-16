@@ -4,12 +4,12 @@
 import type { PropsWithChildren } from 'react';
 import React, { createContext, useContext, useCallback } from 'react';
 import { useAccount, useDisconnect } from 'wagmi';
-// Assuming useConnectModal is from @xellar/kit
+// Import useConnectModal from @xellar/kit
 import { useConnectModal } from '@xellar/kit';
 
 interface AuthContextUser {
   address?: `0x${string}`;
-  // Add other user properties from Xellar if needed (e.g., email for embedded wallets)
+  // Add other user properties from Xellar if needed
 }
 
 interface AuthContextType {
@@ -24,19 +24,20 @@ const XellarAuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const XellarAuthProvider: React.FC<PropsWithChildren<{}>> = ({ children }) => {
   const { address, isConnected, isConnecting, isReconnecting } = useAccount();
-  const { open: openConnectModal } = useConnectModal(); // This line might error if useConnectModal isn't in @xellar/kit or used differently
+  const connectModal = useConnectModal(); // Get the connectModal object
   const { disconnect } = useDisconnect();
 
   const isLoadingState = isConnecting || isReconnecting;
 
   const loginCallback = useCallback(() => {
-    if (openConnectModal) {
-      openConnectModal();
+    if (connectModal?.open) {
+      connectModal.open(); // Call open method on the connectModal object
     } else {
-      console.error("Xellar connect modal hook (useConnectModal) is not available or not correctly imported from @xellar/kit. Consult Xellar documentation.");
-      alert("Connect wallet functionality needs to be updated with the correct Xellar SDK usage.");
+      console.error("Xellar connect modal hook (useConnectModal) is not available or not correctly imported/initialized from @xellar/kit. Consult Xellar documentation.");
+      // Fallback alert or other UI indication if needed
+      alert("Connect wallet functionality is not available at the moment. Please ensure Xellar Kit is properly configured.");
     }
-  }, [openConnectModal]);
+  }, [connectModal]);
 
   const logoutCallback = useCallback(() => {
     disconnect();
