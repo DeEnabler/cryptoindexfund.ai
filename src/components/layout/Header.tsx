@@ -5,10 +5,10 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, X, Home, Briefcase, Lightbulb, Rocket, LogOut, UserCircle, Wallet } from "lucide-react";
+import { Menu, X, Home, Briefcase, Lightbulb, Rocket, LogOut, UserCircle } from "lucide-react"; // Removed Wallet icon as it's covered by UserCircle/Rocket
 import { usePathname } from 'next/navigation';
 import { cn } from "@/lib/utils";
-import { useXellar } from "@/contexts/XellarContext";
+import { useReownAuth } from "@/contexts/ReownAuthContext"; // Updated import
 
 const navItems = [
   { href: "/", label: "Home", icon: Home },
@@ -20,7 +20,7 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
-  const { user, login, logout, isAuthenticated, isLoading } = useXellar();
+  const { user, login, logout, isAuthenticated, isLoading } = useReownAuth(); // Updated hook
 
   useEffect(() => {
     setIsMounted(true);
@@ -36,7 +36,7 @@ export function Header() {
   };
 
   const renderAuthButtonContent = () => {
-    if (!isMounted || isLoading) { // Show loading if not mounted or Xellar is loading
+    if (!isMounted || isLoading) { 
       return <div className="flex items-center space-x-2"><div className="h-5 w-5 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent"></div><span>Loading...</span></div>;
     }
     if (isAuthenticated && user?.address) {
@@ -131,7 +131,7 @@ export function Header() {
         <div className="flex items-center space-x-2">
           <Button
             onClick={handleAuthAction}
-            disabled={isLoading && !isAuthenticated} // Disable if loading and not already authenticated
+            disabled={isLoading && !isAuthenticated} 
             className="hidden md:flex items-center space-x-2 bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-150 ease-in-out group"
           >
             {renderAuthButtonContent()}
