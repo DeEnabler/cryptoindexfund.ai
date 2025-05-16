@@ -4,7 +4,7 @@
 import type { PropsWithChildren } from 'react';
 import { WagmiProvider } from 'wagmi';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { XellarKitProvider } from '@xellar/kit';
+import { XellarKitProvider, darkTheme } from '@xellar/kit'; // Added darkTheme import
 import { XellarProvider as CustomXellarProvider } from '@/contexts/XellarContext';
 import { wagmiConfig, queryClient } from '@/lib/xellarConfig';
 
@@ -12,7 +12,7 @@ export function AppProviders({ children }: PropsWithChildren) {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <XellarKitProvider> {/* XellarKitProvider might take config or rely on Wagmi's context */}
+        <XellarKitProvider theme={darkTheme}> {/* Added theme prop */}
           <CustomXellarProvider>
             {children}
           </CustomXellarProvider>
