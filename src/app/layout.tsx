@@ -10,7 +10,12 @@ export const metadata: Metadata = {
   title: 'CryptoIndexFund - Decentralized Crypto Fund',
   description: 'Invest in crypto with transparency and decentralization. Welcome to CryptoIndexFund.',
   icons: {
-    icon: '/favicon.ico',
+    icon: [
+      { url: '/favicon.ico', sizes: 'any', type: 'image/x-icon' },
+      { url: '/android-chrome-512x512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    // Consider adding apple-touch-icon if you have one:
+    // apple: '/apple-touch-icon.png', 
   },
 };
 
@@ -34,3 +39,4 @@ export default function RootLayout({
     </html>
   );
 }
+
