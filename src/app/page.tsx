@@ -4,23 +4,98 @@
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { ArrowRight, Lock, BarChartBig, Users, Zap, TrendingUp } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ArrowRight, Zap, TrendingUp, DollarSign, Shield, Layers, Cpu, Target, Briefcase } from "lucide-react";
 import Link from "next/link";
-import AnimatedGradientText from "@/components/feature/AnimatedGradientText"; // Import the new component
+import AnimatedGradientText from "@/components/feature/AnimatedGradientText";
+
+interface Fund {
+  id: string;
+  ticker: string;
+  name: string;
+  description: string;
+  marketPrice: string;
+  asOfDate: string;
+  icon: React.ReactNode;
+  category: "single-coin" | "sector";
+  href: string;
+}
+
+const fundsData: Fund[] = [
+  {
+    id: "btc",
+    ticker: "BTC",
+    name: "BTC Fund",
+    description: "Focused investment in Bitcoin, the leading cryptocurrency, aiming for long-term capital appreciation.",
+    marketPrice: "$65,432.10",
+    asOfDate: "05/18/2025",
+    icon: <DollarSign className="h-10 w-10 text-primary" />,
+    category: "single-coin",
+    href: "/fund/btc-fund"
+  },
+  {
+    id: "eth",
+    ticker: "ETH",
+    name: "ETH Fund",
+    description: "Exposure to Ethereum, the backbone of decentralized applications and smart contracts.",
+    marketPrice: "$3,567.89",
+    asOfDate: "05/18/2025",
+    icon: <Layers className="h-10 w-10 text-primary" />,
+    category: "single-coin",
+    href: "/fund/eth-fund"
+  },
+  {
+    id: "sol",
+    ticker: "SOL",
+    name: "Solana Fund",
+    description: "Investing in Solana, a high-performance blockchain known for its speed and scalability.",
+    marketPrice: "$172.45",
+    asOfDate: "05/18/2025",
+    icon: <Zap className="h-10 w-10 text-primary" />,
+    category: "single-coin",
+    href: "/fund/sol-fund"
+  },
+  {
+    id: "dff",
+    ticker: "DFF",
+    name: "Digital Future Fund",
+    description: "A diversified portfolio targeting key growth areas in the digital asset ecosystem, including Web3 and Metaverse.",
+    marketPrice: "$123.45",
+    asOfDate: "05/18/2025",
+    icon: <Briefcase className="h-10 w-10 text-primary" />,
+    category: "sector",
+    href: "/fund/dff-fund"
+  },
+  {
+    id: "aia",
+    ticker: "AIA",
+    name: "AI Agents Fund",
+    description: "Investment in projects at the intersection of Artificial Intelligence and blockchain technology.",
+    marketPrice: "$88.90",
+    asOfDate: "05/18/2025",
+    icon: <Cpu className="h-10 w-10 text-primary" />,
+    category: "sector",
+    href: "/fund/aia-fund"
+  },
+];
+
 
 export default function HomePage() {
   const [parallaxOffset, setParallaxOffset] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      setParallaxOffset(window.pageYOffset * 0.4); 
+      setParallaxOffset(window.pageYOffset * 0.4);
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); 
+    handleScroll();
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const singleCoinFunds = fundsData.filter(fund => fund.category === 'single-coin');
+  const sectorFunds = fundsData.filter(fund => fund.category === 'sector');
 
   return (
     <div className="space-y-16">
@@ -70,7 +145,7 @@ export default function HomePage() {
             CryptoIndexFund offers a decentralized crypto fund, bringing transparency and security to your investments. Join the financial revolution.
           </p>
           <div className="mt-10 flex justify-center space-x-4">
-            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
+            <Button asChild size="lg">
               <Link href="/fund-overview">
                 Explore Funds <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
@@ -79,54 +154,71 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Investment Products Section */}
       <section className="py-12">
-        <h2 className="text-3xl font-bold text-center mb-12">Why CryptoIndexFund?</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <FeatureCard
-            icon={<Lock className="h-10 w-10 text-primary" />}
-            title="Decentralized & Secure"
-            description="Built on blockchain technology, ensuring your assets are managed transparently and securely without intermediaries."
-            data-ai-hint="security lock"
-          />
-          <FeatureCard
-            icon={<BarChartBig className="h-10 w-10 text-primary" />}
-            title="Transparent Operations"
-            description="All fund activities are verifiable on-chain. Track every transaction and holding with unprecedented clarity."
-            data-ai-hint="data chart"
-          />
-          <FeatureCard
-            icon={<Users className="h-10 w-10 text-primary" />}
-            title="User-Friendly Platform"
-            description="Easily connect your wallet, deposit, withdraw, and monitor your investments through our intuitive interface."
-            data-ai-hint="people collaboration"
-          />
-        </div>
-      </section>
-
-      {/* How it Works Section */}
-      <section className="py-12">
-        <h2 className="text-3xl font-bold text-center mb-12">Getting Started is Easy</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-          <StepCard
-            step="1"
-            title="Connect Your Wallet"
-            description="Securely connect your preferred Web3 wallet."
-            icon={<Zap className="h-8 w-8 mx-auto mb-4 text-primary" />}
-          />
-          <StepCard
-            step="2"
-            title="Deposit Funds"
-            description="Choose a fund and deposit your crypto assets with a few clicks."
-            icon={<ArrowRight className="h-8 w-8 mx-auto mb-4 text-primary transform rotate-90 md:rotate-0" />}
-          />
-           <StepCard
-            step="3"
-            title="Track Your Growth"
-            description="Monitor your investment performance in real-time through your dashboard."
-            icon={<TrendingUp className="h-8 w-8 mx-auto mb-4 text-primary" />}
-          />
-        </div>
+        <h2 className="text-3xl font-bold text-center mb-12 text-primary">Investment Products</h2>
+        <Tabs defaultValue="single-coin" className="w-full max-w-4xl mx-auto">
+          <TabsList className="grid w-full grid-cols-2 mb-8">
+            <TabsTrigger value="single-coin" className="text-lg py-3">Single Coin Funds</TabsTrigger>
+            <TabsTrigger value="sector-funds" className="text-lg py-3">Sector Funds</TabsTrigger>
+          </TabsList>
+          <TabsContent value="single-coin">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {singleCoinFunds.map((fund) => (
+                <Card key={fund.id} className="shadow-lg hover:shadow-primary/20 transition-shadow duration-300 flex flex-col">
+                  <CardHeader className="items-center text-center">
+                    <div className="p-3 bg-primary/10 rounded-full mb-3">
+                      {fund.icon}
+                    </div>
+                    <CardTitle className="text-2xl">{fund.ticker}</CardTitle>
+                    <CardDescription className="text-sm font-semibold">{fund.name}</CardDescription>
+                  </CardHeader>
+                  <CardContent className="flex-grow flex flex-col justify-between">
+                    <p className="text-muted-foreground text-sm mb-4 flex-grow">{fund.description}</p>
+                    <div className="mt-auto">
+                      <div className="mb-4">
+                        <p className="text-xs text-muted-foreground">Market Price</p>
+                        <p className="text-xl font-bold text-primary">{fund.marketPrice}</p>
+                      </div>
+                      <Button asChild className="w-full">
+                        <Link href={fund.href}>View Details</Link>
+                      </Button>
+                      <p className="text-xs text-muted-foreground text-center mt-2">{fund.asOfDate}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+          <TabsContent value="sector-funds">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {sectorFunds.map((fund) => (
+                <Card key={fund.id} className="shadow-lg hover:shadow-primary/20 transition-shadow duration-300 flex flex-col">
+                  <CardHeader className="items-center text-center">
+                     <div className="p-3 bg-primary/10 rounded-full mb-3">
+                      {fund.icon}
+                    </div>
+                    <CardTitle className="text-2xl">{fund.ticker}</CardTitle>
+                    <CardDescription className="text-sm font-semibold">{fund.name}</CardDescription>
+                  </CardHeader>
+                  <CardContent className="flex-grow flex flex-col justify-between">
+                    <p className="text-muted-foreground text-sm mb-4 flex-grow">{fund.description}</p>
+                     <div className="mt-auto">
+                      <div className="mb-4">
+                        <p className="text-xs text-muted-foreground">Market Price</p>
+                        <p className="text-xl font-bold text-primary">{fund.marketPrice}</p>
+                      </div>
+                      <Button asChild className="w-full">
+                        <Link href={fund.href}>View Details</Link>
+                      </Button>
+                      <p className="text-xs text-muted-foreground text-center mt-2">{fund.asOfDate}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
       </section>
 
       {/* Call to Action Section */}
@@ -139,7 +231,7 @@ export default function HomePage() {
             <CardDescription className="text-lg mb-8 text-muted-foreground">
               Join CryptoIndexFund today and experience the future of decentralized fund management.
             </CardDescription>
-            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
+            <Button asChild size="lg">
               <Link href="/fund-overview">
                 View Our Funds <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
@@ -147,52 +239,6 @@ export default function HomePage() {
           </CardContent>
         </Card>
       </section>
-    </div>
-  );
-}
-
-interface FeatureCardProps {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  "data-ai-hint": string;
-}
-
-function FeatureCard({ icon, title, description, "data-ai-hint": dataAiHint }: FeatureCardProps) {
-  return (
-    <Card className="text-center shadow-lg hover:shadow-primary/20 transition-shadow duration-300">
-      <CardHeader className="items-center">
-        <div className="p-4 bg-primary/10 rounded-full mb-4">
-          {icon}
-        </div>
-        <CardTitle className="text-2xl">{title}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-muted-foreground">{description}</p>
-      </CardContent>
-    </Card>
-  );
-}
-
-
-interface StepCardProps {
-  step: string;
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-}
-
-function StepCard({ step, title, description, icon }: StepCardProps) {
-  return (
-    <div className="p-6 rounded-lg">
-      <div className="flex items-center justify-center mb-4">
-        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-primary-foreground font-bold text-xl">
-          {step}
-        </div>
-      </div>
-      {icon}
-      <h3 className="text-xl font-semibold mb-2">{title}</h3>
-      <p className="text-muted-foreground">{description}</p>
     </div>
   );
 }
