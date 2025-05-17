@@ -11,9 +11,7 @@ export function Footer() {
         <div className="flex flex-col items-center justify-between md:flex-row">
           <div className="mb-4 md:mb-0">
             <Link href="/" className="flex items-center space-x-2">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-7 w-7 text-primary">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-              </svg>
+              {/* Removed SVG logo */}
               <span className="font-semibold text-xl text-primary">CryptoIndexFund</span>
             </Link>
           </div>
