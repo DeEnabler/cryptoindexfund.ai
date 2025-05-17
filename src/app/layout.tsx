@@ -7,10 +7,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { AppProviders } from '@/components/AppProviders';
 
 export const metadata: Metadata = {
-  title: 'TrustVest - Decentralized Crypto Fund',
-  description: 'Invest in crypto with transparency and decentralization. Welcome to TrustVest.',
+  title: 'CryptoIndexFund.ai - Decentralized Crypto Fund',
+  description: 'Invest in crypto with transparency and decentralization. Welcome to CryptoIndexFund.ai.',
   icons: {
-    icon: '/favicon.ico', // Reference the favicon.ico at the root
+    icon: '/favicon.ico',
   },
 };
 
