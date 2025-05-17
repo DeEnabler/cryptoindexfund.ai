@@ -5,7 +5,8 @@ import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowRight, Zap, TrendingUp, DollarSign, Shield, Layers, Cpu, Target, Briefcase } from "lucide-react";
+import { ArrowRight, Zap, DollarSign, Layers, Cpu, Briefcase } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
 import AnimatedGradientText from "@/components/feature/AnimatedGradientText";
 
@@ -16,7 +17,7 @@ interface Fund {
   description: string;
   marketPrice: string;
   asOfDate: string;
-  icon: React.ReactNode;
+  icon: LucideIcon;
   category: "single-coin" | "sector";
   href: string;
 }
@@ -29,7 +30,7 @@ const fundsData: Fund[] = [
     description: "Focused investment in Bitcoin, the leading cryptocurrency, aiming for long-term capital appreciation.",
     marketPrice: "$65,432.10",
     asOfDate: "05/18/2025",
-    icon: <DollarSign className="h-10 w-10 text-primary" />,
+    icon: DollarSign,
     category: "single-coin",
     href: "/fund/btc-fund"
   },
@@ -40,7 +41,7 @@ const fundsData: Fund[] = [
     description: "Exposure to Ethereum, the backbone of decentralized applications and smart contracts.",
     marketPrice: "$3,567.89",
     asOfDate: "05/18/2025",
-    icon: <Layers className="h-10 w-10 text-primary" />,
+    icon: Layers,
     category: "single-coin",
     href: "/fund/eth-fund"
   },
@@ -51,7 +52,7 @@ const fundsData: Fund[] = [
     description: "Investing in Solana, a high-performance blockchain known for its speed and scalability.",
     marketPrice: "$172.45",
     asOfDate: "05/18/2025",
-    icon: <Zap className="h-10 w-10 text-primary" />,
+    icon: Zap,
     category: "single-coin",
     href: "/fund/sol-fund"
   },
@@ -62,7 +63,7 @@ const fundsData: Fund[] = [
     description: "A diversified portfolio targeting key growth areas in the digital asset ecosystem, including Web3 and Metaverse.",
     marketPrice: "$123.45",
     asOfDate: "05/18/2025",
-    icon: <Briefcase className="h-10 w-10 text-primary" />,
+    icon: Briefcase,
     category: "sector",
     href: "/fund/dff-fund"
   },
@@ -73,7 +74,7 @@ const fundsData: Fund[] = [
     description: "Investment in projects at the intersection of Artificial Intelligence and blockchain technology.",
     marketPrice: "$88.90",
     asOfDate: "05/18/2025",
-    icon: <Cpu className="h-10 w-10 text-primary" />,
+    icon: Cpu,
     category: "sector",
     href: "/fund/aia-fund"
   },
@@ -89,7 +90,7 @@ export default function HomePage() {
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll();
+    handleScroll(); // Call on mount to set initial position
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -156,19 +157,26 @@ export default function HomePage() {
 
       {/* Investment Products Section */}
       <section className="py-12">
-        <h2 className="text-3xl font-bold text-center mb-12 text-primary">Investment Products</h2>
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-primary">Explore our products</h2>
+          <p className="mt-2 text-lg text-muted-foreground max-w-2xl mx-auto">
+            CryptoIndexFund funds aim to capture future-forward investment opportunities and represent potential growth areas in our constantly evolving world.
+          </p>
+        </div>
+
         <Tabs defaultValue="single-coin" className="w-full max-w-4xl mx-auto">
           <TabsList className="grid w-full grid-cols-2 mb-8">
             <TabsTrigger value="single-coin" className="text-lg py-3">Single Coin Funds</TabsTrigger>
             <TabsTrigger value="sector-funds" className="text-lg py-3">Sector Funds</TabsTrigger>
           </TabsList>
+          
           <TabsContent value="single-coin">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {singleCoinFunds.map((fund) => (
                 <Card key={fund.id} className="shadow-lg hover:shadow-primary/20 transition-shadow duration-300 flex flex-col">
                   <CardHeader className="items-center text-center">
                     <div className="p-3 bg-primary/10 rounded-full mb-3">
-                      {fund.icon}
+                      <fund.icon className="h-10 w-10 text-primary" />
                     </div>
                     <CardTitle className="text-2xl">{fund.ticker}</CardTitle>
                     <CardDescription className="text-sm font-semibold">{fund.name}</CardDescription>
@@ -183,20 +191,21 @@ export default function HomePage() {
                       <Button asChild className="w-full">
                         <Link href={fund.href}>View Details</Link>
                       </Button>
-                      <p className="text-xs text-muted-foreground text-center mt-2">{fund.asOfDate}</p>
+                      <p className="text-xs text-muted-foreground text-center mt-2">As of {fund.asOfDate}</p>
                     </div>
                   </CardContent>
                 </Card>
               ))}
             </div>
           </TabsContent>
+
           <TabsContent value="sector-funds">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8"> {/* Adjusted for typically fewer sector funds */}
               {sectorFunds.map((fund) => (
                 <Card key={fund.id} className="shadow-lg hover:shadow-primary/20 transition-shadow duration-300 flex flex-col">
                   <CardHeader className="items-center text-center">
                      <div className="p-3 bg-primary/10 rounded-full mb-3">
-                      {fund.icon}
+                      <fund.icon className="h-10 w-10 text-primary" />
                     </div>
                     <CardTitle className="text-2xl">{fund.ticker}</CardTitle>
                     <CardDescription className="text-sm font-semibold">{fund.name}</CardDescription>
@@ -211,7 +220,7 @@ export default function HomePage() {
                       <Button asChild className="w-full">
                         <Link href={fund.href}>View Details</Link>
                       </Button>
-                      <p className="text-xs text-muted-foreground text-center mt-2">{fund.asOfDate}</p>
+                      <p className="text-xs text-muted-foreground text-center mt-2">As of {fund.asOfDate}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -242,3 +251,4 @@ export default function HomePage() {
     </div>
   );
 }
+
