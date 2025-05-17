@@ -6,13 +6,13 @@ import React, { useEffect, useRef } from 'react';
 interface AnimatedGradientTextProps {
   text: string;
   className?: string;
-  highlightColor?: string;
+  highlightColor?: string; // Make this optional
 }
 
 const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
   text,
   className,
-  highlightColor = '#4d99f2', // Default highlight color
+  highlightColor = '#4d99f2', // Default highlight color if not provided
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -35,20 +35,16 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
 
     let offset = 0;
     const speed = 1; // Adjust for speed of gradient movement
-
-    let baseColor = 'rgb(255, 255, 255)'; // Default base color (white)
+    let baseColor = 'rgb(255, 255, 255)'; // Default base color
 
     const resizeCanvasAndDraw = () => {
       if (!ctx || !canvas || !container || !hiddenTextEl) return;
 
-      // Set canvas dimensions based on the container (which is sized by the hidden h4)
-      // Use devicePixelRatio for sharper rendering on high-DPI screens
       const dpr = window.devicePixelRatio || 1;
       canvas.width = container.clientWidth * dpr;
       canvas.height = container.clientHeight * dpr;
       ctx.scale(dpr, dpr); // Scale context to match CSS pixels
 
-      // Get font properties from the hidden h4
       const computedStyle = window.getComputedStyle(hiddenTextEl);
       const fontStyle = computedStyle.getPropertyValue('font-style');
       const fontVariant = computedStyle.getPropertyValue('font-variant');
@@ -56,45 +52,48 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
       const fontSize = computedStyle.getPropertyValue('font-size');
       const fontFamily = computedStyle.getPropertyValue('font-family');
       
-      baseColor = computedStyle.getPropertyValue('color'); // Get base text color
+      // Determine baseColor from the computed style of the hidden text element
+      baseColor = computedStyle.getPropertyValue('color') || 'rgb(255, 255, 255)';
+
 
       ctx.font = `${fontStyle} ${fontVariant} ${fontWeight} ${fontSize} ${fontFamily}`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
-      draw(); // Redraw with new dimensions/font
+      draw();
     };
     
     const draw = () => {
       if (!ctx || !canvas) return;
 
-      // Clear the canvas
-      ctx.clearRect(0, 0, canvas.width / (window.devicePixelRatio||1) , canvas.height/ (window.devicePixelRatio||1));
+      // Clear the canvas using its actual width and height (physical pixels)
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-
-      // Create gradient relative to canvas's unscaled width for CSS pixels
       const canvasCssWidth = canvas.width / (window.devicePixelRatio || 1);
-      const gradientXStart = -canvasCssWidth + offset;
-      const gradientXEnd = canvasCssWidth + offset;
+      
+      // Adjust gradient calculation if needed, ensure it covers the text area
+      const gradientXStart = -canvasCssWidth + offset; // Start further left
+      const gradientXEnd = canvasCssWidth + offset;   // End further right
       
       const gradient = ctx.createLinearGradient(gradientXStart, 0, gradientXEnd, 0);
       
-      // Text is always visible in baseColor, highlightColor sweeps across
+      // Gradient: baseColor -> highlightColor -> baseColor
+      // This ensures text is always visible in its base color.
       gradient.addColorStop(0, baseColor);
-      gradient.addColorStop(0.4, baseColor);       // Start of highlight area
+      gradient.addColorStop(0.45, baseColor); // Start of highlight area
       gradient.addColorStop(0.5, highlightColor);  // Peak of highlight
-      gradient.addColorStop(0.6, baseColor);       // End of highlight area
+      gradient.addColorStop(0.55, baseColor); // End of highlight area
       gradient.addColorStop(1, baseColor);
 
-      // Apply gradient and draw text
       ctx.fillStyle = gradient;
       
-      const yPos = (canvas.height / (window.devicePixelRatio || 1)) / 2;
-      const xPos = (canvas.width / (window.devicePixelRatio || 1)) / 2;
+      // Draw text centered on the canvas (using CSS pixel dimensions for positioning)
+      const xPos = canvasCssWidth / 2;
+      const yPos = canvas.height / (window.devicePixelRatio || 1) / 2;
       ctx.fillText(text, xPos, yPos);
 
-      // Animate offset
       offset += speed;
+      // Ensure offset reset condition handles the extended gradient width
       if (offset >= canvasCssWidth * 2) { 
         offset = 0;
       }
@@ -102,32 +101,36 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
       animationFrameId.current = requestAnimationFrame(draw);
     };
 
-    // Initial setup
     resizeCanvasAndDraw(); 
 
-    // Handle resize using ResizeObserver for better accuracy
     const observer = new ResizeObserver(resizeCanvasAndDraw);
-    observer.observe(container);
+    if (container) {
+      observer.observe(container);
+    }
     
-    // Fallback for window resize if ResizeObserver is not fully supported or for font loading changes
     window.addEventListener('resize', resizeCanvasAndDraw);
-    // Also consider font loading, but it's complex. For now, resize handles most cases.
 
     return () => {
       if (animationFrameId.current) {
         cancelAnimationFrame(animationFrameId.current);
       }
       window.removeEventListener('resize', resizeCanvasAndDraw);
-      observer.unobserve(container);
+      if (container) {
+        observer.unobserve(container);
+      }
       observer.disconnect();
     };
-  }, [text, highlightColor, className]); // Rerun effect if text, highlightColor or className changes
+  }, [text, highlightColor, className]);
 
   return (
     <div
       ref={containerRef}
       className={`animated-gradient-text-container ${className || ''}`}
-      style={{ position: 'relative', display: 'inline-block' /* Ensures container fits text */ }}
+      style={{ 
+        position: 'relative', 
+        display: 'inline-block', // Or 'block' depending on desired layout behavior
+        verticalAlign: 'bottom', // Helps align with surrounding text if inline-block
+      }}
     >
       <h4
         ref={hiddenTextRef}
@@ -137,8 +140,8 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
           padding: 0,
           border: 'none',
           opacity: 0,
-          visibility: 'hidden',
-          whiteSpace: 'nowrap', // Prevent wrapping that might affect measurement
+          visibility: 'hidden', // Ensures it doesn't render but takes up space
+          whiteSpace: 'nowrap', 
         }}
       >
         {text}
@@ -151,7 +154,7 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
           left: 0,
           width: '100%',
           height: '100%',
-          opacity: 1,
+          opacity: 1, // Canvas itself is fully opaque, its content has transparency
         }}
       />
     </div>
