@@ -90,7 +90,11 @@ export function ArticleSummarizer() {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isPending} className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground">
+            <Button 
+              type="submit" 
+              disabled={isPending} 
+              className="w-full sm:w-auto" /* Removed redundant bg-primary, hover:bg-primary/90, text-primary-foreground */
+            >
               {isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
