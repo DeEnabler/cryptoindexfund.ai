@@ -105,7 +105,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
         <Link href="/" className="flex items-center space-x-2" onClick={() => setIsMobileMenuOpen(false)}>
-          <Image src="/android-chrome-512x512.png" alt="CryptoIndexFund Logo" width={32} height={32} className="h-8 w-auto" />
+          <Image src="/android-chrome-512x512.png" alt="CryptoIndexFund Site Logo" width={32} height={32} className="h-8 w-auto" priority={true} />
           <span className="font-bold text-2xl text-primary">CryptoIndexFund</span>
         </Link>
 
@@ -143,7 +143,7 @@ export function Header() {
             </SheetTrigger>
             <SheetContent side="right" className="w-full max-w-xs bg-background p-6 pt-12">
               <Link href="/" className="flex items-center space-x-2 mb-8" onClick={() => setIsMobileMenuOpen(false)}>
-                <Image src="/android-chrome-512x512.png" alt="CryptoIndexFund Logo" width={32} height={32} className="h-8 w-auto" />
+                <Image src="/android-chrome-512x512.png" alt="CryptoIndexFund Site Logo" width={32} height={32} className="h-8 w-auto" />
                 <span className="font-bold text-2xl text-primary">CryptoIndexFund</span>
               </Link>
               <nav className="flex flex-col space-y-3">
