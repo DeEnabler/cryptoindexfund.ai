@@ -6,17 +6,18 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { ArrowRight, Lock, BarChartBig, Users, Zap, TrendingUp } from "lucide-react";
 import Link from "next/link";
+import AnimatedGradientText from "@/components/feature/AnimatedGradientText"; // Import the new component
 
 export default function HomePage() {
   const [parallaxOffset, setParallaxOffset] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      setParallaxOffset(window.pageYOffset * 0.4); // Adjust 0.4 for desired parallax speed
+      setParallaxOffset(window.pageYOffset * 0.4); 
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Call on mount to set initial position
+    handleScroll(); 
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -33,211 +34,37 @@ export default function HomePage() {
             willChange: 'transform'
           }}
         >
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 1, gridColumnStart: 1 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'top center', '--final-opacity': '0.2', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M126 0 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 1, gridColumnStart: 2 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'bottom center', '--final-opacity': '0.3', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 126 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 1, gridColumnStart: 3 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 1, gridColumnStart: 4 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 1, gridColumnStart: 5 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 2, gridColumnStart: 1 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'bottom center', '--final-opacity': '0.2', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 126 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 2, gridColumnStart: 2 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 2, gridColumnStart: 3 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'bottom center', '--final-opacity': '0.3', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 126 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'bottom center', '--final-opacity': '0.4', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M126 126 L0 126 L126 0 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 2, gridColumnStart: 4 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'top center', '--final-opacity': '0.4', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M126 0 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 2, gridColumnStart: 5 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'bottom center', '--final-opacity': '0.2', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 126 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 3, gridColumnStart: 1 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 3, gridColumnStart: 2 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'top center', '--final-opacity': '0.3', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M126 0 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'bottom center', '--final-opacity': '0.2', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 126 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 3, gridColumnStart: 3 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'top center', '--final-opacity': '0.5', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M126 0 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 3, gridColumnStart: 4 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 3, gridColumnStart: 5 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 4, gridColumnStart: 1 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 4, gridColumnStart: 2 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'top center', '--final-opacity': '0.2', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M126 0 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 4, gridColumnStart: 3 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 4, gridColumnStart: 4 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'bottom center', '--final-opacity': '0.3', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 126 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 4, gridColumnStart: 5 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 5, gridColumnStart: 1 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 5, gridColumnStart: 2 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 5, gridColumnStart: 3 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 5, gridColumnStart: 4 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'top center', '--final-opacity': '0.2', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M126 0 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
-          <div className="animated-grid-svg-item" style={{ gridRowStart: 5, gridColumnStart: 5 }}>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-            <svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}>
-              <path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path>
-            </svg>
-          </div>
+          {/* SVG Grid from previous implementation - retained */}
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 1, gridColumnStart: 1 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'top center', '--final-opacity': '0.2', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M126 0 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg></div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 1, gridColumnStart: 2 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'bottom center', '--final-opacity': '0.3', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 126 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg></div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 1, gridColumnStart: 3 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg></div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 1, gridColumnStart: 4 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg></div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 1, gridColumnStart: 5 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg></div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 2, gridColumnStart: 1 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'bottom center', '--final-opacity': '0.2', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 126 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg></div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 2, gridColumnStart: 2 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg></div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 2, gridColumnStart: 3 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'bottom center', '--final-opacity': '0.3', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 126 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'bottom center', '--final-opacity': '0.4', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M126 126 L0 126 L126 0 Z" fill="hsl(var(--primary))"></path></svg></div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 2, gridColumnStart: 4 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'top center', '--final-opacity': '0.4', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M126 0 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg></div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 2, gridColumnStart: 5 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'bottom center', '--final-opacity': '0.2', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 126 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg></div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 3, gridColumnStart: 1 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg></div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 3, gridColumnStart: 2 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'top center', '--final-opacity': '0.3', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M126 0 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'bottom center', '--final-opacity': '0.2', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 126 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path></svg></div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 3, gridColumnStart: 3 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'top center', '--final-opacity': '0.5', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M126 0 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg></div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 3, gridColumnStart: 4 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg></div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 3, gridColumnStart: 5 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg></div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 4, gridColumnStart: 1 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg></div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 4, gridColumnStart: 2 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'top center', '--final-opacity': '0.2', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M126 0 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg></div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 4, gridColumnStart: 3 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg></div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 4, gridColumnStart: 4 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'bottom center', '--final-opacity': '0.3', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 126 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg></div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 4, gridColumnStart: 5 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg></div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 5, gridColumnStart: 1 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg></div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 5, gridColumnStart: 2 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg></div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 5, gridColumnStart: 3 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg></div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 5, gridColumnStart: 4 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'scaleY 2s 0s forwards', transformOrigin: 'top center', '--final-opacity': '0.2', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M126 0 L126 126 L0 0 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg></div>
+          <div className="animated-grid-svg-item" style={{ gridRowStart: 5, gridColumnStart: 5 }}><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg><svg viewBox="0 0 126 126" className="animated" style={{ animation: 'undefined undefined undefined forwards', opacity: 0, position: 'absolute' } as React.CSSProperties}><path d="M0 0 L126 0 L0 126 Z" fill="hsl(var(--primary))"></path></svg></div>
         </div>
         <div className="relative z-10">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight">
             <span className="block">Invest in the Future,</span>
-            <span className="block text-primary-foreground">Trustlessly.</span>
+            <AnimatedGradientText text="Trustlessly." className="block text-primary-foreground" />
           </h1>
           <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-muted-foreground">
             CryptoIndexFund offers a decentralized crypto fund, bringing transparency and security to your investments. Join the financial revolution.
@@ -284,7 +111,7 @@ export default function HomePage() {
           <StepCard
             step="1"
             title="Connect Your Wallet"
-            description="Securely connect your preferred Web3 wallet like MetaMask."
+            description="Securely connect your preferred Web3 wallet."
             icon={<Zap className="h-8 w-8 mx-auto mb-4 text-primary" />}
           />
           <StepCard
