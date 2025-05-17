@@ -7,8 +7,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { AppProviders } from '@/components/AppProviders';
 
 export const metadata: Metadata = {
-  title: 'CryptoIndexFund.ai - Decentralized Crypto Fund',
-  description: 'Invest in crypto with transparency and decentralization. Welcome to CryptoIndexFund.ai.',
+  title: 'CryptoIndexFund - Decentralized Crypto Fund',
+  description: 'Invest in crypto with transparency and decentralization. Welcome to CryptoIndexFund.',
   icons: {
     icon: '/favicon.ico',
   },

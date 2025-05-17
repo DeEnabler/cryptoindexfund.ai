@@ -8,7 +8,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, X, Home, Briefcase, Lightbulb, Rocket, LogOut, UserCircle } from "lucide-react";
 import { usePathname } from 'next/navigation';
 import { cn } from "@/lib/utils";
-import { useXellarAuth } from "@/contexts/XellarContext";
+import { useXellarAuth } from "@/contexts/XellarContext"; // Will be renamed if context name changes
 
 const navItems = [
   { href: "/", label: "Home", icon: Home },
@@ -20,7 +20,7 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
-  const { user, login, logout, isAuthenticated, isLoading } = useXellarAuth();
+  const { user, login, logout, isAuthenticated, isLoading } = useXellarAuth(); // Will be renamed if context hook name changes
 
   useEffect(() => {
     setIsMounted(true);
@@ -87,7 +87,7 @@ export function Header() {
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-8 w-8 text-primary">
               <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
             </svg>
-            <span className="font-bold text-2xl text-primary">CryptoIndexFund.ai</span>
+            <span className="font-bold text-2xl text-primary">CryptoIndexFund</span>
           </Link>
           <div className="h-8 w-24 animate-pulse rounded-md bg-muted md:hidden"></div>
           <div className="hidden md:flex space-x-4 items-center">
@@ -109,7 +109,7 @@ export function Header() {
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-8 w-8 text-primary">
             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
           </svg>
-          <span className="font-bold text-2xl text-primary">CryptoIndexFund.ai</span>
+          <span className="font-bold text-2xl text-primary">CryptoIndexFund</span>
         </Link>
 
         <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
@@ -149,7 +149,7 @@ export function Header() {
                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-8 w-8 text-primary">
                     <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
                   </svg>
-                <span className="font-bold text-2xl text-primary">CryptoIndexFund.ai</span>
+                <span className="font-bold text-2xl text-primary">CryptoIndexFund</span>
               </Link>
               <nav className="flex flex-col space-y-3">
                 {navItems.map((item) => (

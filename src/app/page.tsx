@@ -240,7 +240,7 @@ export default function HomePage() {
             <span className="block text-primary-foreground">Trustlessly.</span>
           </h1>
           <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-muted-foreground">
-            cryptoindexfund.ai offers a decentralized crypto fund, bringing transparency and security to your investments. Join the financial revolution.
+            CryptoIndexFund offers a decentralized crypto fund, bringing transparency and security to your investments. Join the financial revolution.
           </p>
           <div className="mt-10 flex justify-center space-x-4">
             <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
@@ -254,7 +254,7 @@ export default function HomePage() {
 
       {/* Features Section */}
       <section className="py-12">
-        <h2 className="text-3xl font-bold text-center mb-12">Why CryptoIndexFund.ai?</h2>
+        <h2 className="text-3xl font-bold text-center mb-12">Why CryptoIndexFund?</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <FeatureCard
             icon={<Lock className="h-10 w-10 text-primary" />}
@@ -310,7 +310,7 @@ export default function HomePage() {
           </CardHeader>
           <CardContent>
             <CardDescription className="text-lg mb-8 text-muted-foreground">
-              Join cryptoindexfund.ai today and experience the future of decentralized fund management.
+              Join CryptoIndexFund today and experience the future of decentralized fund management.
             </CardDescription>
             <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
               <Link href="/fund-overview">

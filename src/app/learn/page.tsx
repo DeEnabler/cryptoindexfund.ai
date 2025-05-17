@@ -5,8 +5,8 @@ import { BookOpen, Lightbulb, Brain, HelpCircle } from "lucide-react";
 
 const faqData = [
   {
-    question: "What is cryptoindexfund.ai?",
-    answer: "cryptoindexfund.ai is a decentralized crypto fund platform that allows users to invest in various cryptocurrency strategies with transparency and security. Our operations are managed by smart contracts on the blockchain.",
+    question: "What is CryptoIndexFund?",
+    answer: "CryptoIndexFund is a decentralized crypto fund platform that allows users to invest in various cryptocurrency strategies with transparency and security. Our operations are managed by smart contracts on the blockchain.",
   },
   {
     question: "How does decentralization benefit me as an investor?",
@@ -17,7 +17,7 @@ const faqData = [
     answer: "DeFi (Decentralized Finance) is an emerging financial technology based on secure distributed ledgers similar to those used by cryptocurrencies. It aims to provide traditional financial services (like lending, borrowing, trading) in a permissionless and transparent manner.",
   },
   {
-    question: "How do I get started with cryptoindexfund.ai?",
+    question: "How do I get started with CryptoIndexFund?",
     answer: "Getting started is simple: 1. Connect your Web3 wallet (e.g., MetaMask). 2. Browse available funds and their strategies. 3. Deposit your chosen cryptocurrency into the fund's smart contract. 4. Monitor your investment performance through your dashboard.",
   },
   {
@@ -33,7 +33,7 @@ export default function LearnPage() {
         <BookOpen className="h-16 w-16 mx-auto text-primary mb-4" />
         <h1 className="text-4xl font-bold tracking-tight text-primary">Expand Your Knowledge</h1>
         <p className="text-lg text-muted-foreground mt-2 max-w-2xl mx-auto">
-          Understand DeFi, blockchain, and how cryptoindexfund.ai is pioneering transparent investments.
+          Understand DeFi, blockchain, and how CryptoIndexFund is pioneering transparent investments.
         </p>
       </header>
 
@@ -76,7 +76,7 @@ export default function LearnPage() {
         <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
             <div className="p-6 border border-dashed border-border rounded-lg text-left">
                 <h3 className="text-xl font-semibold text-primary mb-2">Understanding Smart Contracts</h3>
-                <p className="text-sm text-muted-foreground">An upcoming guide on how smart contracts power cryptoindexfund.ai and ensure trustless operations.</p>
+                <p className="text-sm text-muted-foreground">An upcoming guide on how smart contracts power CryptoIndexFund and ensure trustless operations.</p>
             </div>
             <div className="p-6 border border-dashed border-border rounded-lg text-left">
                 <h3 className="text-xl font-semibold text-primary mb-2">Navigating Crypto Volatility</h3>

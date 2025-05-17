@@ -14,7 +14,7 @@ export default function TransparencyPage() {
         <ShieldCheck className="h-16 w-16 mx-auto text-primary mb-4" />
         <h1 className="text-4xl font-bold tracking-tight text-primary">Unwavering Transparency</h1>
         <p className="text-lg text-muted-foreground mt-2 max-w-2xl mx-auto">
-          At cryptoindexfund.ai, we believe in complete openness. Our operations are built on the blockchain,
+          At CryptoIndexFund, we believe in complete openness. Our operations are built on the blockchain,
           ensuring every action is verifiable and immutable.
         </p>
       </header>
@@ -97,7 +97,7 @@ export default function TransparencyPage() {
 
       <section className="text-center py-8">
         <p className="text-muted-foreground italic">
-          cryptoindexfund.ai is committed to pushing the boundaries of financial transparency.
+          CryptoIndexFund is committed to pushing the boundaries of financial transparency.
           While we strive for utmost security, always do your own research (DYOR) before investing.
         </p>
       </section>
