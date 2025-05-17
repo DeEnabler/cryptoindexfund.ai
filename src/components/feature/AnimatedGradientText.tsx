@@ -35,15 +35,14 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
   const [baseColor, setBaseColor] = useState<string>('rgb(255, 255, 255)');
   const [actualHighlightColor, setActualHighlightColor] = useState<string>(initialHighlightColor);
 
-  // Refs to store canvas dimensions to avoid state-driven re-renders for drawing
   const canvasLogicalWidthRef = useRef<number>(0);
   const canvasLogicalHeightRef = useRef<number>(0);
 
 
   const setupAndDraw = useCallback(() => {
     const canvas = canvasRef.current;
-    const container = containerRef.current; // Keep for potential future use
     const hiddenTextEl = hiddenTextRef.current;
+    const container = containerRef.current;
 
     if (!canvas || !hiddenTextEl || !container) {
       return;
@@ -57,15 +56,13 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
     const dpr = window.devicePixelRatio || 1;
     const rect = hiddenTextEl.getBoundingClientRect();
     
-    // Update logical dimensions directly
     canvasLogicalWidthRef.current = rect.width;
     canvasLogicalHeightRef.current = rect.height;
 
-    // Set physical canvas size
     canvas.width = canvasLogicalWidthRef.current * dpr;
     canvas.height = canvasLogicalHeightRef.current * dpr;
     
-    ctx.scale(dpr, dpr); // Scale context for high DPI
+    ctx.scale(dpr, dpr); 
     
     const computedStyle = window.getComputedStyle(hiddenTextEl);
     const fontStyle = computedStyle.getPropertyValue('font-style');
@@ -75,8 +72,8 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
     const fontFamily = computedStyle.getPropertyValue('font-family');
     const newBaseColor = computedStyle.getPropertyValue('color') || 'rgb(255, 255, 255)';
     
-    setBaseColor(newBaseColor); // State update for base color
-    setActualHighlightColor(initialHighlightColor); // State update for highlight color
+    setBaseColor(newBaseColor);
+    setActualHighlightColor(initialHighlightColor);
 
     ctx.font = `${fontStyle} ${fontVariant} ${fontWeight} ${fontSize} ${fontFamily}`;
     ctx.textAlign = 'left';
@@ -95,9 +92,8 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
                          (metrics.actualBoundingBoxDescent !== undefined ? metrics.actualBoundingBoxDescent : numericFontSize * 0.25);
 
       const angle = Math.random() * Math.PI * 2;
-      // Adjust gradientVisualLength and totalTravelDistance for better highlight visibility
-      const gradientVisualLength = Math.max(charWidth, charHeight) * 1.2; // Make gradient strip shorter
-      const totalTravelDistance = gradientVisualLength * 2; // Offset will travel from -L to L
+      const gradientVisualLength = Math.max(charWidth, charHeight) * 2.0; // Increased for longer gradient
+      const totalTravelDistance = gradientVisualLength * 2; 
       const cycleDuration = Math.random() * 2 + 3; // 3-5 seconds
       const speed = totalTravelDistance / (cycleDuration * 60);
 
@@ -115,30 +111,26 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
       });
       currentX += charWidth;
     }
-    setCharsData(newCharsData); // This state update will trigger the drawing useEffect
+    setCharsData(newCharsData);
 
-  }, [text, initialHighlightColor]); // Dependencies of setupAndDraw
+  }, [text, initialHighlightColor]);
 
 
   useEffect(() => {
-    // Initial setup call
     setupAndDraw();
     
     const containerEl = containerRef.current;
     const hiddenTextEl = hiddenTextRef.current;
     if (!containerEl || !hiddenTextEl) return;
 
-    // Observe container for resizes that might affect hiddenTextEl's layout
     const resizeObserver = new ResizeObserver(() => {
       if (animationFrameId.current) {
-        cancelAnimationFrame(animationFrameId.current); // Cancel old animation frame
+        cancelAnimationFrame(animationFrameId.current);
       }
-      setupAndDraw(); // Re-initialize character data and canvas size
+      setupAndDraw();
     });
 
-    // Observe the hidden text element itself for changes, as its size dictates canvas size
     resizeObserver.observe(hiddenTextEl);
-    // Also observe the main container in case its size changes (e.g. due to parent flex/grid)
     resizeObserver.observe(containerEl);
 
 
@@ -149,7 +141,7 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
       }
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setupAndDraw]); // Re-run setup if the setup function itself changes (due to text/highlightColor props)
+  }, [setupAndDraw]);
 
 
   useEffect(() => {
@@ -159,29 +151,21 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Font settings might need to be re-applied if context was reset (e.g. canvas resized)
-    // This is handled by setupAndDraw re-running on resize.
-
     const dpr = window.devicePixelRatio || 1;
 
     const draw = () => {
-      // Physical canvas dimensions
       const physicalCanvasWidth = canvasLogicalWidthRef.current * dpr;
       const physicalCanvasHeight = canvasLogicalHeightRef.current * dpr;
 
-      // Ensure canvas physical size is up-to-date
       if (canvas.width !== physicalCanvasWidth || canvas.height !== physicalCanvasHeight) {
-        // This should ideally be caught by ResizeObserver calling setupAndDraw,
-        // but as a fallback, if draw detects mismatch, it might indicate a problem.
-        // For now, we assume setupAndDraw handles canvas resizing.
-        console.warn("Canvas dimensions mismatch in draw loop. ResizeObserver might not be working as expected.");
+        // This case should ideally be handled by the ResizeObserver,
+        // but added a log if it occurs during the draw loop.
+        // console.warn("Canvas dimensions mismatch in draw loop. ResizeObserver might not be working as expected.");
+        // Potentially could call setupAndDraw here, but it might lead to loops if not careful.
       }
       
-      // Clear using physical dimensions
-      ctx.clearRect(0, 0, physicalCanvasWidth, physicalCanvasHeight); 
+      ctx.clearRect(0, 0, canvas.width, canvas.height); // Use physical dimensions for clearing
 
-      // The context is already scaled by DPR from setupAndDraw, so drawing operations use logical pixels
-      // Re-apply font if it was lost during a potential canvas internal reset (though less likely with current setup)
       const hiddenTextEl = hiddenTextRef.current;
        if (hiddenTextEl) {
            const computedStyle = window.getComputedStyle(hiddenTextEl);
@@ -190,24 +174,18 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
            ctx.textBaseline = 'middle';
         }
 
-
-      const highlightBandWidthFraction = 0.35; // Make highlight band wider
+      const highlightBandWidthFraction = 0.5; // Increased for wider gradient lines
 
       charsData.forEach(charData => {
         charData.offset += charData.speed;
-        // Simpler reset for smoother looping
         if (charData.offset > charData.gradientVisualLength) {
           charData.offset = -charData.gradientVisualLength; 
-          charData.angle = Math.random() * Math.PI * 2; // Re-randomize angle for next cycle
-          // Speed remains same for consistent cycle duration
+          charData.angle = Math.random() * Math.PI * 2;
         }
 
         const cosA = Math.cos(charData.angle);
         const sinA = Math.sin(charData.angle);
         
-        // Gradient points are relative to the character's drawing position (charData.x, charData.y)
-        // The gradient is applied in the canvas's current coordinate space.
-        // So, if text is at (charData.x, charData.y), the gradient should be defined around that.
         const gradX0 = charData.x + (charData.offset - charData.gradientVisualLength / 2) * cosA;
         const gradY0 = charData.y + (charData.offset - charData.gradientVisualLength / 2) * sinA;
         const gradX1 = charData.x + (charData.offset + charData.gradientVisualLength / 2) * cosA;
@@ -228,8 +206,6 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
       animationFrameId.current = requestAnimationFrame(draw);
     };
 
-    // Start animation
-    // Cancel any existing animation frame before starting a new one
     if (animationFrameId.current) {
         cancelAnimationFrame(animationFrameId.current);
     }
@@ -240,7 +216,7 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-  }, [charsData, baseColor, actualHighlightColor]); // Re-run animation loop if these change
+  }, [charsData, baseColor, actualHighlightColor]);
 
   return (
     <div
@@ -248,11 +224,10 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
       className={`animated-gradient-text-container ${className || ''}`}
       style={{
         position: 'relative',
-        display: 'inline-block', // Ensures container fits text
-        verticalAlign: 'bottom', // Or 'baseline', 'middle' depending on desired alignment with surrounding text
+        display: 'inline-block',
+        verticalAlign: 'bottom', 
       }}
     >
-      {/* Hidden h4 for accessibility and layout measurement */}
       <h4
         ref={hiddenTextRef}
         aria-hidden="true"
@@ -260,10 +235,10 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
           margin: 0,
           padding: 0,
           border: 'none',
-          opacity: 0, // Hidden visually but present for layout and screen readers
-          visibility: 'hidden', // Further ensures it doesn't interfere visually, but getBoundingClientRect works
-          whiteSpace: 'nowrap', // Keep text on one line for accurate width measurement
-          display: 'inline-block', // So its bounds are tight around the text
+          opacity: 0, 
+          visibility: 'hidden', 
+          whiteSpace: 'nowrap', 
+          display: 'inline-block', 
           lineHeight: 'normal',
         }}
       >
@@ -275,9 +250,8 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
           position: 'absolute',
           top: 0,
           left: 0,
-          width: '100%', // CSS width/height for responsive scaling of canvas drawing surface
+          width: '100%', 
           height: '100%',
-          // opacity: 1, // Default, not needed unless changing
         }}
       />
     </div>
@@ -285,4 +259,3 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
 };
 
 export default AnimatedGradientText;
-
