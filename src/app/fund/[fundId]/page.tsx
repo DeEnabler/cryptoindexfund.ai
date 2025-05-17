@@ -3,11 +3,11 @@
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart";
+import { ChartContainer, ChartTooltipContent, ChartLegendContent } from "@/components/ui/chart"; // Removed ChartTooltip, ChartLegend as they are not directly used
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { DollarSign, Users, ListCollapse, TrendingUp, Zap, ArrowLeft } from "lucide-react";
 import type { ChartConfig } from "@/components/ui/chart";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react'; // Added use
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -55,8 +55,11 @@ const mockTransactions = [
   { id: "TX005", date: "2024-07-10", type: "Deposit", amount: "5.0 Units", status: "Pending" },
 ];
 
-export default function FundDetailPage({ params }: { params: { fundId: string } }) {
+export default function FundDetailPage({ params: paramsProp }: { params: { fundId: string } | Promise<{ fundId: string }> }) {
   const [isMounted, setIsMounted] = useState(false);
+  
+  const params = use(paramsProp); // Unwrap params using React.use()
+
   const fundId = params.fundId;
   const fundDetails = fundsDetailsMap[fundId] || defaultFundDetails;
 
@@ -272,5 +275,3 @@ export default function FundDetailPage({ params }: { params: { fundId: string } 
     </div>
   );
 }
-
-    
