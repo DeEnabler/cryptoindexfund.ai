@@ -4,82 +4,82 @@
 
 @layer base {
   :root {
-    --background: 240 64% 6%; /* Even Darker Navy Blue */
-    --foreground: 0 0% 90%; 
+    --background: 240 64% 2.5%; /* Even Darker Navy Blue */
+    --foreground: 0 0% 95%; /* Brighter Text */
 
-    --card: 240 60% 9%; /* Even Darker Card Navy */
-    --card-foreground: 0 0% 90%;
+    --card: 240 60% 5%; /* Darker Card Navy */
+    --card-foreground: 0 0% 95%;
 
-    --popover: 240 58% 11%; /* Even Darker Popover Background */
-    --popover-foreground: 0 0% 90%;
+    --popover: 240 58% 7%; /* Darker Popover Background */
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 285 50% 30%; /* Significantly Darker Ethereum-inspired Purple */
-    --primary-foreground: 0 0% 95%;
+    --primary: 285 65% 35%; /* Slightly Brighter, More Saturated Purple */
+    --primary-foreground: 0 0% 98%; /* Very Bright Foreground for Primary */
 
-    --secondary: 278 70% 25%; /* Significantly darker shade for secondary */
-    --secondary-foreground: 0 0% 95%;
+    --secondary: 278 70% 28%; /* Slightly adjusted secondary */
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 240 50% 15%; /* Even Darker Muted Background */
-    --muted-foreground: 0 0% 50%; /* Darker Muted Text */
+    --muted: 240 50% 10%; /* Darker Muted Background */
+    --muted-foreground: 0 0% 65%; /* Slightly Brighter Muted Text */
 
-    --accent: 278 70% 18%; /* Significantly Darker Complementary Indigo */
-    --accent-foreground: 0 0% 95%;
+    --accent: 278 75% 22%; /* Adjusted Accent */
+    --accent-foreground: 0 0% 98%;
 
-    --destructive: 0 60% 35%; /* Darker Destructive Red */
-    --destructive-foreground: 0 0% 95%;
+    --destructive: 0 60% 40%; /* Adjusted Destructive Red */
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 240 50% 20%; /* Even Darker Border Color */
-    --input: 240 50% 23%; /* Even Darker Input Background */
-    --ring: 285 50% 30%; /* Ring color (Primary - Significantly Darker) */
+    --border: 240 50% 15%; /* Darker Border Color */
+    --input: 240 50% 18%; /* Darker Input Background */
+    --ring: 285 65% 35%; /* Ring color (Primary) */
 
     --radius: 0.5rem;
 
-    --chart-1: 285 50% 30%; 
-    --chart-2: 278 70% 18%; 
-    --chart-3: 220 60% 45%; 
-    --chart-4: 300 40% 50%; 
-    --chart-5: 260 50% 40%; 
+    --chart-1: 285 65% 35%;
+    --chart-2: 278 75% 22%;
+    --chart-3: 220 60% 50%;
+    --chart-4: 300 40% 55%;
+    --chart-5: 260 50% 45%;
 
-    --sidebar-background: 240 64% 5%; 
-    --sidebar-foreground: 0 0% 85%;
-    --sidebar-primary: 285 50% 30%; 
-    --sidebar-primary-foreground: 0 0% 95%;
-    --sidebar-accent: 278 70% 18%; 
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 240 50% 18%;
-    --sidebar-ring: 285 50% 30%; 
+    --sidebar-background: 240 64% 2%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 285 65% 35%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 278 75% 22%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 240 50% 12%;
+    --sidebar-ring: 285 65% 35%;
   }
 
   /* Fallback for systems that prefer light mode but we force dark */
   .dark {
-    --background: 240 64% 6%;
-    --foreground: 0 0% 90%;
-    --card: 240 60% 9%;
-    --card-foreground: 0 0% 90%;
-    --popover: 240 58% 11%;
-    --popover-foreground: 0 0% 90%;
-    --primary: 285 50% 30%;
-    --primary-foreground: 0 0% 95%;
-    --secondary: 278 70% 25%;
-    --secondary-foreground: 0 0% 95%;
-    --muted: 240 50% 15%;
-    --muted-foreground: 0 0% 50%;
-    --accent: 278 70% 18%;
-    --accent-foreground: 0 0% 95%;
-    --destructive: 0 60% 35%;
-    --destructive-foreground: 0 0% 95%;
-    --border: 240 50% 20%;
-    --input: 240 50% 23%;
-    --ring: 285 50% 30%;
-    
-    --sidebar-background: 240 64% 5%;
-    --sidebar-foreground: 0 0% 85%;
-    --sidebar-primary: 285 50% 30%;
-    --sidebar-primary-foreground: 0 0% 95%;
-    --sidebar-accent: 278 70% 18%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 240 50% 18%;
-    --sidebar-ring: 285 50% 30%;
+    --background: 240 64% 2.5%;
+    --foreground: 0 0% 95%;
+    --card: 240 60% 5%;
+    --card-foreground: 0 0% 95%;
+    --popover: 240 58% 7%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 285 65% 35%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 278 70% 28%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 50% 10%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 278 75% 22%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 60% 40%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 50% 15%;
+    --input: 240 50% 18%;
+    --ring: 285 65% 35%;
+
+    --sidebar-background: 240 64% 2%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 285 65% 35%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 278 75% 22%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 240 50% 12%;
+    --sidebar-ring: 285 65% 35%;
   }
 }
 
@@ -105,7 +105,7 @@
     transform: scaleY(0);
   }
   to {
-    opacity: var(--final-opacity); 
+    opacity: var(--final-opacity);
     transform: scaleY(1);
   }
 }
