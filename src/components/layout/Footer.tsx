@@ -1,6 +1,7 @@
 
 import Link from "next/link";
 import { Github, Twitter, Linkedin } from "lucide-react";
+import Image from "next/image";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -11,7 +12,7 @@ export function Footer() {
         <div className="flex flex-col items-center justify-between md:flex-row">
           <div className="mb-4 md:mb-0">
             <Link href="/" className="flex items-center space-x-2">
-              {/* Removed SVG logo */}
+              <Image src="/android-chrome-512x512.png" alt="CryptoIndexFund Logo" width={32} height={32} className="h-8 w-auto" />
               <span className="font-semibold text-xl text-primary">CryptoIndexFund</span>
             </Link>
           </div>

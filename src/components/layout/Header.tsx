@@ -8,7 +8,8 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, X, Home, Briefcase, Lightbulb, Rocket, LogOut, UserCircle } from "lucide-react";
 import { usePathname } from 'next/navigation';
 import { cn } from "@/lib/utils";
-import { useXellarAuth } from "@/contexts/XellarContext"; // Will be renamed if context name changes
+import { useXellarAuth } from "@/contexts/XellarContext"; 
+import Image from "next/image";
 
 const navItems = [
   { href: "/", label: "Home", icon: Home },
@@ -20,7 +21,7 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
-  const { user, login, logout, isAuthenticated, isLoading } = useXellarAuth(); // Will be renamed if context hook name changes
+  const { user, login, logout, isAuthenticated, isLoading } = useXellarAuth(); 
 
   useEffect(() => {
     setIsMounted(true);
@@ -84,8 +85,8 @@ export function Header() {
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
-            {/* Removed SVG logo */}
-            <span className="font-bold text-2xl text-primary">CryptoIndexFund</span>
+            <div className="h-8 w-8 animate-pulse rounded-md bg-muted"></div>
+            <span className="h-6 w-32 animate-pulse rounded-md bg-muted"></span>
           </Link>
           <div className="h-8 w-24 animate-pulse rounded-md bg-muted md:hidden"></div>
           <div className="hidden md:flex space-x-4 items-center">
@@ -104,7 +105,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
         <Link href="/" className="flex items-center space-x-2" onClick={() => setIsMobileMenuOpen(false)}>
-          {/* Removed SVG logo */}
+          <Image src="/android-chrome-512x512.png" alt="CryptoIndexFund Logo" width={32} height={32} className="h-8 w-auto" />
           <span className="font-bold text-2xl text-primary">CryptoIndexFund</span>
         </Link>
 
@@ -142,7 +143,7 @@ export function Header() {
             </SheetTrigger>
             <SheetContent side="right" className="w-full max-w-xs bg-background p-6 pt-12">
               <Link href="/" className="flex items-center space-x-2 mb-8" onClick={() => setIsMobileMenuOpen(false)}>
-                 {/* Removed SVG logo */}
+                <Image src="/android-chrome-512x512.png" alt="CryptoIndexFund Logo" width={32} height={32} className="h-8 w-auto" />
                 <span className="font-bold text-2xl text-primary">CryptoIndexFund</span>
               </Link>
               <nav className="flex flex-col space-y-3">
