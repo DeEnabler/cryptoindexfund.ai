@@ -84,40 +84,46 @@ export default function FundOverviewPage() {
   return (
     <div className="space-y-12">
       <header className="text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-primary">Investment Products</h1>
-        <p className="text-lg text-muted-foreground mt-2 max-w-2xl mx-auto">
-          Explore our curated selection of crypto index funds designed for diverse investment strategies.
+        <h1 className="text-4xl font-bold tracking-tight text-primary">Explore our products</h1>
+        <p className="text-lg text-muted-foreground mt-2 max-w-3xl mx-auto">
+          CryptoIndexFund funds aim to capture future-forward investment opportunities and represent potential growth areas in our constantly evolving world.
         </p>
       </header>
 
       <Tabs defaultValue="single-coin" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 mb-8">
-          <TabsTrigger value="single-coin" className="text-lg py-3">Single Coin Funds</TabsTrigger>
-          <TabsTrigger value="sector-funds" className="text-lg py-3">Sector Funds</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 mb-8 max-w-xl mx-auto">
+          <TabsTrigger value="single-coin" className="text-xl py-4 data-[state=active]:shadow-lg">Single Coin Funds</TabsTrigger>
+          <TabsTrigger value="sector-funds" className="text-xl py-4 data-[state=active]:shadow-lg">Sector Funds</TabsTrigger>
         </TabsList>
         
         <TabsContent value="single-coin">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {singleCoinFunds.map((fund) => (
-              <Card key={fund.id} className="shadow-lg hover:shadow-primary/20 transition-shadow duration-300 flex flex-col">
-                <CardHeader className="items-center text-center">
-                  <div className="p-3 bg-primary/10 rounded-full mb-3">
-                    <fund.icon className="h-10 w-10 text-primary" />
-                  </div>
-                  <CardTitle className="text-2xl">{fund.ticker}</CardTitle>
-                  <CardDescription className="text-sm font-semibold">{fund.name}</CardDescription>
-                </CardHeader>
-                <CardContent className="flex-grow flex flex-col justify-between">
-                  <p className="text-muted-foreground text-sm mb-4 flex-grow min-h-[60px]">{fund.description}</p>
-                  <div className="mt-auto">
-                    <div className="mb-4">
-                      <p className="text-xs text-muted-foreground">Market Price</p>
-                      <p className="text-xl font-bold text-primary">{fund.marketPrice}</p>
+              <Card key={fund.id} className="shadow-lg hover:shadow-primary/20 transition-shadow duration-300 flex flex-col bg-card/80 backdrop-blur-sm">
+                <CardHeader className="pb-4">
+                  <div className="flex items-start space-x-4">
+                    <div className="p-2 bg-primary/10 rounded-md mt-1">
+                      <fund.icon className="h-8 w-8 text-primary" />
                     </div>
-                    <Button asChild className="w-full">
-                      <Link href={fund.href}>View Details</Link>
-                    </Button>
-                    <p className="text-xs text-muted-foreground text-center mt-2">As of {fund.asOfDate}</p>
+                    <div className="flex-1">
+                      <h2 className="text-3xl font-bold text-foreground">{fund.ticker}</h2>
+                      <h4 className="text-md font-semibold text-muted-foreground">{fund.name}</h4>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="flex-grow flex flex-col justify-between pt-0">
+                  <p className="text-sm text-muted-foreground mb-4 flex-grow min-h-[60px]">{fund.description}</p>
+                  <div className="space-y-4 mt-auto">
+                    <div>
+                      <p className="text-xs text-muted-foreground/80">Market Price</p>
+                      <h4 className="text-2xl font-bold text-primary">{fund.marketPrice}</h4>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <Button asChild className="w-auto">
+                        <Link href={fund.href}>View Details</Link>
+                      </Button>
+                       <p className="text-xs text-muted-foreground/80">As of {fund.asOfDate}</p>
+                    </div>
                     <p className="text-xs text-muted-foreground/70 text-center mt-1 italic">Detailed fund page coming soon!</p>
                   </div>
                 </CardContent>
@@ -127,28 +133,34 @@ export default function FundOverviewPage() {
         </TabsContent>
 
         <TabsContent value="sector-funds">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8"> {/* Sector funds often look better in a 2-col layout on larger screens */}
             {sectorFunds.map((fund) => (
-              <Card key={fund.id} className="shadow-lg hover:shadow-primary/20 transition-shadow duration-300 flex flex-col">
-                <CardHeader className="items-center text-center">
-                   <div className="p-3 bg-primary/10 rounded-full mb-3">
-                    <fund.icon className="h-10 w-10 text-primary" />
-                  </div>
-                  <CardTitle className="text-2xl">{fund.ticker}</CardTitle>
-                  <CardDescription className="text-sm font-semibold">{fund.name}</CardDescription>
-                </CardHeader>
-                <CardContent className="flex-grow flex flex-col justify-between">
-                  <p className="text-muted-foreground text-sm mb-4 flex-grow min-h-[60px]">{fund.description}</p>
-                   <div className="mt-auto">
-                    <div className="mb-4">
-                      <p className="text-xs text-muted-foreground">Market Price</p>
-                      <p className="text-xl font-bold text-primary">{fund.marketPrice}</p>
+             <Card key={fund.id} className="shadow-lg hover:shadow-primary/20 transition-shadow duration-300 flex flex-col bg-card/80 backdrop-blur-sm">
+                <CardHeader className="pb-4">
+                  <div className="flex items-start space-x-4">
+                    <div className="p-2 bg-primary/10 rounded-md mt-1">
+                      <fund.icon className="h-8 w-8 text-primary" />
                     </div>
-                    <Button asChild className="w-full">
-                      <Link href={fund.href}>View Details</Link>
-                    </Button>
-                    <p className="text-xs text-muted-foreground text-center mt-2">As of {fund.asOfDate}</p>
-                     <p className="text-xs text-muted-foreground/70 text-center mt-1 italic">Detailed fund page coming soon!</p>
+                    <div className="flex-1">
+                      <h2 className="text-3xl font-bold text-foreground">{fund.ticker}</h2>
+                      <h4 className="text-md font-semibold text-muted-foreground">{fund.name}</h4>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="flex-grow flex flex-col justify-between pt-0">
+                  <p className="text-sm text-muted-foreground mb-4 flex-grow min-h-[60px]">{fund.description}</p>
+                  <div className="space-y-4 mt-auto">
+                    <div>
+                      <p className="text-xs text-muted-foreground/80">Market Price</p>
+                      <h4 className="text-2xl font-bold text-primary">{fund.marketPrice}</h4>
+                    </div>
+                     <div className="flex items-center justify-between">
+                      <Button asChild className="w-auto">
+                        <Link href={fund.href}>View Details</Link>
+                      </Button>
+                       <p className="text-xs text-muted-foreground/80">As of {fund.asOfDate}</p>
+                    </div>
+                    <p className="text-xs text-muted-foreground/70 text-center mt-1 italic">Detailed fund page coming soon!</p>
                   </div>
                 </CardContent>
               </Card>
@@ -159,3 +171,5 @@ export default function FundOverviewPage() {
     </div>
   );
 }
+
+    
