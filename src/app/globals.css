@@ -127,3 +127,40 @@
   width: 100%;
   height: 100%;
 }
+
+/* For button hover border animation */
+@property --gradient-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes a-border-spin {
+  0% {
+    --gradient-angle: 0deg;
+  }
+  100% {
+    --gradient-angle: 360deg;
+  }
+}
+
+/* For button click ripple effect */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.ripple-effect {
+  position: absolute;
+  border-radius: 50%;
+  background-color: hsla(var(--primary-foreground), 0.3); /* Example ripple color */
+  animation: ripple 0.7s linear;
+  pointer-events: none; /* So it doesn't interfere with button clicks */
+  transform: scale(0); /* Start scaled down */
+}

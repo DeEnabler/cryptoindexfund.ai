@@ -81,19 +81,18 @@ export function Header() {
 
 
   if (!isMounted) {
+    // Simplified skeleton for brevity during complex changes
     return (
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
-          <Link href="/" className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2">
             <div className="h-8 w-8 animate-pulse rounded-md bg-muted"></div>
             <span className="h-6 w-32 animate-pulse rounded-md bg-muted"></span>
-          </Link>
+          </div>
           <div className="h-8 w-24 animate-pulse rounded-md bg-muted md:hidden"></div>
           <div className="hidden md:flex space-x-4 items-center">
-            {navItems.map((item) => (
-               <div key={item.href} className="h-6 w-28 animate-pulse rounded-md bg-muted"></div>
-            ))}
-             <div className="h-10 w-32 animate-pulse rounded-md bg-muted"></div>
+            {[1,2,3].map(i => <div key={i} className="h-8 w-28 animate-pulse rounded-md bg-muted"></div>)}
+            <div className="h-10 w-32 animate-pulse rounded-md bg-muted"></div>
           </div>
         </div>
       </header>
@@ -111,17 +110,23 @@ export function Header() {
 
         <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
           {navItems.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
+            <Button 
+              key={item.label} 
+              asChild 
+              variant="ghost" 
+              size="default"
               className={cn(
-                "px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
-                pathname === item.href ? "bg-accent text-accent-foreground" : "text-foreground/80"
+                "px-3 py-2 text-sm font-medium", // Base styling for Button's children content
+                pathname === item.href 
+                  ? "bg-accent text-accent-foreground [&:hover]:bg-accent/90" // Active state with specific hover
+                  : "text-foreground/80 hover:bg-accent/80 hover:text-accent-foreground" // Default state
               )}
             >
-               <item.icon className="inline h-4 w-4 mr-1.5 mb-0.5" />
-              {item.label}
-            </Link>
+              <Link href={item.href}>
+                 <item.icon className="inline h-4 w-4 mr-1.5 mb-0.5" />
+                {item.label}
+              </Link>
+            </Button>
           ))}
         </nav>
 
@@ -129,13 +134,16 @@ export function Header() {
           <Button
             onClick={handleAuthAction}
             disabled={isLoading && !isAuthenticated}
-            className="hidden md:flex items-center space-x-2 bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-150 ease-in-out group"
+            variant="default" // Ensure it uses the default variant styles for animated border
+            size="default"
+            className="hidden md:flex items-center space-x-2 px-4 py-2 group" // group class added for potential future group-hover states
           >
             {renderAuthButtonContent()}
           </Button>
 
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild className="md:hidden">
+              {/* Using Button component for SheetTrigger to inherit effects */}
               <Button variant="ghost" size="icon">
                 {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
                 <span className="sr-only">Toggle menu</span>
@@ -148,18 +156,24 @@ export function Header() {
               </Link>
               <nav className="flex flex-col space-y-3">
                 {navItems.map((item) => (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
+                  <Button 
+                    key={`mobile-${item.label}`}
+                    asChild 
+                    variant="ghost" 
+                    size="lg" // Larger for mobile
                     className={cn(
-                      "flex items-center space-x-3 px-3 py-3 rounded-md text-lg font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
-                      pathname === item.href ? "bg-accent text-accent-foreground" : "text-foreground/80"
+                      "flex items-center justify-start space-x-3 px-3 py-3 text-lg font-medium",
+                      pathname === item.href 
+                      ? "bg-accent text-accent-foreground [&:hover]:bg-accent/90"
+                      : "text-foreground/80 hover:bg-accent/80 hover:text-accent-foreground"
                     )}
+                    onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    <item.icon className="h-5 w-5" />
-                    <span>{item.label}</span>
-                  </Link>
+                    <Link href={item.href}>
+                      <item.icon className="h-5 w-5" />
+                      <span>{item.label}</span>
+                    </Link>
+                  </Button>
                 ))}
                  <Button
                     onClick={() => {
@@ -167,7 +181,9 @@ export function Header() {
                         setIsMobileMenuOpen(false);
                     }}
                     disabled={isLoading && !isAuthenticated}
-                    className="w-full flex items-center justify-center space-x-2 bg-primary hover:bg-primary/90 text-primary-foreground py-6 text-lg mt-4"
+                    variant="default"
+                    size="lg"
+                    className="w-full flex items-center justify-center space-x-2 py-6 text-lg mt-4"
                   >
                    {renderMobileAuthButtonContent()}
                  </Button>
@@ -179,5 +195,3 @@ export function Header() {
     </header>
   );
 }
-
-    
