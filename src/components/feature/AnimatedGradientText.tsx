@@ -44,13 +44,11 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
     const container = containerRef.current;
 
     if (!canvas || !hiddenTextEl || !container) {
-      console.warn('Canvas, hidden text, or container not found');
       return;
     }
 
     const ctx = canvas.getContext('2d');
     if (!ctx) {
-      console.warn('Canvas context not found');
       return;
     }
 
@@ -75,21 +73,24 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
     const newBaseColor = computedStyle.getPropertyValue('color') || 'rgb(255, 255, 255)';
     
     setBaseColor(newBaseColor);
-    setActualHighlightColor(initialHighlightColor); // Use the prop or default
+    setActualHighlightColor(initialHighlightColor);
 
     ctx.font = `${fontStyle} ${fontVariant} ${fontWeight} ${fontSize} ${fontFamily}`;
     ctx.textAlign = 'left';
-    ctx.textBaseline = 'middle'; // Better for vertical centering
+    ctx.textBaseline = 'middle';
 
     const numericFontSize = parseFloat(fontSize);
     const newCharsData: CharAnimation[] = [];
     let currentX = 0;
 
-    const textChars = Array.from(text); // Handle multi-byte characters correctly for length
+    const textChars = Array.from(text);
 
-    // Calculate stagger amount for continuous ripple
-    const placeholderTotalTravelDistanceForStagger = (numericFontSize * 2.0) * 2; // Based on gradientVisualLength * 2
-    const staggerAmount = placeholderTotalTravelDistanceForStagger / (textChars.length > 1 ? Math.min(textChars.length, 5) : 1);
+    const placeholderCharMaxDimForStagger = numericFontSize; // Approximate, good enough for stagger calc
+    const placeholderGradientVisualLengthForStagger = placeholderCharMaxDimForStagger * 2.0;
+    const placeholderTotalTravelDistanceForStagger = placeholderGradientVisualLengthForStagger * 2;
+    
+    const staggerDenominator = textChars.length > 1 ? textChars.length : 1;
+    const staggerAmount = placeholderTotalTravelDistanceForStagger / staggerDenominator;
 
 
     for (let i = 0; i < textChars.length; i++) {
@@ -103,19 +104,19 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
       const charMaxDim = Math.max(charWidth, charHeight);
 
       const angle = Math.random() * Math.PI * 2;
-      const gradientVisualLength = charMaxDim * 2.0; // Wider gradient strip
-      const totalTravelDistance = gradientVisualLength * 2; // Full sweep in and out
+      const gradientVisualLength = charMaxDim * 2.0; 
+      const totalTravelDistance = gradientVisualLength * 2; 
       const cycleDuration = Math.random() * 3 + 5; // 5-8 seconds per cycle
-      const speed = totalTravelDistance / (cycleDuration * 60); // distance per frame (assuming 60fps)
+      const speed = totalTravelDistance / (cycleDuration * 60);
 
       newCharsData.push({
         char,
         x: currentX,
-        y: canvasLogicalHeightRef.current / 2, // Vertically center text
+        y: canvasLogicalHeightRef.current / 2,
         width: charWidth,
         fontHeight: numericFontSize,
         angle,
-        offset: (i * staggerAmount) % totalTravelDistance, // Staggered start
+        offset: (i * staggerAmount) % totalTravelDistance,
         speed,
         gradientVisualLength,
         totalTravelDistance,
@@ -127,7 +128,7 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
 
 
   useEffect(() => {
-    setupAndDraw(); // Initial setup
+    setupAndDraw();
 
     const containerElement = containerRef.current;
     if (!containerElement) return;
@@ -156,7 +157,9 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const computedStyle = window.getComputedStyle(hiddenTextRef.current!);
+    const computedStyle = hiddenTextRef.current ? window.getComputedStyle(hiddenTextRef.current) : null;
+    if (!computedStyle) return;
+
     const fontStyle = computedStyle.getPropertyValue('font-style');
     const fontVariant = computedStyle.getPropertyValue('font-variant');
     const fontWeight = computedStyle.getPropertyValue('font-weight');
@@ -166,23 +169,20 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
 
-    const highlightBandWidthFraction = 0.7; // 70% of the gradient strip is highlight
+    const highlightBandWidthFraction = 0.9; // Increased from 0.7 to 0.9
 
     const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear full physical canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       charsData.forEach(charData => {
-        charData.offset = (charData.offset + charData.speed) % charData.totalTravelDistance;
+        charData.offset = (charData.offset + charData.speed);
+        if (charData.offset >= charData.totalTravelDistance) {
+            charData.offset %= charData.totalTravelDistance;
+        }
         
-        // currentDrawOffset determines the center of the gradient strip relative to the character
-        // It ranges from -gradientVisualLength to +gradientVisualLength
         const currentDrawOffset = charData.offset - charData.gradientVisualLength;
-
         const halfGVL = charData.gradientVisualLength / 2;
         
-        // Calculate gradient start and end points based on angle and currentDrawOffset
-        // The gradient is always centered on the character's position for its angle
-        // but its color stops are shifted by currentDrawOffset
         const dx = Math.cos(charData.angle);
         const dy = Math.sin(charData.angle);
 
@@ -192,7 +192,7 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
         const y2 = halfGVL * dy + currentDrawOffset * dy;
 
         const gradient = ctx.createLinearGradient(
-          charData.x + charData.width / 2 + x1, // Center gradient on char, then apply angled offset
+          charData.x + charData.width / 2 + x1,
           charData.y + y1,
           charData.x + charData.width / 2 + x2,
           charData.y + y2
@@ -202,11 +202,11 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
         const stop2 = 0.5;
         const stop3 = 0.5 + highlightBandWidthFraction / 2;
 
-        gradient.addColorStop(Math.max(0, stop1 - 0.1), baseColor); // Start with base color
+        gradient.addColorStop(Math.max(0, stop1 - 0.05), baseColor); 
         gradient.addColorStop(Math.max(0, stop1), baseColor);
         gradient.addColorStop(stop2, actualHighlightColor);
         gradient.addColorStop(Math.min(1, stop3), baseColor);
-        gradient.addColorStop(Math.min(1, stop3 + 0.1), baseColor); // End with base color
+        gradient.addColorStop(Math.min(1, stop3 + 0.05), baseColor);
 
         ctx.fillStyle = gradient;
         ctx.fillText(charData.char, charData.x, charData.y);
@@ -226,8 +226,8 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
 
 
   return (
-    <div ref={containerRef} className={className} style={{ position: 'relative', display: 'inline-block' }}>
-      <h4 ref={hiddenTextRef} style={{ margin: 0, opacity: 0, visibility: 'hidden' }} aria-hidden="true">
+    <div ref={containerRef} className={className} style={{ position: 'relative', display: 'inline-block', verticalAlign: 'bottom' /* Helps align with text */ }}>
+      <h4 ref={hiddenTextRef} style={{ margin: 0, opacity: 0, visibility: 'hidden', display: 'inline-block' }} aria-hidden="true">
         {text}
       </h4>
       <canvas
@@ -247,3 +247,4 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
 
 export default AnimatedGradientText;
 
+    
