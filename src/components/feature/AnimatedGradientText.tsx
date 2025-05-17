@@ -6,9 +6,14 @@ import React, { useEffect, useRef } from 'react';
 interface AnimatedGradientTextProps {
   text: string;
   className?: string;
+  highlightColor?: string;
 }
 
-const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({ text, className }) => {
+const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({
+  text,
+  className,
+  highlightColor = '#4d99f2', // Default highlight color
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const hiddenTextRef = useRef<HTMLHeadingElement>(null);
@@ -31,14 +36,17 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({ text, class
     let offset = 0;
     const speed = 1; // Adjust for speed of gradient movement
 
-    const resizeCanvas = () => {
+    let baseColor = 'rgb(255, 255, 255)'; // Default base color (white)
+
+    const resizeCanvasAndDraw = () => {
+      if (!ctx || !canvas || !container || !hiddenTextEl) return;
+
       // Set canvas dimensions based on the container (which is sized by the hidden h4)
-      canvas.width = container.clientWidth;
-      canvas.height = container.clientHeight;
-    };
-    
-    const draw = () => {
-      if (!ctx || !canvas) return;
+      // Use devicePixelRatio for sharper rendering on high-DPI screens
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = container.clientWidth * dpr;
+      canvas.height = container.clientHeight * dpr;
+      ctx.scale(dpr, dpr); // Scale context to match CSS pixels
 
       // Get font properties from the hidden h4
       const computedStyle = window.getComputedStyle(hiddenTextEl);
@@ -47,85 +55,90 @@ const AnimatedGradientText: React.FC<AnimatedGradientTextProps> = ({ text, class
       const fontWeight = computedStyle.getPropertyValue('font-weight');
       const fontSize = computedStyle.getPropertyValue('font-size');
       const fontFamily = computedStyle.getPropertyValue('font-family');
-      const lineHeight = computedStyle.getPropertyValue('line-height');
+      
+      baseColor = computedStyle.getPropertyValue('color'); // Get base text color
 
       ctx.font = `${fontStyle} ${fontVariant} ${fontWeight} ${fontSize} ${fontFamily}`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
-      // Clear the canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      draw(); // Redraw with new dimensions/font
+    };
+    
+    const draw = () => {
+      if (!ctx || !canvas) return;
 
-      // Create gradient
-      const gradientXStart = -canvas.width + offset;
-      const gradientXEnd = canvas.width + offset;
+      // Clear the canvas
+      ctx.clearRect(0, 0, canvas.width / (window.devicePixelRatio||1) , canvas.height/ (window.devicePixelRatio||1));
+
+
+      // Create gradient relative to canvas's unscaled width for CSS pixels
+      const canvasCssWidth = canvas.width / (window.devicePixelRatio || 1);
+      const gradientXStart = -canvasCssWidth + offset;
+      const gradientXEnd = canvasCssWidth + offset;
       
       const gradient = ctx.createLinearGradient(gradientXStart, 0, gradientXEnd, 0);
-      gradient.addColorStop(0, 'rgba(0,0,0,0)'); // Transparent
-      gradient.addColorStop(0.45, 'rgba(0,0,0,0)'); // Transparent leading up to color
-      gradient.addColorStop(0.5, '#4d99f2'); // Highlight color
-      gradient.addColorStop(0.55, 'rgba(0,0,0,0)'); // Transparent after color
-      gradient.addColorStop(1, 'rgba(0,0,0,0)'); // Transparent
+      
+      // Text is always visible in baseColor, highlightColor sweeps across
+      gradient.addColorStop(0, baseColor);
+      gradient.addColorStop(0.4, baseColor);       // Start of highlight area
+      gradient.addColorStop(0.5, highlightColor);  // Peak of highlight
+      gradient.addColorStop(0.6, baseColor);       // End of highlight area
+      gradient.addColorStop(1, baseColor);
 
       // Apply gradient and draw text
       ctx.fillStyle = gradient;
       
-      // Calculate Y position to better center text vertically considering line height
-      // Using canvas.height / 2 might not be perfect for all fonts/line-heights
-      // For 'middle' baseline, h/2 is a good start.
-      const yPos = canvas.height / 2;
-
-      ctx.fillText(text, canvas.width / 2, yPos);
+      const yPos = (canvas.height / (window.devicePixelRatio || 1)) / 2;
+      const xPos = (canvas.width / (window.devicePixelRatio || 1)) / 2;
+      ctx.fillText(text, xPos, yPos);
 
       // Animate offset
       offset += speed;
-      if (offset >= canvas.width * 2) { // Loop the gradient movement
+      if (offset >= canvasCssWidth * 2) { 
         offset = 0;
       }
 
       animationFrameId.current = requestAnimationFrame(draw);
     };
 
-    resizeCanvas(); // Initial resize
-    draw(); // Start animation
+    // Initial setup
+    resizeCanvasAndDraw(); 
 
-    // Handle resize
-    const observer = new ResizeObserver(resizeCanvas);
-    if (container) {
-      observer.observe(container);
-    }
+    // Handle resize using ResizeObserver for better accuracy
+    const observer = new ResizeObserver(resizeCanvasAndDraw);
+    observer.observe(container);
     
-    window.addEventListener('resize', resizeCanvas);
-
+    // Fallback for window resize if ResizeObserver is not fully supported or for font loading changes
+    window.addEventListener('resize', resizeCanvasAndDraw);
+    // Also consider font loading, but it's complex. For now, resize handles most cases.
 
     return () => {
       if (animationFrameId.current) {
         cancelAnimationFrame(animationFrameId.current);
       }
-      window.removeEventListener('resize', resizeCanvas);
-      if (container) {
-        observer.unobserve(container);
-      }
+      window.removeEventListener('resize', resizeCanvasAndDraw);
+      observer.unobserve(container);
       observer.disconnect();
     };
-  }, [text]);
+  }, [text, highlightColor, className]); // Rerun effect if text, highlightColor or className changes
 
   return (
     <div
       ref={containerRef}
       className={`animated-gradient-text-container ${className || ''}`}
-      style={{ position: 'relative', color: '#4d99f2' /* Hint color, canvas will render actual */ }}
+      style={{ position: 'relative', display: 'inline-block' /* Ensures container fits text */ }}
     >
       <h4
         ref={hiddenTextRef}
         aria-hidden="true"
         style={{
           margin: 0,
-          padding: 0, // Ensure no extra padding affects measurement
-          border: 'none', // Ensure no border affects measurement
+          padding: 0,
+          border: 'none',
           opacity: 0,
-          visibility: 'hidden', // Better for layout measurement than just opacity: 0
-          // Inherit font styles from the container's className
+          visibility: 'hidden',
+          whiteSpace: 'nowrap', // Prevent wrapping that might affect measurement
         }}
       >
         {text}
