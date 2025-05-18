@@ -2,18 +2,23 @@
 "use client";
 
 import type { PropsWithChildren } from 'react';
-// Removed WagmiProvider, QueryClientProvider, and XellarKitProvider as Xellar integration is disabled
-// Removed wagmiConfig, queryClient imports
-import { XellarAuthProvider } from '@/contexts/XellarContext'; // This will use the mocked context
+import { WagmiProvider } from 'wagmi';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+// Import XellarKitProvider and darkTheme from @xellar/kit
+import { XellarKitProvider, darkTheme } from '@xellar/kit'; 
+import { XellarAuthProvider } from '@/contexts/XellarContext';
+import { wagmiConfig, queryClient } from '@/lib/xellarConfig';
 
 export function AppProviders({ children }: PropsWithChildren) {
   return (
-    // WagmiProvider, QueryClientProvider, and XellarKitProvider are removed
-    // to disable the Xellar wallet connection functionality temporarily.
-    // The XellarAuthProvider remains to provide a mocked context,
-    // ensuring components like the Header don't break.
-    <XellarAuthProvider>
-      {children}
-    </XellarAuthProvider>
+    <WagmiProvider config={wagmiConfig}>
+      <QueryClientProvider client={queryClient}>
+        <XellarKitProvider theme={darkTheme}> {/* Apply theme to XellarKitProvider */}
+          <XellarAuthProvider>
+            {children}
+          </XellarAuthProvider>
+        </XellarKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
   );
 }

@@ -1,43 +1,39 @@
 
-// "use client";
+"use client";
 
-// import type { Config } from 'wagmi';
-// import { createConfig, http } from 'wagmi'; // Keep createConfig if used directly
-// import { QueryClient } from '@tanstack/react-query';
-// // Import defaultConfig from @xellar/kit (or the correct Xellar package)
-// import { defaultConfig } from '@xellar/kit';
-// import { polygonAmoy } from 'viem/chains'; // Example chain
+import type { Config } from 'wagmi';
+import { QueryClient } from '@tanstack/react-query';
+// Import defaultConfig from @xellar/kit
+import { defaultConfig as xellarDefaultConfig } from '@xellar/kit';
+import { polygonAmoy } from 'viem/chains'; // Using polygonAmoy as per previous successful setup
 
-// // export const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
-// // const walletConnectProjectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
-// // const xellarAppId = process.env.NEXT_PUBLIC_XELLAR_PROJECT_ID;
+const walletConnectProjectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
+const xellarProjectId = process.env.NEXT_PUBLIC_XELLAR_PROJECT_ID;
 
-// // // For debugging: Log the values being used
-// // console.log("[Xellar Config] WalletConnect Project ID being used:", walletConnectProjectId);
-// // console.log("[Xellar Config] Xellar Project ID being used:", xellarAppId);
+// Log for debugging
+console.log("[Xellar Config] WalletConnect Project ID being used:", walletConnectProjectId);
+console.log("[Xellar Config] Xellar Project ID being used:", xellarProjectId);
 
-// // if (!walletConnectProjectId) {
-// //   console.warn("NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID is not set. WalletConnect functionality may be impaired. Get ID from https://cloud.walletconnect.com/");
-// // }
-// // if (!xellarAppId) {
-// //   console.error("CRITICAL: NEXT_PUBLIC_XELLAR_PROJECT_ID is not set in .env file. Xellar Kit features will likely not work.");
-// // }
+if (!walletConnectProjectId) {
+  console.warn(
+    'NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID is not set in .env file. WalletConnect functionality will be impaired. Get ID from https://cloud.walletconnect.com/'
+  );
+}
+if (!xellarProjectId) {
+  console.error(
+    'CRITICAL: NEXT_PUBLIC_XELLAR_PROJECT_ID is not set in .env file. Xellar features will likely not work.'
+  );
+}
 
-// // Use defaultConfig from @xellar/kit
-// // export const wagmiConfig = defaultConfig({
-// //   appName: "TrustVest",
-// //   walletConnectProjectId: walletConnectProjectId!,
-// //   xellarAppId: xellarAppId!,
-// //   xellarEnv: "sandbox", // Or "production", verify with Xellar docs
-// //   chains: [polygonAmoy],
-// //   ssr: true, // For Next.js App Router
-// // }) as Config;
-
-// // Fallback minimal config if Xellar's defaultConfig is problematic or for disabling
-// // export const wagmiConfig = createConfig({
-// //   chains: [polygonAmoy],
-// //   transports: {
-// //     [polygonAmoy.id]: http(),
-// //   },
-// // });
+export const wagmiConfig = xellarDefaultConfig({
+  appName: 'CryptoIndexFund',
+  // @ts-ignore - Trusting Xellar's defaultConfig to handle potentially undefined projectId
+  walletConnectProjectId: walletConnectProjectId!,
+  // @ts-ignore - Trusting Xellar's defaultConfig to handle potentially undefined appId
+  xellarAppId: xellarProjectId!,
+  xellarEnv: 'sandbox', // Ensure this matches your Xellar dashboard app environment
+  chains: [polygonAmoy], // Ensure this chain is configured on your Xellar dashboard app
+  ssr: true,
+}) as Config; // Cast to Config type from wagmi
