@@ -5,7 +5,7 @@ import type { PropsWithChildren } from 'react';
 import { useState, useEffect } from 'react';
 import { type Config, WagmiProvider } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { XellarKitProvider, darkTheme } from '@xellar/kit';
+import { XellarKitProvider, darkTheme } from '@xellar/kit'; // Assuming darkTheme is a valid export
 import { XellarAuthProvider } from '@/contexts/XellarContext';
 import { wagmiConfig, queryClient } from '@/lib/xellarConfig';
 
@@ -18,34 +18,31 @@ export function AppProviders({ children }: PropsWithChildren) {
     setIsMounted(true);
   }, []);
 
-  // WagmiProvider, QueryClientProvider, and XellarAuthProvider will always be rendered.
-  // XellarAuthProvider itself handles its internal state based on disableXellarInDev and isMounted.
-  // XellarKitProvider is conditional on isMounted and !disableXellarInDev, as it might have client-side dependencies
-  // or cause issues (like "Failed to fetch app config") during SSR if not properly configured.
-
+  // WagmiProvider and QueryClientProvider are always top-level
   return (
     <WagmiProvider config={wagmiConfig as Config}>
       <QueryClientProvider client={queryClient}>
-        <XellarAuthProvider>
-          {disableXellarInDev ? (
-            <>
-              {/* Xellar is disabled, XellarKitProvider is not rendered */}
-              {/* console.log added here if needed for debugging the disabled path, but generally keep console logs out of production code */}
+        {disableXellarInDev ? (
+          // Xellar is disabled, provide XellarAuthProvider in its disabled state
+          <XellarAuthProvider>
+            {children}
+          </XellarAuthProvider>
+        ) : isMounted ? (
+          // Xellar is enabled AND client is mounted, render the full Xellar stack
+          // XellarKitProvider wraps XellarAuthProvider
+          <XellarKitProvider theme={darkTheme}>
+            <XellarAuthProvider>
               {children}
-            </>
-          ) : isMounted ? (
-            <XellarKitProvider theme={darkTheme}>
-              {/* Xellar is enabled AND client is mounted */}
-              {children}
-            </XellarKitProvider>
-          ) : (
-            <>
-              {/* Xellar is enabled BUT client is NOT yet mounted (SSR/build), XellarKitProvider is skipped */}
-              {/* This ensures children are rendered during SSR/build even if XellarKitProvider isn't ready */}
-              {children}
-            </>
-          )}
-        </XellarAuthProvider>
+            </XellarAuthProvider>
+          </XellarKitProvider>
+        ) : (
+          // Xellar is enabled BUT client is NOT yet mounted (SSR/build)
+          // Render XellarAuthProvider (which defers its internal Xellar hook calls)
+          // XellarKitProvider is skipped here to avoid SSR/build issues from it.
+          <XellarAuthProvider>
+            {children}
+          </XellarAuthProvider>
+        )}
       </QueryClientProvider>
     </WagmiProvider>
   );
