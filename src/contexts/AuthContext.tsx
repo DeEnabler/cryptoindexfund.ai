@@ -3,6 +3,9 @@
 
 import React, { createContext, useContext, useCallback, ReactNode, useEffect, useState } from 'react';
 import { useAccount, useDisconnect, useConnect, type Connector } from 'wagmi';
+// Reown AppKit might provide its own modal trigger, or Wagmi's connect() might work with their adapter.
+// For now, we'll keep the Wagmi useConnect. If Reown has a specific hook to open its modal (e.g., from appKitModal exported from context/index.tsx),
+// that would be used here instead or in conjunction.
 
 interface AuthContextUser {
   address?: `0x${string}`;
@@ -15,7 +18,7 @@ interface AuthContextType {
   login: (connector?: Connector) => void;
   logout: () => void;
   connectors: readonly Connector[];
-  error: Error | null;
+  error: Error | null; // For Wagmi connection errors
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,8 +27,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [user, setUser] = useState<AuthContextUser | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   
-  // Wagmi hooks should only be called when isMounted is true to avoid SSR issues if they are not fully SSR safe
-  // or if their behavior depends on client-side environment.
+  // Wagmi hooks
   const { address, isConnected, isConnecting: isWagmiConnecting, status } = useAccount();
   const { disconnect } = useDisconnect();
   const { connect, connectors, error: connectError, isPending: isConnectPending } = useConnect();
@@ -56,15 +58,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const loginCallback = useCallback((connectorInstance?: Connector) => {
     if (!isMounted) {
       console.warn("Login attempt before AuthProvider is fully mounted on client.");
-      // Potentially show a toast or alert, or simply disallow if critical
       return;
     }
+
+    // Standard Wagmi connect flow. Reown's WagmiAdapter should make its connection method available via wagmi's `connectors`.
+    // Or, Reown AppKit might offer a specific hook/function to open its modal, e.g. `appKitModal.open()`
+    // if `appKitModal` from `context/index.tsx` were made available here.
+    // For now, this will try to use Wagmi's standard connect which Reown's adapter plugs into.
     if (connectorInstance) {
       connect({ connector: connectorInstance });
     } else if (connectors.length > 0) {
-      connect({ connector: connectors[0] }); // Attempt with the first available connector
+      // Typically, Reown AppKit provides its own button/modal that handles connector selection.
+      // If we want to programmatically open, we might need to call a Reown specific function.
+      // This is a fallback to try the first available Wagmi connector.
+      console.log("Attempting to connect with first available Wagmi connector. Reown AppKit might have its own modal trigger.");
+      connect({ connector: connectors[0] }); 
     } else {
-      console.warn("No wallet connectors available to login.");
+      console.warn("No wallet connectors available to login via Wagmi.");
       alert("No wallet connectors found. Please ensure you have a Web3 wallet (like MetaMask) installed or try a different browser/device.");
     }
   }, [isMounted, connect, connectors]);
@@ -75,9 +85,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, [isMounted, isConnected, disconnect]);
 
-  // isLoading should be true if not mounted yet, or if wagmi is connecting/pending
   const isLoadingAuth = !isMounted || isWagmiConnecting || isConnectPending;
-  // isAuthenticated should only be true if mounted and wagmi reports connected status
   const isAuthenticatedAuth = isMounted && isConnected && !!user && status === 'connected';
 
   const authContextValue: AuthContextType = {
@@ -86,7 +94,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     isAuthenticated: isAuthenticatedAuth,
     login: loginCallback,
     logout: logoutCallback,
-    connectors: isMounted ? connectors : [], // Provide empty array if not mounted
+    connectors: isMounted ? connectors : [],
     error: authError,
   };
 
@@ -101,12 +109,11 @@ export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
     console.error("useAuth must be used within an AuthProvider. Context is undefined.");
-    // Return a default "safe" state to prevent crashes if used outside provider
     return {
       user: null,
-      isLoading: true, // Assume loading if context is missing
+      isLoading: true,
       isAuthenticated: false,
-      login: () => alert("Auth context not available. Ensure AppProviders is set up correctly."),
+      login: () => alert("Auth context not available. Ensure ContextProvider from Reown setup is correctly wrapping your app."),
       logout: () => {},
       connectors: [],
       error: new Error("AuthProvider not found in component tree."),
