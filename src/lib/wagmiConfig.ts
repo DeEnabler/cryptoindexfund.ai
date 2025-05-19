@@ -2,7 +2,7 @@
 "use client";
 
 import { createConfig, http, type Config } from 'wagmi';
-import { polygonAmoy, mainnet } from 'viem/chains'; // Keep polygonAmoy for now, user might change for production
+import { polygonAmoy } from 'viem/chains'; 
 import { injected, walletConnect } from '@wagmi/connectors';
 import { QueryClient } from '@tanstack/react-query';
 
@@ -16,7 +16,6 @@ if (!walletConnectProjectId) {
   console.error(
     '[Wagmi Config] CRITICAL: NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID is not set. WalletConnect functionality will be impaired or fail.'
   );
-  // Potentially throw an error or use a fallback if this ID is absolutely critical for app operation
 }
 
 const chainsToUse = [polygonAmoy]; // Default to polygonAmoy, can be configured further or made dynamic
