@@ -1,11 +1,11 @@
 
 "use client";
 
-import { type Config, createConfig, http } from 'wagmi';
+import { type Config } from 'wagmi';
 import { QueryClient } from '@tanstack/react-query';
 // Import defaultConfig from @xellar/kit
-import { defaultConfig as xellarDefaultConfig } from '@xellar/kit';
-import { polygonAmoy } from 'viem/chains'; // Using polygonAmoy as per previous successful setup
+import { defaultConfig } from '@xellar/kit';
+import { polygonAmoy } from 'viem/chains';
 
 export const queryClient = new QueryClient();
 
@@ -22,36 +22,37 @@ console.log("[Xellar Config] Disable Xellar in Dev:", disableXellarInDev);
 let wagmiConfigValue: Config;
 
 if (disableXellarInDev) {
-  console.log("[Xellar Config] Xellar SDK disabled for this environment. Using basic Wagmi config.");
+  console.log("[Xellar Config] Xellar SDK disabled for this development environment. Using basic Wagmi config.");
+  // Basic non-Xellar Wagmi config for when Xellar is disabled
+  const { createConfig, http } = await import('wagmi');
+  const { mainnet } = await import('viem/chains'); // Using mainnet as a generic placeholder
   wagmiConfigValue = createConfig({
-    chains: [polygonAmoy], // Minimal chain setup
+    chains: [mainnet],
     transports: {
-      [polygonAmoy.id]: http(),
+      [mainnet.id]: http(),
     },
     ssr: true,
   });
 } else {
   if (!walletConnectProjectId) {
     console.warn(
-      'NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID is not set. WalletConnect functionality via Xellar will be impaired.'
+      '[Xellar Config] CRITICAL: NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID is not set. WalletConnect functionality via Xellar will be impaired or fail.'
     );
   }
   if (!xellarProjectId) {
     console.error(
-      'CRITICAL: NEXT_PUBLIC_XELLAR_PROJECT_ID is not set. Xellar features will likely not work.'
+      '[Xellar Config] CRITICAL: NEXT_PUBLIC_XELLAR_PROJECT_ID is not set. Xellar features will likely not work.'
     );
   }
 
-  wagmiConfigValue = xellarDefaultConfig({
+  wagmiConfigValue = defaultConfig({
     appName: 'CryptoIndexFund',
-    // @ts-ignore walletConnectProjectId could be undefined if not set, xellarDefaultConfig should handle it or warn
-    walletConnectProjectId: walletConnectProjectId!,
-    // @ts-ignore xellarAppId could be undefined if not set, xellarDefaultConfig should handle it or warn
+    walletConnectProjectId: walletConnectProjectId!, 
     xellarAppId: xellarProjectId!,
-    xellarEnv: 'sandbox', // Ensure this matches your Xellar dashboard app environment
-    chains: [polygonAmoy], // Ensure this chain is configured on your Xellar dashboard app
-    ssr: true,
-  }) as Config; // Cast to Config type from wagmi
+    xellarEnv: "production", // Changed from "sandbox" to "production"
+    chains: [polygonAmoy], 
+    ssr: true, 
+  }) as Config; 
 }
 
 export const wagmiConfig = wagmiConfigValue;
