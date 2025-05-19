@@ -5,11 +5,13 @@ import type { PropsWithChildren } from 'react';
 import { useState, useEffect } from 'react';
 import { type Config, WagmiProvider } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { XellarKitProvider, darkTheme } from '@xellar/kit'; 
+import { XellarKitProvider, darkTheme } from '@xellar/kit';
 import { XellarAuthProvider } from '@/contexts/XellarContext';
 import { wagmiConfig, queryClient } from '@/lib/xellarConfig';
 import ErrorBoundary from './ErrorBoundary';
 
+// Ensure NEXT_PUBLIC_DISABLE_XELLAR_IN_DEV is set to 'false' (or not set at all)
+// in your Vercel environment variables for production/live testing of Xellar.
 const disableXellarInDev = process.env.NEXT_PUBLIC_DISABLE_XELLAR_IN_DEV === 'true';
 
 export function AppProviders({ children }: PropsWithChildren) {
@@ -19,25 +21,33 @@ export function AppProviders({ children }: PropsWithChildren) {
     setIsMounted(true);
   }, []);
 
-  // Fallback UI to render if XellarKitProvider (or its children during init) crashes.
-  // This fallback renders XellarAuthProvider in a "forced disable" mode.
+  // Fallback UI for when XellarKitProvider or its children crash during initialization.
+  // This renders XellarAuthProvider in a "forced disable" state.
   const xellarErrorFallback = (
     <XellarAuthProvider forceDisable={true}>
       {children}
     </XellarAuthProvider>
   );
 
-  return (
-    <WagmiProvider config={wagmiConfig as Config}>
-      <QueryClientProvider client={queryClient}>
-        {disableXellarInDev ? (
-          // Xellar is disabled by environment variable, render XellarAuthProvider in its default (likely disabled) state.
+  if (disableXellarInDev) {
+    // Xellar is explicitly disabled by environment variable
+    return (
+      <WagmiProvider config={wagmiConfig as Config}>
+        <QueryClientProvider client={queryClient}>
           <XellarAuthProvider>
             {children}
           </XellarAuthProvider>
-        ) : isMounted ? (
-          // Xellar is enabled AND client is mounted.
-          // Render the full Xellar stack, wrapped in an ErrorBoundary.
+        </QueryClientProvider>
+      </WagmiProvider>
+    );
+  }
+
+  // Xellar is enabled, proceed with full provider stack
+  return (
+    <WagmiProvider config={wagmiConfig as Config}>
+      <QueryClientProvider client={queryClient}>
+        {isMounted ? (
+          // On the client and Xellar is enabled, render the full Xellar stack
           <ErrorBoundary fallback={xellarErrorFallback}>
             <XellarKitProvider theme={darkTheme}>
               <XellarAuthProvider>
@@ -46,10 +56,9 @@ export function AppProviders({ children }: PropsWithChildren) {
             </XellarKitProvider>
           </ErrorBoundary>
         ) : (
-          // Xellar is enabled BUT client is NOT yet mounted (e.g., SSR/build time).
-          // Render XellarAuthProvider; it defers its internal Xellar hook calls until mounted.
-          // XellarKitProvider is skipped here to avoid potential SSR/build issues if it's not SSR-compatible
-          // or if it tries to fetch config immediately.
+          // During SSR or before client mount (when Xellar is enabled)
+          // Render XellarAuthProvider which handles its own client-side hook deferral.
+          // XellarKitProvider is skipped here to avoid SSR issues.
           <XellarAuthProvider>
             {children}
           </XellarAuthProvider>
