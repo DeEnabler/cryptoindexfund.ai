@@ -1,7 +1,7 @@
 // context/index.tsx
 'use client'
 
-import { wagmiAdapter, projectId, networks as configNetworks } from '@/config'; // Use networks from config
+import { wagmiAdapter, projectId, networks as configNetworks } from '../config'; // Use networks from config
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createAppKit } from '@reown/appkit/react'; 
 import React, { type ReactNode } from 'react';

@@ -1,3 +1,4 @@
+
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
@@ -5,7 +6,7 @@ import { Footer } from '@/components/layout/Footer';
 import { Toaster } from "@/components/ui/toaster";
 // import { AppProviders } from '@/components/AppProviders'; // Replaced by ContextProvider
 import { headers } from "next/headers";
-import ContextProvider from '@/context'; // Updated import path
+import ContextProvider from '../../context'; // Updated import path
 
 export const metadata: Metadata = {
   title: 'CryptoIndexFund - Decentralized Crypto Fund',
