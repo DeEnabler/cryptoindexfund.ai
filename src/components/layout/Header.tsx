@@ -8,7 +8,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, X, Home, Briefcase, Lightbulb, Rocket, LogOut, UserCircle } from "lucide-react";
 import { usePathname } from 'next/navigation';
 import { cn } from "@/lib/utils";
-import { useXellarAuth } from "@/contexts/XellarContext"; 
+import { useAuth } from "@/contexts/AuthContext"; // Updated import
 import Image from "next/image";
 
 const navItems = [
@@ -21,7 +21,7 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
-  const { user, login, logout, isAuthenticated, isLoading } = useXellarAuth(); 
+  const { user, login, logout, isAuthenticated, isLoading, connectors } = useAuth(); // Updated to useAuth
 
   useEffect(() => {
     setIsMounted(true);
@@ -32,7 +32,13 @@ export function Header() {
     if (isAuthenticated) {
       logout();
     } else {
-      login();
+      // For simplicity, try the first connector.
+      // A real app would present a modal to choose a connector if multiple exist.
+      if (connectors.length > 0) {
+        login(connectors[0]); // Pass the connector instance
+      } else {
+        login(); // Will show alert from AuthContext if no connectors
+      }
     }
   };
 
@@ -85,10 +91,10 @@ export function Header() {
     return (
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="h-8 w-8 animate-pulse rounded-md bg-muted"></div>
-            <span className="h-6 w-32 animate-pulse rounded-md bg-muted"></span>
-          </div>
+          <Link href="/" className="flex items-center space-x-2">
+            <Image src="/android-chrome-192x192.png" alt="CryptoIndexFund Logo" width={32} height={32} className="h-8 w-auto" priority={true}/>
+            <span className="font-bold text-2xl text-primary">CryptoIndexFund</span>
+          </Link>
           <div className="h-8 w-24 animate-pulse rounded-md bg-muted md:hidden"></div>
           <div className="hidden md:flex space-x-4 items-center">
             {[1,2,3].map(i => <div key={i} className="h-8 w-28 animate-pulse rounded-md bg-muted"></div>)}
@@ -110,16 +116,16 @@ export function Header() {
 
         <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
           {navItems.map((item) => (
-            <Button 
-              key={item.label} 
-              asChild 
-              variant="ghost" 
+            <Button
+              key={item.label}
+              asChild
+              variant="ghost"
               size="default"
               className={cn(
-                "px-3 py-2 text-sm font-medium", // Base styling for Button's children content
-                pathname === item.href 
-                  ? "bg-accent text-accent-foreground [&:hover]:bg-accent/90" // Active state with specific hover
-                  : "text-foreground/80 hover:bg-accent/80 hover:text-accent-foreground" // Default state
+                "px-3 py-2 text-sm font-medium",
+                pathname === item.href
+                  ? "bg-accent text-accent-foreground [&:hover]:bg-accent/90"
+                  : "text-foreground/80 hover:bg-accent/80 hover:text-accent-foreground"
               )}
             >
               <Link href={item.href}>
@@ -133,17 +139,16 @@ export function Header() {
         <div className="flex items-center space-x-2">
           <Button
             onClick={handleAuthAction}
-            disabled={isLoading && !isAuthenticated}
-            variant="default" // Ensure it uses the default variant styles for animated border
+            disabled={isLoading && !isAuthenticated && connectors.length === 0} // Disable if loading or no connectors
+            variant="default"
             size="default"
-            className="hidden md:flex items-center space-x-2 px-4 py-2 group" // group class added for potential future group-hover states
+            className="hidden md:flex items-center space-x-2 px-4 py-2 group"
           >
             {renderAuthButtonContent()}
           </Button>
 
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild className="md:hidden">
-              {/* Using Button component for SheetTrigger to inherit effects */}
               <Button variant="ghost" size="icon">
                 {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
                 <span className="sr-only">Toggle menu</span>
@@ -151,19 +156,19 @@ export function Header() {
             </SheetTrigger>
             <SheetContent side="right" className="w-full max-w-xs bg-background p-6 pt-12">
               <Link href="/" className="flex items-center space-x-2 mb-8" onClick={() => setIsMobileMenuOpen(false)}>
-                <Image src="/android-chrome-192x192.png" alt="CryptoIndexFund Site Logo" width={32} height={32} className="h-8 w-auto" />
+                <Image src="/android-chrome-192x192.png" alt="CryptoIndexFund Logo" width={32} height={32} className="h-8 w-auto" />
                 <span className="font-bold text-2xl text-primary">CryptoIndexFund</span>
               </Link>
               <nav className="flex flex-col space-y-3">
                 {navItems.map((item) => (
-                  <Button 
+                  <Button
                     key={`mobile-${item.label}`}
-                    asChild 
-                    variant="ghost" 
-                    size="lg" // Larger for mobile
+                    asChild
+                    variant="ghost"
+                    size="lg"
                     className={cn(
                       "flex items-center justify-start space-x-3 px-3 py-3 text-lg font-medium",
-                      pathname === item.href 
+                      pathname === item.href
                       ? "bg-accent text-accent-foreground [&:hover]:bg-accent/90"
                       : "text-foreground/80 hover:bg-accent/80 hover:text-accent-foreground"
                     )}
@@ -180,7 +185,7 @@ export function Header() {
                         handleAuthAction();
                         setIsMobileMenuOpen(false);
                     }}
-                    disabled={isLoading && !isAuthenticated}
+                    disabled={isLoading && !isAuthenticated && connectors.length === 0}
                     variant="default"
                     size="lg"
                     className="w-full flex items-center justify-center space-x-2 py-6 text-lg mt-4"
