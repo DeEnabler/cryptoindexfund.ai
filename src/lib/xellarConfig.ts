@@ -2,10 +2,11 @@
 "use client";
 
 import type { Config } from 'wagmi';
-import { createConfig, http } from 'wagmi'; // Ensure createConfig and http are imported for the fallback
-import { polygonAmoy, mainnet } from 'viem/chains'; // Ensure mainnet is imported for the fallback
+import { createConfig, http } from 'wagmi'; // For fallback
 import { QueryClient } from '@tanstack/react-query';
+// defaultConfig is expected from @xellar/kit
 import { defaultConfig as xellarDefaultConfig } from '@xellar/kit';
+import { polygonAmoy, mainnet } from 'viem/chains'; // Keep polygonAmoy for now, user might change for production
 
 export const queryClient = new QueryClient();
 
@@ -13,20 +14,19 @@ const walletConnectProjectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
 const xellarProjectId = process.env.NEXT_PUBLIC_XELLAR_PROJECT_ID;
 const disableXellarInDev = process.env.NEXT_PUBLIC_DISABLE_XELLAR_IN_DEV === 'true';
 
-// Log environment variables to help diagnose issues, especially on Vercel
+// Log environment variables to help diagnose issues
 console.log("[Xellar Config] WalletConnect Project ID being used:", walletConnectProjectId);
 console.log("[Xellar Config] Xellar Project ID being used:", xellarProjectId);
 console.log("[Xellar Config] Disable Xellar in Dev:", disableXellarInDev);
-console.log("[Xellar Config] Xellar Environment being used for defaultConfig:", disableXellarInDev ? "N/A (Xellar Disabled)" : "production");
+console.log("[Xellar Config] Xellar Environment being used for defaultConfig:", "production");
 
 
 let wagmiConfigValue: Config;
 
 if (disableXellarInDev) {
   // Basic non-Xellar Wagmi config for when Xellar is explicitly disabled
-  // Using mainnet as a fallback chain example
   wagmiConfigValue = createConfig({
-    chains: [mainnet, polygonAmoy],
+    chains: [mainnet, polygonAmoy], // Default chains for disabled mode
     transports: {
       [mainnet.id]: http(),
       [polygonAmoy.id]: http(),
@@ -48,10 +48,11 @@ if (disableXellarInDev) {
   // Xellar-enabled Wagmi config
   wagmiConfigValue = xellarDefaultConfig({
     appName: 'CryptoIndexFund',
-    walletConnectProjectId: walletConnectProjectId!,
+    walletConnectProjectId: walletConnectProjectId!, 
     xellarAppId: xellarProjectId!,
-    xellarEnv: "production", // Changed to production
-    chains: [polygonAmoy], // Consider changing to production chains like polygon mainnet if applicable
+    xellarEnv: "production", // Explicitly set to production
+    // TODO: Update chains for your actual production environment if polygonAmoy is not the target
+    chains: [polygonAmoy], 
     ssr: true,
   }) as Config;
 }
