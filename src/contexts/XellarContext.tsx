@@ -3,8 +3,8 @@
 
 import React, { createContext, useContext, useCallback, ReactNode, useEffect, useState } from 'react';
 import { useAccount, useDisconnect } from 'wagmi';
-// Import useConnectModal from @xellar/kit - this will be conditionally used
-import { useConnectModal } from '@xellar/kit';
+// Import useConnectModal from @xellar/kit, aliased to avoid potential conflicts
+import { useConnectModal as useXellarKitConnectModal } from '@xellar/kit'; 
 
 interface AuthContextUser {
   address?: `0x${string}`;
@@ -25,18 +25,33 @@ const XellarAuthContext = createContext<AuthContextType | undefined>(undefined);
 const disableXellarInDev = process.env.NEXT_PUBLIC_DISABLE_XELLAR_IN_DEV === 'true';
 
 export const XellarAuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [isMounted, setIsMounted] = useState(false);
+  const [user, setUser] = useState<AuthContextUser | null>(null);
+  // isLoadingSDK indicates if client-side hooks (like useXellarKitConnectModal) are ready
+  // It's true initially if Xellar is enabled, and set to false once mounted
+  const [isLoadingSDK, setIsLoadingSDK] = useState(!disableXellarInDev); 
+
+  useEffect(() => {
+    setIsMounted(true);
+    if (!disableXellarInDev) {
+      setIsLoadingSDK(false); // SDK considered "ready" (for calling hooks) once mounted
+    } else {
+      setIsLoadingSDK(false); // If disabled, SDK is also not "loading"
+    }
+  }, []);
+
   if (disableXellarInDev) {
     // Provide mock implementation if Xellar is disabled
     const mockAuthContext: AuthContextType = {
       user: null,
-      isLoading: false,
+      isLoading: false, // Not loading if disabled
       isAuthenticated: false,
       login: () => {
-        alert("Wallet connection is disabled in this development environment. Please configure NEXT_PUBLIC_DISABLE_XELLAR_IN_DEV=false and ensure Xellar/WalletConnect is set up for production/live testing.");
-        console.log("Mock login called: Xellar SDK is disabled for this environment.");
+        alert("Wallet connection is disabled in this development environment.");
+        console.log("Mock login called: Xellar SDK is disabled.");
       },
       logout: () => {
-        console.log("Mock logout called: Xellar SDK is disabled for this environment.");
+        console.log("Mock logout called: Xellar SDK is disabled.");
       },
       isXellarDisabled: true,
     };
@@ -48,25 +63,32 @@ export const XellarAuthProvider: React.FC<{ children: ReactNode }> = ({ children
   }
 
   // Original provider logic when Xellar is enabled
+  // These Wagmi hooks should be safe as WagmiProvider is always an ancestor
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { address, isConnected, isConnecting } = useAccount();
+  const { address, isConnected, isConnecting: isWagmiConnecting } = useAccount();
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { disconnect } = useDisconnect();
+  
+  // Xellar's useConnectModal hook - only call if mounted and Xellar is enabled
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const connectModalHook = useConnectModal();
+  const xellarConnectModalHook = isMounted ? useXellarKitConnectModal() : null;
 
-  const user: AuthContextUser | null = isConnected && address ? { address } : null;
+  useEffect(() => {
+    if (isConnected && address) {
+      setUser({ address });
+    } else {
+      setUser(null);
+    }
+  }, [isConnected, address]);
 
   const loginCallback = useCallback(() => {
-    if (!isConnected && connectModalHook) {
-      connectModalHook.open();
-    } else if (isConnected) {
-      console.log("Already connected with address:", address);
-    } else {
-      console.error("Xellar connect modal hook is not available. Ensure XellarKitProvider is set up correctly.");
-      alert("Wallet connection system is currently unavailable. Please try again shortly.");
+    if (!isMounted || !xellarConnectModalHook) {
+      console.log("Login attempted before Xellar SDK (connect modal) is ready or available.");
+      alert("Wallet connection is initializing, please try again shortly.");
+      return;
     }
-  }, [isConnected, connectModalHook, address]);
+    xellarConnectModalHook.open();
+  }, [isMounted, xellarConnectModalHook]);
 
   const logoutCallback = useCallback(() => {
     if (isConnected) {
@@ -74,17 +96,17 @@ export const XellarAuthProvider: React.FC<{ children: ReactNode }> = ({ children
     }
   }, [isConnected, disconnect]);
 
+  const authContextValue: AuthContextType = {
+    user,
+    isLoading: isWagmiConnecting || isLoadingSDK, // isLoadingSDK primarily covers the "not yet mounted" state for Xellar's hook
+    isAuthenticated: isConnected && !!user,
+    login: loginCallback,
+    logout: logoutCallback,
+    isXellarDisabled: false,
+  };
+
   return (
-    <XellarAuthContext.Provider
-      value={{
-        user,
-        isLoading: isConnecting,
-        isAuthenticated: isConnected,
-        login: loginCallback,
-        logout: logoutCallback,
-        isXellarDisabled: false,
-      }}
-    >
+    <XellarAuthContext.Provider value={authContextValue}>
       {children}
     </XellarAuthContext.Provider>
   );

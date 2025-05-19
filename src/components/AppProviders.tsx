@@ -2,10 +2,10 @@
 "use client";
 
 import type { PropsWithChildren } from 'react';
-import { useState, useEffect } from 'react'; // Added useState, useEffect
-import { WagmiProvider, type Config } from 'wagmi';
+import { useState, useEffect } from 'react';
+import { type Config, WagmiProvider } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { XellarKitProvider } from '@xellar/kit'; 
+import { XellarKitProvider, darkTheme } from '@xellar/kit';
 import { XellarAuthProvider } from '@/contexts/XellarContext';
 import { wagmiConfig, queryClient } from '@/lib/xellarConfig';
 
@@ -18,42 +18,34 @@ export function AppProviders({ children }: PropsWithChildren) {
     setIsMounted(true);
   }, []);
 
-  if (disableXellarInDev) {
-    console.log("[AppProviders] XellarKitProvider is DISABLED for this environment.");
-    // For disabled state, we can render children directly or with a minimal WagmiProvider if still needed
-    // For simplicity, if Xellar is disabled, we provide a very basic setup.
-    // If even basic WagmiProvider (mocked in xellarConfig) causes issues, this can be just {children}
-    return (
-      <WagmiProvider config={wagmiConfig as Config}> {/* Ensure wagmiConfig is cast if it can be a mock */}
-        <QueryClientProvider client={queryClient}>
-          <XellarAuthProvider> {/* This will provide mocked context */}
-            {children}
-          </XellarAuthProvider>
-        </QueryClientProvider>
-      </WagmiProvider>
-    );
-  }
+  // WagmiProvider, QueryClientProvider, and XellarAuthProvider will always be rendered.
+  // XellarAuthProvider itself handles its internal state based on disableXellarInDev and isMounted.
+  // XellarKitProvider is conditional on isMounted and !disableXellarInDev, as it might have client-side dependencies
+  // or cause issues (like "Failed to fetch app config") during SSR if not properly configured.
 
-  // Only render the full Xellar-enabled provider stack if mounted on the client
-  if (!isMounted) {
-    // Render null or a loading state, or just children if a brief unstyled flash is acceptable
-    // Returning null will prevent children from rendering until client mount,
-    // which might be desired if they depend heavily on these contexts.
-    // Alternatively, pass children through if they can render without these contexts initially.
-    // For now, let's pass children through to avoid completely blanking the page during SSR.
-    // A more sophisticated solution might involve a loading skeleton.
-    return <>{children}</>; 
-  }
-
-  console.log("[AppProviders] XellarKitProvider is ENABLED for this environment (Client Mounted).");
   return (
     <WagmiProvider config={wagmiConfig as Config}>
       <QueryClientProvider client={queryClient}>
-        <XellarKitProvider> {/* Removed theme prop for diagnostics, can be re-added if Xellar docs confirm usage */}
-          <XellarAuthProvider>
-            {children}
-          </XellarAuthProvider>
-        </XellarKitProvider>
+        <XellarAuthProvider>
+          {disableXellarInDev ? (
+            <>
+              {/* Xellar is disabled, XellarKitProvider is not rendered */}
+              {/* console.log added here if needed for debugging the disabled path, but generally keep console logs out of production code */}
+              {children}
+            </>
+          ) : isMounted ? (
+            <XellarKitProvider theme={darkTheme}>
+              {/* Xellar is enabled AND client is mounted */}
+              {children}
+            </XellarKitProvider>
+          ) : (
+            <>
+              {/* Xellar is enabled BUT client is NOT yet mounted (SSR/build), XellarKitProvider is skipped */}
+              {/* This ensures children are rendered during SSR/build even if XellarKitProvider isn't ready */}
+              {children}
+            </>
+          )}
+        </XellarAuthProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
