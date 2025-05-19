@@ -1,4 +1,6 @@
 
+"use client"; // Add this directive
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, ExternalLink, FileText, SearchCode, GitCommitHorizontal } from "lucide-react";
