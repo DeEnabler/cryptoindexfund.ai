@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ChartContainer, ChartTooltipContent, ChartLegendContent } from "@/components/ui/chart";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { DollarSign, Users, ListCollapse, TrendingUp, Zap, ArrowLeft, Loader2 } from "lucide-react";
+import { DollarSign, Users, ListCollapse, TrendingUp, Zap, ArrowLeft, Loader2, AlertTriangle } from "lucide-react";
 import type { ChartConfig } from "@/components/ui/chart";
 import { useState, useEffect, use } from 'react';
 import Link from "next/link";
@@ -45,6 +45,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
   const [isMounted, setIsMounted] = useState(false);
   const [chartData, setChartData] = useState<PerformanceDataPoint[]>([]);
   const [isLoadingChart, setIsLoadingChart] = useState(true);
+  const [chartError, setChartError] = useState<string | null>(null);
   
   const params = use(paramsProp); 
 
@@ -57,6 +58,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
 
   useEffect(() => {
     setIsLoadingChart(true);
+    setChartError(null); // Reset error on new fetch
     console.log("[Chart Data] Fetching from /data/rebalancing_50_50_7d.json");
     fetch('/data/rebalancing_50_50_7d.json')
       .then(response => {
@@ -73,21 +75,32 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
           if (data.length > 0 && data[0] && typeof data[0].date !== 'undefined' && typeof data[0].value !== 'undefined') {
             console.log("[Chart Data] Data appears valid. Setting chart data.");
             setChartData(data as PerformanceDataPoint[]);
+            setChartError(null);
           } else if (data.length === 0) {
             console.warn("[Chart Data] Fetched data is an empty array.");
             setChartData([]);
+            setChartError("Fetched data is empty. No performance data to display.");
           } else {
-            console.warn("[Chart Data] Fetched data is an array, but items do not have expected 'date' and 'value' properties. First item:", data[0]);
+            const missingProps = [];
+            if (typeof data[0]?.date === 'undefined') missingProps.push("'date'");
+            if (typeof data[0]?.value === 'undefined') missingProps.push("'value'");
+            const errorMsg = `Fetched data is an array, but items do not have expected ${missingProps.join(' and ')} properties. First item: ${JSON.stringify(data[0])}`;
+            console.warn(`[Chart Data] ${errorMsg}`);
             setChartData([]);
+            setChartError(errorMsg);
           }
         } else {
-          console.warn("[Chart Data] Fetched data is not an array. Received:", typeof data, data);
+          const errorMsg = `Fetched data is not an array. Received: ${typeof data}, ${JSON.stringify(data)}`;
+          console.warn(`[Chart Data] ${errorMsg}`);
           setChartData([]);
+          setChartError(errorMsg);
         }
       })
       .catch(error => {
-        console.error("[Chart Data] Failed to fetch or process fund performance data:", error);
-        setChartData([]); // Fallback to empty data on error
+        const errorMsg = `Failed to fetch or process fund performance data: ${error.message}`;
+        console.error(`[Chart Data] ${errorMsg}`);
+        setChartData([]); 
+        setChartError(errorMsg);
       })
       .finally(() => {
         setIsLoadingChart(false);
@@ -265,8 +278,12 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
                 </ResponsiveContainer>
               </ChartContainer>
             ) : (
-              <div className="flex items-center justify-center h-full">
-                <p className="text-muted-foreground">No performance data available.</p>
+              <div className="flex flex-col items-center justify-center h-full p-4 text-center">
+                <AlertTriangle className="h-10 w-10 text-destructive mb-2" />
+                <p className="text-lg font-semibold text-destructive">No performance data available.</p>
+                {chartError && (
+                  <p className="text-sm text-muted-foreground mt-1 max-w-md">{chartError}</p>
+                )}
               </div>
             )}
           </CardContent>
@@ -314,3 +331,5 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
     </div>
   );
 }
+
+    
