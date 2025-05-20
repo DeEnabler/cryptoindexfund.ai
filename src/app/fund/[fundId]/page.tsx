@@ -39,14 +39,14 @@ const mockTransactions = [
   { id: "TX005", date: "2024-07-10", type: "Deposit", amount: "5.0 Units", status: "Pending" },
 ];
 
-type PerformanceDataPoint = { date: string; value: number }; // Assuming this structure for rebalancing_50_50_7d.json
+type PerformanceDataPoint = { date: string; value: number };
 
 export default function FundDetailPage({ params: paramsProp }: { params: { fundId: string } | Promise<{ fundId: string }> }) {
   const [isMounted, setIsMounted] = useState(false);
   const [chartData, setChartData] = useState<PerformanceDataPoint[]>([]);
   const [isLoadingChart, setIsLoadingChart] = useState(true);
   
-  const params = use(paramsProp); // Unwrap params using React.use()
+  const params = use(paramsProp); 
 
   const fundId = params.fundId;
   const fundDetails = fundsDetailsMap[fundId] || defaultFundDetails;
@@ -56,27 +56,44 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
   }, []);
 
   useEffect(() => {
-    // No longer depends on fundId for fetching data, as we're using a specific file
     setIsLoadingChart(true);
-    fetch('/data/rebalancing_50_50_7d.json') // Fetch from the specified JSON file
+    console.log("[Chart Data] Fetching from /data/rebalancing_50_50_7d.json");
+    fetch('/data/rebalancing_50_50_7d.json')
       .then(response => {
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          console.error("[Chart Data] Network response was not ok:", response.statusText);
+          throw new Error(`Network response was not ok: ${response.statusText}`);
         }
         return response.json();
       })
       .then(data => {
-        // Assuming the fetched data is directly an array of PerformanceDataPoint
-        setChartData(data || []); 
+        console.log("[Chart Data] Raw fetched data:", data);
+
+        if (Array.isArray(data)) {
+          if (data.length > 0 && data[0] && typeof data[0].date !== 'undefined' && typeof data[0].value !== 'undefined') {
+            console.log("[Chart Data] Data appears valid. Setting chart data.");
+            setChartData(data as PerformanceDataPoint[]);
+          } else if (data.length === 0) {
+            console.warn("[Chart Data] Fetched data is an empty array.");
+            setChartData([]);
+          } else {
+            console.warn("[Chart Data] Fetched data is an array, but items do not have expected 'date' and 'value' properties. First item:", data[0]);
+            setChartData([]);
+          }
+        } else {
+          console.warn("[Chart Data] Fetched data is not an array. Received:", typeof data, data);
+          setChartData([]);
+        }
       })
       .catch(error => {
-        console.error("Failed to fetch fund performance data:", error);
-        setChartData( [] ); // Fallback to empty data on error
+        console.error("[Chart Data] Failed to fetch or process fund performance data:", error);
+        setChartData([]); // Fallback to empty data on error
       })
       .finally(() => {
         setIsLoadingChart(false);
+        console.log("[Chart Data] Finished loading chart data attempt.");
       });
-  }, []); // Empty dependency array, so it fetches once on mount
+  }, []);
 
 
   if (!isMounted) {
@@ -227,7 +244,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
                     <Legend content={<ChartLegendContent />} />
                     <Area
                       type="monotone"
-                      dataKey="value" // Assuming 'value' is the key for the main data series in your JSON
+                      dataKey="value"
                       stroke="hsl(var(--primary))"
                       fill="hsla(var(--primary), 0.2)"
                       strokeWidth={2}
