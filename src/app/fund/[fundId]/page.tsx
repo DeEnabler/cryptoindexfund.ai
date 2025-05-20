@@ -39,7 +39,7 @@ const mockTransactions = [
   { id: "TX005", date: "2024-07-10", type: "Deposit", amount: "5.0 Units", status: "Pending" },
 ];
 
-type PerformanceDataPoint = { date: string; value: number };
+type PerformanceDataPoint = { date: string; value: number }; // Assuming this structure for rebalancing_50_50_7d.json
 
 export default function FundDetailPage({ params: paramsProp }: { params: { fundId: string } | Promise<{ fundId: string }> }) {
   const [isMounted, setIsMounted] = useState(false);
@@ -56,27 +56,27 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
   }, []);
 
   useEffect(() => {
-    if (fundId) {
-      setIsLoadingChart(true);
-      fetch('/data/fundPerformanceData.json')
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
-        .then(data => {
-          setChartData(data[fundId] || data.default || []);
-        })
-        .catch(error => {
-          console.error("Failed to fetch fund performance data:", error);
-          setChartData( [] ); // Fallback to empty data on error
-        })
-        .finally(() => {
-          setIsLoadingChart(false);
-        });
-    }
-  }, [fundId]);
+    // No longer depends on fundId for fetching data, as we're using a specific file
+    setIsLoadingChart(true);
+    fetch('/data/rebalancing_50_50_7d.json') // Fetch from the specified JSON file
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Assuming the fetched data is directly an array of PerformanceDataPoint
+        setChartData(data || []); 
+      })
+      .catch(error => {
+        console.error("Failed to fetch fund performance data:", error);
+        setChartData( [] ); // Fallback to empty data on error
+      })
+      .finally(() => {
+        setIsLoadingChart(false);
+      });
+  }, []); // Empty dependency array, so it fetches once on mount
 
 
   if (!isMounted) {
@@ -188,9 +188,9 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
           <CardHeader>
             <CardTitle className="flex items-center">
               <TrendingUp className="h-6 w-6 mr-2 text-primary" />
-              {fundName} Performance
+              Performance Data
             </CardTitle>
-            <CardDescription>Monthly fund value over the past year (from static JSON).</CardDescription>
+            <CardDescription>Historical performance data (from static JSON: rebalancing_50_50_7d.json).</CardDescription>
           </CardHeader>
           <CardContent className="h-[350px] w-full p-0">
             {isLoadingChart ? (
@@ -227,7 +227,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
                     <Legend content={<ChartLegendContent />} />
                     <Area
                       type="monotone"
-                      dataKey="value"
+                      dataKey="value" // Assuming 'value' is the key for the main data series in your JSON
                       stroke="hsl(var(--primary))"
                       fill="hsla(var(--primary), 0.2)"
                       strokeWidth={2}
@@ -249,7 +249,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
               </ChartContainer>
             ) : (
               <div className="flex items-center justify-center h-full">
-                <p className="text-muted-foreground">No performance data available for this fund.</p>
+                <p className="text-muted-foreground">No performance data available.</p>
               </div>
             )}
           </CardContent>
