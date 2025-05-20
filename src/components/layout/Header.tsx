@@ -5,23 +5,24 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, X, Home, Briefcase, Lightbulb, Rocket, LogOut, UserCircle } from "lucide-react";
+import { Menu, X, Home, Briefcase, Lightbulb, Rocket, LogOut, UserCircle, BookText } from "lucide-react"; // Added BookText
 import { usePathname } from 'next/navigation';
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/contexts/AuthContext"; // Updated import
+import { useAuth } from "@/contexts/AuthContext";
 import Image from "next/image";
 
 const navItems = [
   { href: "/", label: "Home", icon: Home },
   { href: "/fund-overview", label: "Investment Products", icon: Briefcase },
   { href: "/learn", label: "Research", icon: Lightbulb },
+  { href: "https://docs.cryptoindexfund.io", label: "Docs", icon: BookText, external: true }, // Added Docs link
 ];
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
-  const { user, login, logout, isAuthenticated, isLoading, connectors } = useAuth(); // Updated to useAuth
+  const { user, login, logout, isAuthenticated, isLoading, connectors } = useAuth();
 
   useEffect(() => {
     setIsMounted(true);
@@ -32,13 +33,7 @@ export function Header() {
     if (isAuthenticated) {
       logout();
     } else {
-      // For simplicity, try the first connector.
-      // A real app would present a modal to choose a connector if multiple exist.
-      if (connectors.length > 0) {
-        login(connectors[0]); // Pass the connector instance
-      } else {
-        login(); // Will show alert from AuthContext if no connectors
-      }
+      login();
     }
   };
 
@@ -123,12 +118,16 @@ export function Header() {
               size="default"
               className={cn(
                 "px-3 py-2 text-sm font-medium",
-                pathname === item.href
+                !item.external && pathname === item.href 
                   ? "bg-accent text-accent-foreground [&:hover]:bg-accent/90"
                   : "text-foreground/80 hover:bg-accent/80 hover:text-accent-foreground"
               )}
             >
-              <Link href={item.href}>
+              <Link 
+                href={item.href} 
+                target={item.external ? "_blank" : "_self"} 
+                rel={item.external ? "noopener noreferrer" : ""}
+              >
                  <item.icon className="inline h-4 w-4 mr-1.5 mb-0.5" />
                 {item.label}
               </Link>
@@ -139,7 +138,7 @@ export function Header() {
         <div className="flex items-center space-x-2">
           <Button
             onClick={handleAuthAction}
-            disabled={isLoading && !isAuthenticated && connectors.length === 0} // Disable if loading or no connectors
+            disabled={isLoading && !isAuthenticated && connectors.length === 0}
             variant="default"
             size="default"
             className="hidden md:flex items-center space-x-2 px-4 py-2 group"
@@ -168,13 +167,17 @@ export function Header() {
                     size="lg"
                     className={cn(
                       "flex items-center justify-start space-x-3 px-3 py-3 text-lg font-medium",
-                      pathname === item.href
+                      !item.external && pathname === item.href
                       ? "bg-accent text-accent-foreground [&:hover]:bg-accent/90"
                       : "text-foreground/80 hover:bg-accent/80 hover:text-accent-foreground"
                     )}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    <Link href={item.href}>
+                    <Link 
+                      href={item.href} 
+                      target={item.external ? "_blank" : "_self"} 
+                      rel={item.external ? "noopener noreferrer" : ""}
+                    >
                       <item.icon className="h-5 w-5" />
                       <span>{item.label}</span>
                     </Link>
