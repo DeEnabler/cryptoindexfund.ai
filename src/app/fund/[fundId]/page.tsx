@@ -3,11 +3,11 @@
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ChartContainer, ChartTooltipContent, ChartLegendContent } from "@/components/ui/chart"; // Removed ChartTooltip, ChartLegend as they are not directly used
+import { ChartContainer, ChartTooltipContent, ChartLegendContent } from "@/components/ui/chart";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { DollarSign, Users, ListCollapse, TrendingUp, Zap, ArrowLeft } from "lucide-react";
+import { DollarSign, Users, ListCollapse, TrendingUp, Zap, ArrowLeft, Loader2 } from "lucide-react";
 import type { ChartConfig } from "@/components/ui/chart";
-import { useState, useEffect, use } from 'react'; // Added use
+import { useState, useEffect, use } from 'react';
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -24,22 +24,6 @@ const defaultFundDetails = {
   name: "Selected Fund", aum: "$1,000,000.00", aumChange: "+0.0% from last month", userShare: "$0.00", userShareTokens: "0.00 TST Token"
 };
 
-
-const mockFundPerformanceData = [
-  { date: "Jan '23", value: 10000 },
-  { date: "Feb '23", value: 10500 },
-  { date: "Mar '23", value: 11000 },
-  { date: "Apr '23", value: 12000 },
-  { date: "May '23", value: 11800 },
-  { date: "Jun '23", value: 12500 },
-  { date: "Jul '23", value: 13000 },
-  { date: "Aug '23", value: 13200 },
-  { date: "Sep '23", value: 12800 },
-  { date: "Oct '23", value: 13500 },
-  { date: "Nov '23", value: 14000 },
-  { date: "Dec '23", value: 14500 },
-];
-
 const chartConfig = {
   value: {
     label: "Fund Value",
@@ -55,18 +39,45 @@ const mockTransactions = [
   { id: "TX005", date: "2024-07-10", type: "Deposit", amount: "5.0 Units", status: "Pending" },
 ];
 
+type PerformanceDataPoint = { date: string; value: number };
+
 export default function FundDetailPage({ params: paramsProp }: { params: { fundId: string } | Promise<{ fundId: string }> }) {
   const [isMounted, setIsMounted] = useState(false);
+  const [chartData, setChartData] = useState<PerformanceDataPoint[]>([]);
+  const [isLoadingChart, setIsLoadingChart] = useState(true);
   
   const params = use(paramsProp); // Unwrap params using React.use()
 
   const fundId = params.fundId;
   const fundDetails = fundsDetailsMap[fundId] || defaultFundDetails;
 
-
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (fundId) {
+      setIsLoadingChart(true);
+      fetch('/data/fundPerformanceData.json')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          setChartData(data[fundId] || data.default || []);
+        })
+        .catch(error => {
+          console.error("Failed to fetch fund performance data:", error);
+          setChartData( [] ); // Fallback to empty data on error
+        })
+        .finally(() => {
+          setIsLoadingChart(false);
+        });
+    }
+  }, [fundId]);
+
 
   if (!isMounted) {
     return (
@@ -179,57 +190,68 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
               <TrendingUp className="h-6 w-6 mr-2 text-primary" />
               {fundName} Performance
             </CardTitle>
-            <CardDescription>Monthly fund value over the past year (mock data).</CardDescription>
+            <CardDescription>Monthly fund value over the past year (from static JSON).</CardDescription>
           </CardHeader>
           <CardContent className="h-[350px] w-full p-0">
-            <ChartContainer config={chartConfig} className="h-full w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart
-                  data={mockFundPerformanceData}
-                  margin={{ top: 5, right: 20, left: -20, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis 
-                    dataKey="date" 
-                    stroke="hsl(var(--muted-foreground))" 
-                    fontSize={12}
-                    tickLine={false}
-                    axisLine={false}
-                  />
-                  <YAxis 
-                    stroke="hsl(var(--muted-foreground))" 
-                    fontSize={12}
-                    tickLine={false}
-                    axisLine={false}
-                    tickFormatter={(value) => `$${value / 1000}k`}
-                  />
-                  <Tooltip
-                    cursor={{ fill: "hsla(var(--accent), 0.1)" }}
-                    content={<ChartTooltipContent indicator="dot" hideLabel />}
-                  />
-                  <Legend content={<ChartLegendContent />} />
-                  <Area
-                    type="monotone"
-                    dataKey="value"
-                    stroke="hsl(var(--primary))"
-                    fill="hsla(var(--primary), 0.2)"
-                    strokeWidth={2}
-                    dot={{
-                      r: 4,
-                      fill: "hsl(var(--primary))",
-                      stroke: "hsl(var(--background))",
-                      strokeWidth: 2,
-                    }}
-                    activeDot={{
-                      r: 6,
-                      fill: "hsl(var(--primary))",
-                      stroke: "hsl(var(--background))",
-                      strokeWidth: 2,
-                    }}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </ChartContainer>
+            {isLoadingChart ? (
+              <div className="flex items-center justify-center h-full">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <p className="ml-2 text-muted-foreground">Loading chart data...</p>
+              </div>
+            ) : chartData.length > 0 ? (
+              <ChartContainer config={chartConfig} className="h-full w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart
+                    data={chartData}
+                    margin={{ top: 5, right: 20, left: -20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis 
+                      dataKey="date" 
+                      stroke="hsl(var(--muted-foreground))" 
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <YAxis 
+                      stroke="hsl(var(--muted-foreground))" 
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={false}
+                      tickFormatter={(value) => `$${value / 1000}k`}
+                    />
+                    <Tooltip
+                      cursor={{ fill: "hsla(var(--accent), 0.1)" }}
+                      content={<ChartTooltipContent indicator="dot" hideLabel />}
+                    />
+                    <Legend content={<ChartLegendContent />} />
+                    <Area
+                      type="monotone"
+                      dataKey="value"
+                      stroke="hsl(var(--primary))"
+                      fill="hsla(var(--primary), 0.2)"
+                      strokeWidth={2}
+                      dot={{
+                        r: 4,
+                        fill: "hsl(var(--primary))",
+                        stroke: "hsl(var(--background))",
+                        strokeWidth: 2,
+                      }}
+                      activeDot={{
+                        r: 6,
+                        fill: "hsl(var(--primary))",
+                        stroke: "hsl(var(--background))",
+                        strokeWidth: 2,
+                      }}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            ) : (
+              <div className="flex items-center justify-center h-full">
+                <p className="text-muted-foreground">No performance data available for this fund.</p>
+              </div>
+            )}
           </CardContent>
         </Card>
       </section>
