@@ -3,10 +3,9 @@
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ChartContainer, ChartTooltipContent, ChartLegendContent } from "@/components/ui/chart";
+import { ChartContainer, ChartTooltipContent, ChartLegendContent, type ChartConfig } from "@/components/ui/chart";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { DollarSign, Users, ListCollapse, TrendingUp, Zap, ArrowLeft, Loader2, AlertTriangle } from "lucide-react";
-import type { ChartConfig } from "@/components/ui/chart";
 import { useState, useEffect, use } from 'react';
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -24,9 +23,10 @@ const defaultFundDetails = {
   name: "Selected Fund", aum: "$1,000,000.00", aumChange: "+0.0% from last month", userShare: "$0.00", userShareTokens: "0.00 TST Token"
 };
 
+// Updated chartConfig to use "close" as the data key
 const chartConfig = {
-  value: {
-    label: "Fund Value",
+  close: { // Changed from "value" to "close"
+    label: "Fund Value (Close Price)", // Updated label
     color: "hsl(var(--primary))",
   },
 } satisfies ChartConfig;
@@ -39,7 +39,8 @@ const mockTransactions = [
   { id: "TX005", date: "2024-07-10", type: "Deposit", amount: "5.0 Units", status: "Pending" },
 ];
 
-type PerformanceDataPoint = { date: string; value: number };
+// Updated PerformanceDataPoint type to use "close"
+type PerformanceDataPoint = { date: string; close: number };
 
 export default function FundDetailPage({ params: paramsProp }: { params: { fundId: string } | Promise<{ fundId: string }> }) {
   const [isMounted, setIsMounted] = useState(false);
@@ -72,7 +73,8 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
         console.log("[Chart Data] Raw fetched data:", data);
 
         if (Array.isArray(data)) {
-          if (data.length > 0 && data[0] && typeof data[0].date !== 'undefined' && typeof data[0].value !== 'undefined') {
+          // Updated validation to check for "close" property
+          if (data.length > 0 && data[0] && typeof data[0].date !== 'undefined' && typeof data[0].close !== 'undefined') {
             console.log("[Chart Data] Data appears valid. Setting chart data.");
             setChartData(data as PerformanceDataPoint[]);
             setChartError(null);
@@ -83,7 +85,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
           } else {
             const missingProps = [];
             if (typeof data[0]?.date === 'undefined') missingProps.push("'date'");
-            if (typeof data[0]?.value === 'undefined') missingProps.push("'value'");
+            if (typeof data[0]?.close === 'undefined') missingProps.push("'close'"); // Changed from 'value'
             const errorMsg = `Fetched data is an array, but items do not have expected ${missingProps.join(' and ')} properties. First item: ${JSON.stringify(data[0])}`;
             console.warn(`[Chart Data] ${errorMsg}`);
             setChartData([]);
@@ -106,10 +108,11 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
         setIsLoadingChart(false);
         console.log("[Chart Data] Finished loading chart data attempt.");
       });
-  }, []);
+  }, []); // Removed fundId from dependencies as the data source is static for now
 
 
   if (!isMounted) {
+    // Skeleton loading state
     return (
       <div className="space-y-8">
         <div className="flex items-center mb-6">
@@ -257,7 +260,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
                     <Legend content={<ChartLegendContent />} />
                     <Area
                       type="monotone"
-                      dataKey="value"
+                      dataKey="close" // Changed from "value" to "close"
                       stroke="hsl(var(--primary))"
                       fill="hsla(var(--primary), 0.2)"
                       strokeWidth={2}
@@ -331,5 +334,6 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
     </div>
   );
 }
-
     
+  
+  
