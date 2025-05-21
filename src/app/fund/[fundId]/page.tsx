@@ -23,10 +23,9 @@ const defaultFundDetails = {
   name: "Selected Fund", aum: "$1,000,000.00", aumChange: "+0.0% from last month", userShare: "$0.00", userShareTokens: "0.00 TST Token"
 };
 
-// Updated chartConfig to use "close" as the data key
 const chartConfig = {
-  close: { // Changed from "value" to "close"
-    label: "Fund Value (Close Price)", // Updated label
+  close: { 
+    label: "Fund Value (Close Price)", 
     color: "hsl(var(--primary))",
   },
 } satisfies ChartConfig;
@@ -39,8 +38,7 @@ const mockTransactions = [
   { id: "TX005", date: "2024-07-10", type: "Deposit", amount: "5.0 Units", status: "Pending" },
 ];
 
-// Updated PerformanceDataPoint type to use "close"
-type PerformanceDataPoint = { date: string; close: number };
+type PerformanceDataPoint = { date: string; close: number }; // Using 'close' as the data key
 
 export default function FundDetailPage({ params: paramsProp }: { params: { fundId: string } | Promise<{ fundId: string }> }) {
   const [isMounted, setIsMounted] = useState(false);
@@ -48,9 +46,9 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
   const [isLoadingChart, setIsLoadingChart] = useState(true);
   const [chartError, setChartError] = useState<string | null>(null);
   
-  const params = use(paramsProp); 
+  const resolvedParams = use(paramsProp); 
 
-  const fundId = params.fundId;
+  const fundId = resolvedParams.fundId;
   const fundDetails = fundsDetailsMap[fundId] || defaultFundDetails;
 
   useEffect(() => {
@@ -59,7 +57,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
 
   useEffect(() => {
     setIsLoadingChart(true);
-    setChartError(null); // Reset error on new fetch
+    setChartError(null); 
     console.log("[Chart Data] Fetching from /data/rebalancing_50_50_7d.json");
     fetch('/data/rebalancing_50_50_7d.json')
       .then(response => {
@@ -73,7 +71,6 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
         console.log("[Chart Data] Raw fetched data:", data);
 
         if (Array.isArray(data)) {
-          // Updated validation to check for "close" property
           if (data.length > 0 && data[0] && typeof data[0].date !== 'undefined' && typeof data[0].close !== 'undefined') {
             console.log("[Chart Data] Data appears valid. Setting chart data.");
             setChartData(data as PerformanceDataPoint[]);
@@ -85,7 +82,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
           } else {
             const missingProps = [];
             if (typeof data[0]?.date === 'undefined') missingProps.push("'date'");
-            if (typeof data[0]?.close === 'undefined') missingProps.push("'close'"); // Changed from 'value'
+            if (typeof data[0]?.close === 'undefined') missingProps.push("'close'");
             const errorMsg = `Fetched data is an array, but items do not have expected ${missingProps.join(' and ')} properties. First item: ${JSON.stringify(data[0])}`;
             console.warn(`[Chart Data] ${errorMsg}`);
             setChartData([]);
@@ -108,11 +105,10 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
         setIsLoadingChart(false);
         console.log("[Chart Data] Finished loading chart data attempt.");
       });
-  }, []); // Removed fundId from dependencies as the data source is static for now
+  }, []);
 
 
   if (!isMounted) {
-    // Skeleton loading state
     return (
       <div className="space-y-8">
         <div className="flex items-center mb-6">
@@ -181,7 +177,6 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
         </div>
       </header>
 
-      {/* Key Metrics */}
       <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card className="shadow-lg hover:shadow-primary/20 transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -215,7 +210,6 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
         </Card>
       </section>
 
-      {/* Fund Performance Chart */}
       <section>
         <Card className="shadow-xl">
           <CardHeader>
@@ -245,6 +239,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
                       fontSize={12}
                       tickLine={false}
                       axisLine={false}
+                      interval="preserveStartEnd" // Reduce tick clutter
                     />
                     <YAxis 
                       stroke="hsl(var(--muted-foreground))" 
@@ -260,22 +255,12 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
                     <Legend content={<ChartLegendContent />} />
                     <Area
                       type="monotone"
-                      dataKey="close" // Changed from "value" to "close"
+                      dataKey="close" 
                       stroke="hsl(var(--primary))"
                       fill="hsla(var(--primary), 0.2)"
                       strokeWidth={2}
-                      dot={{
-                        r: 4,
-                        fill: "hsl(var(--primary))",
-                        stroke: "hsl(var(--background))",
-                        strokeWidth: 2,
-                      }}
-                      activeDot={{
-                        r: 6,
-                        fill: "hsl(var(--primary))",
-                        stroke: "hsl(var(--background))",
-                        strokeWidth: 2,
-                      }}
+                      dot={false} // Remove dots for individual data points
+                      activeDot={false} // Remove active dots
                     />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -293,7 +278,6 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
         </Card>
       </section>
 
-      {/* Recent Transactions Table */}
       <section>
         <Card className="shadow-xl">
           <CardHeader>
@@ -337,3 +321,5 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
     
   
   
+
+    
