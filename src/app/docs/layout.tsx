@@ -1,4 +1,6 @@
 
+"use client"; // Add this directive
+
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -12,11 +14,13 @@ import {
   SidebarMenuButton,
   SidebarGroup,
   SidebarGroupLabel,
+  SidebarGroupContent,
   SidebarInset,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Home, BookOpen, Users, Settings, FileText, Lightbulb, Landmark, ShieldCheck, Info, BarChart3, FolderGit2, HelpCircleIcon } from 'lucide-react';
 
+// Metadata export is fine in a Client Component for the App Router
 export const metadata: Metadata = {
   title: 'Documentation - CryptoIndexFund',
   description: 'Official documentation for CryptoIndexFund.',
@@ -96,8 +100,6 @@ export default function DocsLayout({
                 <SidebarGroup key={group.label}>
                   <SidebarGroupLabel className="text-sidebar-foreground/70 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:py-2">
                     <span className="group-data-[collapsible=icon]:hidden">{group.label}</span>
-                    {/* Optionally show first letter or an icon when collapsed */}
-                    {/* <span className="hidden group-data-[collapsible=icon]:inline">{group.label.charAt(0)}</span> */}
                   </SidebarGroupLabel>
                   <SidebarGroupContent>
                     {group.items.map((item) => (
@@ -125,11 +127,6 @@ export default function DocsLayout({
               ))}
             </SidebarMenu>
           </SidebarContent>
-          {/* Optional Sidebar Footer can go here 
-          <SidebarFooter className="p-2 border-t border-sidebar-border group-data-[collapsible=icon]:hidden">
-             Footer content 
-          </SidebarFooter>
-          */}
         </Sidebar>
         <SidebarInset className="flex-1 bg-background relative">
           <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 md:hidden">
