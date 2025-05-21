@@ -7,6 +7,7 @@ import { Footer } from '@/components/layout/Footer';
 import { Toaster } from "@/components/ui/toaster";
 import ContextProvider from '../../context'; // Path relative to project root
 import { headers } from "next/headers";
+import { StickyCountdownTimer } from '@/components/feature/StickyCountdownTimer';
 
 const fkGrotesk = localFont({
   src: [
@@ -34,7 +35,7 @@ export const metadata: Metadata = {
   title: 'CryptoIndexFund - Decentralized Crypto Fund',
   description: 'Invest in crypto with transparency and decentralization. Welcome to CryptoIndexFund.',
   icons: {
-    icon: '/favicon.ico', // Path relative to the public directory
+    icon: '/favicon.ico', // Next.js will automatically serve /app/favicon.ico at the root
     other: [
        { rel: 'icon', url: '/android-chrome-192x192.png', sizes: '192x192', type: 'image/png' },
        { rel: 'icon', url: '/android-chrome-512x512.png', sizes: '512x512', type: 'image/png' },
@@ -43,7 +44,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#02040A', // Corresponds to updated --background
+  themeColor: '#0F0F0F', 
 };
 
 export default function RootLayout({
@@ -64,6 +65,7 @@ export default function RootLayout({
           <Footer />
           <Toaster />
         </ContextProvider>
+        <StickyCountdownTimer />
       </body>
     </html>
   );
