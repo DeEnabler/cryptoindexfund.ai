@@ -18,31 +18,59 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  async rewrites() {
+  async redirects() {
     return [
       {
-        source: '/:path*', // Matches any path on the host
+        source: '/',
+        destination: '/docs',
+        permanent: true, // Or false if you want it to be temporary
         has: [
           {
             type: 'host',
             value: 'docs.cryptoindexfund.ai',
           },
         ],
-        destination: '/docs/:path*', // Rewrites to /docs/the-same-path
       },
-      // Explicit rule for the root of the subdomain
-      {
-        source: '/', 
-        has: [
-          {
-            type: 'host',
-            value: 'docs.cryptoindexfund.ai',
-          },
-        ],
-        destination: '/docs', // Rewrites to /docs
-      },
+      // You can add other path-specific redirects for the docs subdomain here if needed
+      // For example, if you had an old path /old-feature and want to redirect it to /docs/new-feature
+      // {
+      //   source: '/old-feature',
+      //   destination: '/docs/new-feature',
+      //   permanent: true,
+      //   has: [
+      //     {
+      //       type: 'host',
+      //       value: 'docs.cryptoindexfund.ai',
+      //     },
+      //   ],
+      // }
     ];
   },
+  // Removed the previous rewrites configuration
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: '/:path*',
+  //       has: [
+  //         {
+  //           type: 'host',
+  //           value: 'docs.cryptoindexfund.ai',
+  //         },
+  //       ],
+  //       destination: '/docs/:path*',
+  //     },
+  //     {
+  //       source: '/',
+  //       has: [
+  //         {
+  //           type: 'host',
+  //           value: 'docs.cryptoindexfund.ai',
+  //         },
+  //       ],
+  //       destination: '/docs',
+  //     },
+  //   ];
+  // },
 };
 
 export default nextConfig;
