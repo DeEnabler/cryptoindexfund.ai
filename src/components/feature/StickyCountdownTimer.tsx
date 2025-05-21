@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 const calculateTimeLeft = () => {
   const now = new Date();
@@ -62,23 +63,25 @@ export function StickyCountdownTimer() {
   const formatNumber = (num: number) => num.toString().padStart(2, '0');
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-primary text-primary-foreground p-3 text-center text-sm md:text-base z-50 shadow-lg">
-      {timeLeft.isTimeUp ? (
-        <span className="font-semibold">Our Native Token Airdrop is LIVE! Claim Yours Now!</span>
-      ) : (
-        <>
-          <span className="font-semibold mr-2">CryptoIndexFund Native Token Airdrop Countdown:</span>
-          <span className="tabular-nums">
-            <span className="mx-1">{formatNumber(timeLeft.days)}<span className="text-xs">d</span></span>
-            <span className="mx-0.5">:</span>
-            <span className="mx-1">{formatNumber(timeLeft.hours)}<span className="text-xs">h</span></span>
-            <span className="mx-0.5">:</span>
-            <span className="mx-1">{formatNumber(timeLeft.minutes)}<span className="text-xs">m</span></span>
-            <span className="mx-0.5">:</span>
-            <span className="mx-1">{formatNumber(timeLeft.seconds)}<span className="text-xs">s</span></span>
-          </span>
-        </>
-      )}
-    </div>
+    <Link href="/airdrop" passHref legacyBehavior>
+      <a className="fixed bottom-0 left-0 right-0 bg-primary text-primary-foreground p-3 text-center text-sm md:text-base z-50 shadow-lg hover:bg-primary/90 transition-colors cursor-pointer block">
+        {timeLeft.isTimeUp ? (
+          <span className="font-semibold">Our Native Token Airdrop is LIVE! Claim Yours Now!</span>
+        ) : (
+          <>
+            <span className="font-semibold mr-2">CryptoIndexFund Native Token Airdrop Countdown:</span>
+            <span className="tabular-nums">
+              <span className="mx-1">{formatNumber(timeLeft.days)}<span className="text-xs">d</span></span>
+              <span className="mx-0.5">:</span>
+              <span className="mx-1">{formatNumber(timeLeft.hours)}<span className="text-xs">h</span></span>
+              <span className="mx-0.5">:</span>
+              <span className="mx-1">{formatNumber(timeLeft.minutes)}<span className="text-xs">m</span></span>
+              <span className="mx-0.5">:</span>
+              <span className="mx-1">{formatNumber(timeLeft.seconds)}<span className="text-xs">s</span></span>
+            </span>
+          </>
+        )}
+      </a>
+    </Link>
   );
 }
