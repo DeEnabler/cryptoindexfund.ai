@@ -1,0 +1,14 @@
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "docs.cryptoindexfund.ai"
+        }
+      ],
+      "destination": "/docs/$1"
+    }
+  ]
+}
