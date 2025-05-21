@@ -4,13 +4,13 @@
 
 @layer base {
   :root {
-    --background: 240 64% 2.5%; /* Even Darker Navy Blue */
+    --background: 0 0% 6%; /* Very Dark Gray */
     --foreground: 0 0% 95%; /* Brighter Text */
 
-    --card: 240 60% 5%; /* Darker Card Navy */
+    --card: 0 0% 6%; /* Very Dark Gray Card */
     --card-foreground: 0 0% 95%;
 
-    --popover: 240 58% 7%; /* Darker Popover Background */
+    --popover: 0 0% 6%; /* Very Dark Gray Popover Background */
     --popover-foreground: 0 0% 95%;
 
     /* Ethereum-inspired purple: #A155B9. Target: HSL(285, 48%, 53%) */
@@ -47,7 +47,7 @@
     --chart-4: 300 40% 55%;
     --chart-5: 260 50% 45%;
 
-    --sidebar-background: 240 64% 2%;
+    --sidebar-background: 0 0% 6%; /* Very Dark Gray Sidebar */
     --sidebar-foreground: 0 0% 90%;
     --sidebar-primary: 285 55% 50%; /* Primary */
     --sidebar-primary-foreground: 0 0% 98%;
@@ -59,11 +59,11 @@
 
   /* Fallback for systems that prefer light mode but we force dark */
   .dark {
-    --background: 240 64% 2.5%;
+    --background: 0 0% 6%; /* Very Dark Gray */
     --foreground: 0 0% 95%;
-    --card: 240 60% 5%;
+    --card: 0 0% 6%; /* Very Dark Gray Card */
     --card-foreground: 0 0% 95%;
-    --popover: 240 58% 7%;
+    --popover: 0 0% 6%; /* Very Dark Gray Popover Background */
     --popover-foreground: 0 0% 95%;
     --primary: 285 55% 50%;
     --primary-foreground: 0 0% 98%;
@@ -79,7 +79,7 @@
     --input: 240 50% 18%;
     --ring: 285 55% 50%;
 
-    --sidebar-background: 240 64% 2%;
+    --sidebar-background: 0 0% 6%; /* Very Dark Gray Sidebar */
     --sidebar-foreground: 0 0% 90%;
     --sidebar-primary: 285 55% 50%;
     --sidebar-primary-foreground: 0 0% 98%;
