@@ -1,24 +1,4 @@
+
 {
-  "rewrites": [
-    {
-      "source": "/",
-      "destination": "/docs",
-      "has": [
-        {
-          "type": "host",
-          "value": "docs.cryptoindexfund.ai"
-        }
-      ]
-    },
-    {
-      "source": "/:path*",
-      "destination": "/docs/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "docs.cryptoindexfund.ai"
-        }
-      ]
-    }
-  ]
+  "rewrites": []
 }

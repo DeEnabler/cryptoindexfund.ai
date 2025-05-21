@@ -18,6 +18,31 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/:path*', // Matches any path on the host
+        has: [
+          {
+            type: 'host',
+            value: 'docs.cryptoindexfund.ai',
+          },
+        ],
+        destination: '/docs/:path*', // Rewrites to /docs/the-same-path
+      },
+      // Explicit rule for the root of the subdomain
+      {
+        source: '/', 
+        has: [
+          {
+            type: 'host',
+            value: 'docs.cryptoindexfund.ai',
+          },
+        ],
+        destination: '/docs', // Rewrites to /docs
+      },
+    ];
+  },
 };
 
 export default nextConfig;
