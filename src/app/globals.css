@@ -13,41 +13,48 @@
     --popover: 240 58% 7%; /* Darker Popover Background */
     --popover-foreground: 0 0% 95%;
 
-    --primary: 285 65% 35%; /* Slightly Brighter, More Saturated Purple */
+    /* Ethereum-inspired purple: #A155B9. Target: HSL(285, 48%, 53%) */
+    /* For dark theme, let's make it a bit more vibrant and less muted.
+       Original spec: 285 65% 35%; - Slightly Brighter, More Saturated Purple
+    */
+    --primary: 285 55% 50%; /* Adjusted primary: HSL for #A155B9 is ~285, 48%, 53%. Let's try this. */
     --primary-foreground: 0 0% 98%; /* Very Bright Foreground for Primary */
 
-    --secondary: 278 70% 28%; /* Slightly adjusted secondary */
+    /* Accent color: Complementary indigo (#4B0082). HSL(278, 100%, 25%) */
+    /* Original spec: 278 75% 22%; - Adjusted Accent */
+    --accent: 278 70% 35%; /* Brighter accent for better visibility */
+    --accent-foreground: 0 0% 98%;
+    
+    /* Secondary (can be a more subtle variant of accent or primary for less emphasis) */
+    --secondary: 278 50% 25%; /* Slightly adjusted secondary */
     --secondary-foreground: 0 0% 98%;
 
     --muted: 240 50% 10%; /* Darker Muted Background */
     --muted-foreground: 0 0% 65%; /* Slightly Brighter Muted Text */
-
-    --accent: 278 75% 22%; /* Adjusted Accent */
-    --accent-foreground: 0 0% 98%;
 
     --destructive: 0 60% 40%; /* Adjusted Destructive Red */
     --destructive-foreground: 0 0% 98%;
 
     --border: 240 50% 15%; /* Darker Border Color */
     --input: 240 50% 18%; /* Darker Input Background */
-    --ring: 285 65% 35%; /* Ring color (Primary) */
+    --ring: 285 55% 50%; /* Ring color (Primary) */
 
     --radius: 0.5rem;
 
-    --chart-1: 285 65% 35%;
-    --chart-2: 278 75% 22%;
+    --chart-1: 285 55% 50%; /* Primary */
+    --chart-2: 278 70% 35%; /* Accent */
     --chart-3: 220 60% 50%;
     --chart-4: 300 40% 55%;
     --chart-5: 260 50% 45%;
 
     --sidebar-background: 240 64% 2%;
     --sidebar-foreground: 0 0% 90%;
-    --sidebar-primary: 285 65% 35%;
+    --sidebar-primary: 285 55% 50%; /* Primary */
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 278 75% 22%;
+    --sidebar-accent: 278 70% 35%; /* Accent */
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 240 50% 12%;
-    --sidebar-ring: 285 65% 35%;
+    --sidebar-ring: 285 55% 50%; /* Primary */
   }
 
   /* Fallback for systems that prefer light mode but we force dark */
@@ -58,28 +65,28 @@
     --card-foreground: 0 0% 95%;
     --popover: 240 58% 7%;
     --popover-foreground: 0 0% 95%;
-    --primary: 285 65% 35%;
+    --primary: 285 55% 50%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 278 70% 28%;
+    --secondary: 278 50% 25%;
     --secondary-foreground: 0 0% 98%;
     --muted: 240 50% 10%;
     --muted-foreground: 0 0% 65%;
-    --accent: 278 75% 22%;
+    --accent: 278 70% 35%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 60% 40%;
     --destructive-foreground: 0 0% 98%;
     --border: 240 50% 15%;
     --input: 240 50% 18%;
-    --ring: 285 65% 35%;
+    --ring: 285 55% 50%;
 
     --sidebar-background: 240 64% 2%;
     --sidebar-foreground: 0 0% 90%;
-    --sidebar-primary: 285 65% 35%;
+    --sidebar-primary: 285 55% 50%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 278 75% 22%;
+    --sidebar-accent: 278 70% 35%;
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 240 50% 12%;
-    --sidebar-ring: 285 65% 35%;
+    --sidebar-ring: 285 55% 50%;
   }
 }
 
@@ -89,12 +96,15 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* font-family is now handled by next/font via a class on <html> and Tailwind's font-sans */
     /* Force dark theme by default */
     color-scheme: dark;
   }
   html {
     /* Force dark theme by default */
     color-scheme: dark;
+    /* Apply the font-sans from Tailwind, which now includes FK Grotesk via CSS variable */
+    @apply font-sans;
   }
 }
 
