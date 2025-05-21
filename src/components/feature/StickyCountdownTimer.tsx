@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -63,10 +64,10 @@ export function StickyCountdownTimer() {
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-primary text-primary-foreground p-3 text-center text-sm md:text-base z-50 shadow-lg">
       {timeLeft.isTimeUp ? (
-        <span className="font-semibold">The event has started!</span>
+        <span className="font-semibold">Our Native Token Airdrop is LIVE! Claim Yours Now!</span>
       ) : (
         <>
-          <span className="font-semibold mr-2">Countdown to July 1st, 12 PM:</span>
+          <span className="font-semibold mr-2">CryptoIndexFund Native Token Airdrop Countdown:</span>
           <span className="tabular-nums">
             <span className="mx-1">{formatNumber(timeLeft.days)}<span className="text-xs">d</span></span>
             <span className="mx-0.5">:</span>
