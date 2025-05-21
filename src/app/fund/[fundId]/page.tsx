@@ -49,7 +49,8 @@ const formatDateForDisplay = (tickItem: string | number) => {
       if (isNaN(date.getTime())) { // Check if date is valid
         return String(tickItem); // Fallback to original if parsing fails
       }
-      return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+      // Format to "Month 'YY" e.g., "Oct '20"
+      return date.toLocaleDateString(undefined, { month: 'short', year: '2-digit' });
     } catch (e) {
       return String(tickItem); // Fallback for any parsing error
     }
