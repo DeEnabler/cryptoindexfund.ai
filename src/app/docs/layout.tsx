@@ -1,7 +1,6 @@
 
 "use client"; // Add this directive
 
-import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -20,11 +19,8 @@ import {
 } from '@/components/ui/sidebar';
 import { Home, BookOpen, Users, Settings, FileText, Lightbulb, Landmark, ShieldCheck, Info, BarChart3, FolderGit2, HelpCircleIcon } from 'lucide-react';
 
-// Metadata export is fine in a Client Component for the App Router
-export const metadata: Metadata = {
-  title: 'Documentation - CryptoIndexFund',
-  description: 'Official documentation for CryptoIndexFund.',
-};
+// Removed metadata export as it's not allowed in Client Components used as layouts.
+// Individual doc pages can export their own metadata if needed.
 
 const docsNavItems = [
   {
@@ -130,7 +126,7 @@ export default function DocsLayout({
         </Sidebar>
         <SidebarInset className="flex-1 bg-background relative">
           <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 md:hidden">
-            <SidebarTrigger className="md:hidden" /> 
+            <SidebarTrigger className="md:hidden" />
             <Link href="/" className="flex items-center gap-2 md:hidden">
                 <Image src="/android-chrome-192x192.png" alt="CryptoIndexFund Logo" data-ai-hint="logo abstract" width={24} height={24} />
                 <span className="font-semibold">CryptoIndexFund Docs</span>
