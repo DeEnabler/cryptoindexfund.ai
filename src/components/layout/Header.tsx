@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, X, Home, Briefcase, Lightbulb, Rocket, LogOut, UserCircle, BookText } from "lucide-react";
+import { Menu, X, Home, Briefcase, Newspaper, Rocket, LogOut, UserCircle, BookText } from "lucide-react"; // Changed Lightbulb to Newspaper
 import { usePathname } from 'next/navigation';
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
@@ -14,7 +14,7 @@ import Image from "next/image";
 const navItems = [
   { href: "/", label: "Home", icon: Home },
   { href: "/fund-overview", label: "Investment Products", icon: Briefcase },
-  { href: "/learn", label: "Research", icon: Lightbulb },
+  { href: "/learn", label: "Blog", icon: Newspaper }, // Changed label to "Blog" and icon to Newspaper
   { href: "https://docs.cryptoindexfund.ai", label: "Docs", icon: BookText, external: true },
 ];
 
@@ -82,12 +82,11 @@ export function Header() {
 
 
   if (!isMounted) {
-    // Simplified skeleton for brevity during complex changes
     return (
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
-            <Image src="/android-chrome-192x192.png" alt="CryptoIndexFund Site Logo" width={32} height={32} className="h-8 w-auto" priority={true}/>
+            <Image src="/android-chrome-192x192.png" alt="CryptoIndexFund Logo" width={32} height={32} className="h-8 w-auto" priority={true}/>
             <span className="font-bold text-2xl text-primary">CryptoIndexFund</span>
           </Link>
           <div className="h-8 w-24 animate-pulse rounded-md bg-muted md:hidden"></div>
@@ -105,7 +104,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
         <Link href="/" className="flex items-center space-x-2" onClick={() => setIsMobileMenuOpen(false)}>
-          <Image src="/android-chrome-192x192.png" alt="CryptoIndexFund Site Logo" width={32} height={32} className="h-8 w-auto" priority={true} />
+          <Image src="/android-chrome-192x192.png" alt="CryptoIndexFund Logo" width={32} height={32} className="h-8 w-auto" priority={true} />
           <span className="font-bold text-2xl text-primary">CryptoIndexFund</span>
         </Link>
 
@@ -155,7 +154,7 @@ export function Header() {
             </SheetTrigger>
             <SheetContent side="right" className="w-full max-w-xs bg-background p-6 pt-12">
               <Link href="/" className="flex items-center space-x-2 mb-8" onClick={() => setIsMobileMenuOpen(false)}>
-                <Image src="/android-chrome-192x192.png" alt="CryptoIndexFund Site Logo" width={32} height={32} className="h-8 w-auto" />
+                <Image src="/android-chrome-192x192.png" alt="CryptoIndexFund Logo" width={32} height={32} className="h-8 w-auto" />
                 <span className="font-bold text-2xl text-primary">CryptoIndexFund</span>
               </Link>
               <nav className="flex flex-col space-y-3">
