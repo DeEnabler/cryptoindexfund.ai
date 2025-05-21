@@ -24,7 +24,7 @@ const defaultFundDetails = {
 };
 
 const chartConfig = {
-  close: { // Updated from 'value' to 'close'
+  close: { 
     label: "Fund Value (Close Price)", 
     color: "hsl(var(--primary))",
   },
@@ -38,7 +38,7 @@ const mockTransactions = [
   { id: "TX005", date: "2024-07-10", type: "Deposit", amount: "5.0 Units", status: "Pending" },
 ];
 
-type PerformanceDataPoint = { date: string; close: number }; // Updated from 'value' to 'close'
+type PerformanceDataPoint = { date: string; close: number }; 
 
 const formatDateForDisplay = (tickItem: string | number) => {
   if (typeof tickItem === 'string') {
@@ -48,6 +48,7 @@ const formatDateForDisplay = (tickItem: string | number) => {
       if (isNaN(date.getTime())) {
         return String(tickItem); 
       }
+      // Format to Month 'YY (e.g., "Oct '20")
       return date.toLocaleDateString(undefined, { month: 'short', year: '2-digit' });
     } catch (e) {
       return String(tickItem); 
@@ -64,6 +65,7 @@ const formatTooltipLabel = (label: string | number) => {
       if (isNaN(date.getTime())) { 
         return String(label); 
       }
+      // Format to Month Day, 'YY (e.g., "Oct 20, '20")
       return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: '2-digit' });
     } catch (e) {
       return String(label);
@@ -108,7 +110,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
             console.log("[Chart Data] Data appears valid.");
             
             let processedData = data as PerformanceDataPoint[];
-            const MAX_POINTS = 250; // Target maximum number of points for the chart
+            const MAX_POINTS = 250; 
             
             if (processedData.length > MAX_POINTS) {
               console.log(`[Chart Data] Original data has ${processedData.length} points. Downsampling to ~${MAX_POINTS}.`);
@@ -127,7 +129,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
           } else {
             const missingProps = [];
             if (typeof data[0]?.date === 'undefined') missingProps.push("'date'");
-            if (typeof data[0]?.close === 'undefined') missingProps.push("'close'"); // Updated from 'value'
+            if (typeof data[0]?.close === 'undefined') missingProps.push("'close'");
             const errorMsg = `Fetched data is an array, but items do not have expected ${missingProps.join(' and ')} properties. First item: ${JSON.stringify(data[0])}`;
             console.warn(`[Chart Data] ${errorMsg}`);
             setChartData([]);
@@ -150,7 +152,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
         setIsLoadingChart(false);
         console.log("[Chart Data] Finished loading chart data attempt.");
       });
-  }, []); // Removed fundId from dependency array as data source is static
+  }, []); 
 
 
   if (!isMounted) {
@@ -262,7 +264,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
               <TrendingUp className="h-6 w-6 mr-2 text-primary" />
               Performance Data
             </CardTitle>
-            <CardDescription>Historical performance data (from static JSON: rebalancing_50_50_7d.json).</CardDescription>
+            <CardDescription>Historical performance data.</CardDescription>
           </CardHeader>
           <CardContent className="h-[350px] w-full p-0">
             {isLoadingChart ? (
@@ -306,8 +308,8 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
                       stroke="hsl(var(--primary))"
                       fill="hsla(var(--primary), 0.2)"
                       strokeWidth={2}
-                      dot={false}          // Ensure dots are not rendered
-                      activeDot={false}    // Ensure active dots are not rendered
+                      dot={false}
+                      activeDot={false}
                     />
                   </AreaChart>
                 </ResponsiveContainer>
