@@ -4,7 +4,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { ChartContainer, ChartTooltipContent, ChartLegendContent, type ChartConfig } from "@/components/ui/chart";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { TrendingUp, ArrowLeft, Loader2, AlertTriangle, Info, Percent, Sigma, Activity } from "lucide-react"; // Added new icons
+import { TrendingUp, ArrowLeft, Loader2, AlertTriangle, Info, Percent, Sigma, Activity, DollarSign } from "lucide-react"; // Added DollarSign
 import { useState, useEffect, use } from 'react';
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,9 @@ interface FundDetail {
   sharpeRatio: FundMetric;
   entrySensitivity: FundMetric;
 }
+
+// Placeholder for DollarSign icon, moved before fundsDetailsMap
+const DollarSignIcon = ({className}: {className?: string}) => <DollarSign className={className} />;
 
 // Mock data for fund details - updated structure
 const fundsDetailsMap: { [key: string]: FundDetail } = {
@@ -63,9 +66,6 @@ const fundsDetailsMap: { [key: string]: FundDetail } = {
   },
 };
 
-// Placeholder for DollarSign icon, can be replaced with actual lucide icon
-const DollarSignIcon = ({className}: {className?: string}) => <DollarSign className={className} />;
-
 
 const defaultFundDetails: FundDetail = {
   name: "Selected Fund", 
@@ -87,14 +87,15 @@ type PerformanceDataPoint = { date: string; close: number };
 const formatDateForDisplay = (tickItem: string | number) => {
   if (typeof tickItem === 'string') {
     try {
+      // Try to replace space with 'T' for more robust parsing if date includes time
       const dateStr = tickItem.includes(' ') ? tickItem.replace(' ', 'T') : tickItem;
       const date = new Date(dateStr);
-      if (isNaN(date.getTime())) {
-        return String(tickItem); 
+      if (isNaN(date.getTime())) { // Check if date is valid
+        return String(tickItem); // Fallback to original string if parsing fails
       }
       return date.toLocaleDateString(undefined, { month: 'short', year: '2-digit' });
     } catch (e) {
-      return String(tickItem); 
+      return String(tickItem); // Fallback in case of other errors
     }
   }
   return String(tickItem);
@@ -105,12 +106,12 @@ const formatTooltipLabel = (label: string | number) => {
     try {
       const dateStr = label.includes(' ') ? label.replace(' ', 'T') : label;
       const date = new Date(dateStr);
-      if (isNaN(date.getTime())) { 
-        return String(label); 
+      if (isNaN(date.getTime())) { // Check if date is valid
+        return String(label); // Fallback to original string if parsing fails
       }
       return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: '2-digit' });
     } catch (e) {
-      return String(label);
+      return String(label); // Fallback in case of other errors
     }
   }
   return String(label);
@@ -123,6 +124,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
   const [isLoadingChart, setIsLoadingChart] = useState(true);
   const [chartError, setChartError] = useState<string | null>(null);
   
+  // Resolve the params if it's a Promise (for Next.js App Router)
   const resolvedParams = use(paramsProp as { fundId: string } | Promise<{ fundId: string }>); 
 
   const fundId = resolvedParams.fundId;
@@ -150,11 +152,13 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
         console.log("[Chart Data] Raw fetched data:", data);
 
         if (Array.isArray(data)) {
+          // Check if the first item has 'date' and 'close' properties
           if (data.length > 0 && data[0] && typeof data[0].date !== 'undefined' && typeof data[0].close !== 'undefined') {
-            console.log("[Chart Data] Data appears valid.");
+            console.log("[Chart Data] Data appears valid. First item:", data[0]);
             
             let processedData = data as PerformanceDataPoint[];
-            const MAX_POINTS = 250; 
+            // Downsample if too many points
+            const MAX_POINTS = 250; // Aim for around 250 points for better performance/readability
             
             if (processedData.length > MAX_POINTS) {
               console.log(`[Chart Data] Original data has ${processedData.length} points. Downsampling to ~${MAX_POINTS}.`);
@@ -171,6 +175,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
             setChartData([]);
             setChartError(emptyMsg);
           } else {
+            // Data is an array, but items don't have expected properties
             const missingProps = [];
             if (data.length > 0 && data[0] && typeof data[0].date === 'undefined') missingProps.push("'date'");
             if (data.length > 0 && data[0] && typeof data[0].close === 'undefined') missingProps.push("'close'");
@@ -180,6 +185,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
             setChartError(errorMsg);
           }
         } else {
+          // Data is not an array
           const errorMsg = `Fetched data is not an array. Received: ${typeof data}, ${JSON.stringify(data)}`;
           console.warn(`[Chart Data] ${errorMsg}`);
           setChartData([]);
@@ -189,7 +195,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
       .catch(error => {
         const errorMsg = `Failed to fetch or process fund performance data: ${error.message}`;
         console.error(`[Chart Data] ${errorMsg}`);
-        setChartData([]); 
+        setChartData([]); // Ensure chartData is empty on error
         setChartError(errorMsg);
       })
       .finally(() => {
@@ -275,7 +281,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
                       fontSize={12}
                       tickLine={false}
                       axisLine={false}
-                      interval="preserveStartEnd"
+                      interval="preserveStartEnd" // Helps with dense data
                       tickFormatter={formatDateForDisplay}
                     />
                     <YAxis 
@@ -283,7 +289,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
                       fontSize={12}
                       tickLine={false}
                       axisLine={false}
-                      tickFormatter={(value) => `$${value / 1000}k`}
+                      tickFormatter={(value) => `$${value / 1000}k`} // Example: format to $10k, $20k
                     />
                     <Tooltip
                       cursor={{ fill: "hsla(var(--accent), 0.1)" }}
@@ -293,12 +299,12 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
                     <Legend content={<ChartLegendContent />} />
                     <Area
                       type="monotone"
-                      dataKey="close" 
+                      dataKey="close" // Changed from "value" to "close"
                       stroke="hsl(var(--primary))"
                       fill="hsla(var(--primary), 0.2)"
                       strokeWidth={2}
-                      dot={false}
-                      activeDot={false}
+                      dot={false} // Remove dots for dense data
+                      activeDot={false} // Remove active dots for dense data
                     />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -355,3 +361,4 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
 }
 
     
+
