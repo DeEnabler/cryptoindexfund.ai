@@ -2,25 +2,77 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ChartContainer, ChartTooltipContent, ChartLegendContent, type ChartConfig } from "@/components/ui/chart";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { DollarSign, Users, ListCollapse, TrendingUp, Zap, ArrowLeft, Loader2, AlertTriangle } from "lucide-react";
+import { TrendingUp, ArrowLeft, Loader2, AlertTriangle, Info, Percent, Sigma, Activity } from "lucide-react"; // Added new icons
 import { useState, useEffect, use } from 'react';
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-// Mock data for fund details - this would ideally come from a service based on fundId
-const fundsDetailsMap: { [key: string]: { name: string; aum: string; aumChange: string; userShare: string; userShareTokens: string; } } = {
-  btc: { name: "Bitcoin Fund", aum: "$6,500,820.75", aumChange: "+4.8% from last month", userShare: "$2,105.50", userShareTokens: "0.0321 BTC Token" },
-  eth: { name: "Ethereum Fund", aum: "$3,210,400.10", aumChange: "+3.5% from last month", userShare: "$1,530.20", userShareTokens: "0.428 ETH Token" },
-  sol: { name: "Solana Fund", aum: "$1,850,600.90", aumChange: "+6.1% from last month", userShare: "$970.00", userShareTokens: "5.62 SOL Token" },
-  dff: { name: "Digital Future Fund", aum: "$2,115,750.00", aumChange: "+2.9% from last month", userShare: "$750.40", userShareTokens: "6.08 DFF Token" },
-  aia: { name: "AI Agents Fund", aum: "$980,300.25", aumChange: "+7.3% from last month", userShare: "$420.90", userShareTokens: "4.73 AIA Token" },
+interface FundMetric {
+  value: string;
+  label: string;
+  asOfDate: string;
+  icon: React.ElementType;
+}
+
+interface FundDetail {
+  name: string;
+  strategy: string;
+  tokenPrice: FundMetric;
+  sharpeRatio: FundMetric;
+  entrySensitivity: FundMetric;
+}
+
+// Mock data for fund details - updated structure
+const fundsDetailsMap: { [key: string]: FundDetail } = {
+  btc: { 
+    name: "Bitcoin Fund", 
+    strategy: "The Bitcoin Fund is solely and passively invested in Bitcoin. Its investment objective is to reflect the value of Bitcoin held by the Trust, less expenses and other liabilities. Bitcoin is a digital asset that is created and transmitted through the operations of the peer-to-peer Bitcoin Network, a decentralized network of computers that operates on cryptographic protocols.",
+    tokenPrice: { value: "$65,432.10", label: "Current Fund Token Price", asOfDate: "05/21/2025", icon: DollarSignIcon },
+    sharpeRatio: { value: "1.85", label: "Sharpe Ratio (Annualized)", asOfDate: "05/21/2025", icon: Sigma},
+    entrySensitivity: { value: "Low", label: "Entry Sensitivity", asOfDate: "05/21/2025", icon: Activity }
+  },
+  eth: { 
+    name: "Ethereum Fund", 
+    strategy: "The Ethereum Fund provides exposure to Ethereum, the backbone of decentralized applications and smart contracts. It aims to track ETH performance, reflecting its utility in transaction fees (gas) and as collateral in DeFi.",
+    tokenPrice: { value: "$3,567.89", label: "Current Fund Token Price", asOfDate: "05/21/2025", icon: DollarSignIcon },
+    sharpeRatio: { value: "2.10", label: "Sharpe Ratio (Annualized)", asOfDate: "05/21/2025", icon: Sigma },
+    entrySensitivity: { value: "Medium", label: "Entry Sensitivity", asOfDate: "05/21/2025", icon: Activity }
+  },
+  sol: { 
+    name: "Solana Fund", 
+    strategy: "The Solana Fund invests in SOL, the native token of the Solana blockchain, known for its high throughput and scalability. The strategy focuses on capturing growth from Solana's expanding ecosystem of dApps and NFT marketplaces.",
+    tokenPrice: { value: "$172.45", label: "Current Fund Token Price", asOfDate: "05/21/2025", icon: DollarSignIcon },
+    sharpeRatio: { value: "1.95", label: "Sharpe Ratio (Annualized)", asOfDate: "05/21/2025", icon: Sigma },
+    entrySensitivity: { value: "High", label: "Entry Sensitivity", asOfDate: "05/21/2025", icon: Activity }
+  },
+  dff: { 
+    name: "Digital Future Fund", 
+    strategy: "The Digital Future Fund is a diversified portfolio targeting key growth areas in the digital asset ecosystem, including Web3 infrastructure, Metaverse platforms, and decentralized identity solutions. It aims for broad exposure to innovative blockchain technologies.",
+    tokenPrice: { value: "$123.45", label: "Current Fund Token Price", asOfDate: "05/21/2025", icon: DollarSignIcon },
+    sharpeRatio: { value: "N/A", label: "Sharpe Ratio (Annualized)", asOfDate: "05/21/2025", icon: Sigma },
+    entrySensitivity: { value: "Medium", label: "Entry Sensitivity", asOfDate: "05/21/2025", icon: Activity }
+  },
+  aia: { 
+    name: "AI Agents Fund", 
+    strategy: "The AI Agents Fund invests in projects at the intersection of Artificial Intelligence and blockchain, focusing on decentralized AI marketplaces, AI-powered oracles, and autonomous agent technologies. The fund seeks to capitalize on the synergy between AI and Web3.",
+    tokenPrice: { value: "$88.90", label: "Current Fund Token Price", asOfDate: "05/21/2025", icon: DollarSignIcon },
+    sharpeRatio: { value: "N/A", label: "Sharpe Ratio (Annualized)", asOfDate: "05/21/2025", icon: Sigma },
+    entrySensitivity: { value: "High", label: "Entry Sensitivity", asOfDate: "05/21/2025", icon: Activity }
+  },
 };
 
-const defaultFundDetails = {
-  name: "Selected Fund", aum: "$1,000,000.00", aumChange: "+0.0% from last month", userShare: "$0.00", userShareTokens: "0.00 TST Token"
+// Placeholder for DollarSign icon, can be replaced with actual lucide icon
+const DollarSignIcon = ({className}: {className?: string}) => <DollarSign className={className} />;
+
+
+const defaultFundDetails: FundDetail = {
+  name: "Selected Fund", 
+  strategy: "Strategy details for this fund are currently unavailable. Please check back later or contact support for more information.",
+  tokenPrice: { value: "$0.00", label: "Current Fund Token Price", asOfDate: "N/A", icon: DollarSignIcon },
+  sharpeRatio: { value: "N/A", label: "Sharpe Ratio (Annualized)", asOfDate: "N/A", icon: Sigma },
+  entrySensitivity: { value: "N/A", label: "Entry Sensitivity", asOfDate: "N/A", icon: Activity }
 };
 
 const chartConfig = {
@@ -29,14 +81,6 @@ const chartConfig = {
     color: "hsl(var(--primary))",
   },
 } satisfies ChartConfig;
-
-const mockTransactions = [
-  { id: "TX001", date: "2024-07-20", type: "Deposit", amount: "2.5 Units", status: "Completed" },
-  { id: "TX002", date: "2024-07-18", type: "Withdrawal", amount: "0.5 Units", status: "Completed" },
-  { id: "TX003", date: "2024-07-15", type: "Investment Rebalance", amount: "Internal Transfer", status: "Completed" },
-  { id: "TX004", date: "2024-07-12", type: "Fee", amount: "0.01 Units", status: "Completed" },
-  { id: "TX005", date: "2024-07-10", type: "Deposit", amount: "5.0 Units", status: "Pending" },
-];
 
 type PerformanceDataPoint = { date: string; close: number }; 
 
@@ -48,7 +92,6 @@ const formatDateForDisplay = (tickItem: string | number) => {
       if (isNaN(date.getTime())) {
         return String(tickItem); 
       }
-      // Format to Month 'YY (e.g., "Oct '20")
       return date.toLocaleDateString(undefined, { month: 'short', year: '2-digit' });
     } catch (e) {
       return String(tickItem); 
@@ -65,7 +108,6 @@ const formatTooltipLabel = (label: string | number) => {
       if (isNaN(date.getTime())) { 
         return String(label); 
       }
-      // Format to Month Day, 'YY (e.g., "Oct 20, '20")
       return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: '2-digit' });
     } catch (e) {
       return String(label);
@@ -91,6 +133,8 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
   }, []);
 
   useEffect(() => {
+    if (!fundId) return; // Don't fetch if fundId is not available
+
     setIsLoadingChart(true);
     setChartError(null); 
     console.log("[Chart Data] Fetching from /data/rebalancing_50_50_7d.json");
@@ -128,8 +172,8 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
             setChartError(emptyMsg);
           } else {
             const missingProps = [];
-            if (typeof data[0]?.date === 'undefined') missingProps.push("'date'");
-            if (typeof data[0]?.close === 'undefined') missingProps.push("'close'");
+            if (data.length > 0 && data[0] && typeof data[0].date === 'undefined') missingProps.push("'date'");
+            if (data.length > 0 && data[0] && typeof data[0].close === 'undefined') missingProps.push("'close'");
             const errorMsg = `Fetched data is an array, but items do not have expected ${missingProps.join(' and ')} properties. First item: ${JSON.stringify(data[0])}`;
             console.warn(`[Chart Data] ${errorMsg}`);
             setChartData([]);
@@ -152,61 +196,39 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
         setIsLoadingChart(false);
         console.log("[Chart Data] Finished loading chart data attempt.");
       });
-  }, []); 
+  }, [fundId]); // Add fundId as dependency
 
 
   if (!isMounted) {
+    // Skeleton loader for initial mount
     return (
-      <div className="space-y-8">
+      <div className="space-y-8 animate-pulse">
         <div className="flex items-center mb-6">
-            <Button variant="outline" size="icon" asChild className="mr-4">
-                <Link href="/fund-overview"><ArrowLeft className="h-4 w-4" /></Link>
-            </Button>
-            <div className="animate-pulse">
+            <div className="h-8 w-8 bg-muted rounded mr-4"></div>
+            <div>
                 <div className="h-8 w-48 bg-muted rounded mb-2"></div>
                 <div className="h-4 w-64 bg-muted rounded"></div>
             </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1,2,3].map(i => (
-            <Card key={i} className="animate-pulse">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <div className="h-6 w-1/2 bg-muted rounded"></div>
-                <div className="h-8 w-8 bg-muted rounded-full"></div>
-              </CardHeader>
-              <CardContent>
-                <div className="h-8 w-3/4 bg-muted rounded mb-2"></div>
-                <div className="h-4 w-1/2 bg-muted rounded"></div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        <Card className="animate-pulse">
-          <CardHeader>
-            <div className="h-6 w-1/3 bg-muted rounded"></div>
-          </CardHeader>
-          <CardContent>
-            <div className="h-64 w-full bg-muted rounded"></div>
-          </CardContent>
-        </Card>
-
-        <Card className="animate-pulse">
-          <CardHeader>
-            <div className="h-6 w-1/4 bg-muted rounded"></div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {[1,2,3,4,5].map(i => ( <div key={i} className="h-10 w-full bg-muted rounded"></div> ))}
-            </div>
-          </CardContent>
-        </Card>
+        <Card><CardHeader><div className="h-6 w-1/3 bg-muted rounded"></div></CardHeader><CardContent><div className="h-64 w-full bg-muted rounded"></div></CardContent></Card>
+        <Card><CardHeader><div className="h-6 w-1/3 bg-muted rounded"></div></CardHeader><CardContent><div className="h-20 w-full bg-muted rounded"></div></CardContent></Card>
+        <Card><CardHeader><div className="h-6 w-1/3 bg-muted rounded"></div></CardHeader><CardContent><div className="h-20 w-full bg-muted rounded"></div></CardContent></Card>
       </div>
     );
   }
   
   const fundName = fundDetails.name || `${fundId.toUpperCase()} Fund`;
+
+  // Helper component for metric items
+  const MetricItem = ({ metric }: { metric: FundMetric }) => (
+    <div className="flex flex-col items-center text-center p-4 border border-border/50 rounded-lg shadow-sm hover:shadow-md transition-shadow bg-card">
+      <metric.icon className="h-8 w-8 text-primary mb-2" />
+      <h3 className="text-2xl font-bold text-foreground">{metric.value}</h3>
+      <p className="text-sm text-muted-foreground">{metric.label}</p>
+      <p className="text-xs text-muted-foreground/70 mt-1">As of {metric.asOfDate}</p>
+    </div>
+  );
 
   return (
     <div className="space-y-8">
@@ -219,43 +241,10 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
         <div>
             <h1 className="text-4xl font-bold tracking-tight text-primary">{fundName} Overview</h1>
             <p className="text-lg text-muted-foreground mt-1">
-            Track your investments and {fundName.toLowerCase()} performance.
+            Detailed performance, strategy, and key metrics for {fundName.toLowerCase()}.
             </p>
         </div>
       </header>
-
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card className="shadow-lg hover:shadow-primary/20 transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Value Locked (TVL)</CardTitle>
-            <DollarSign className="h-5 w-5 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{fundDetails.aum}</div>
-            <p className="text-xs text-muted-foreground">{fundDetails.aumChange}</p>
-          </CardContent>
-        </Card>
-        <Card className="shadow-lg hover:shadow-primary/20 transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Your Share (Mock)</CardTitle>
-            <Users className="h-5 w-5 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{fundDetails.userShare}</div>
-            <p className="text-xs text-muted-foreground">Equivalent to {fundDetails.userShareTokens}</p>
-          </CardContent>
-        </Card>
-        <Card className="shadow-lg hover:shadow-primary/20 transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Fund Strategy</CardTitle>
-            <ListCollapse className="h-5 w-5 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-xl font-bold">{fundId.toUpperCase()} Focused</div>
-            <p className="text-xs text-muted-foreground">Concentrated exposure to {fundName.toLowerCase()}</p>
-          </CardContent>
-        </Card>
-      </section>
 
       <section>
         <Card className="shadow-xl">
@@ -331,39 +320,38 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
         <Card className="shadow-xl">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Zap className="h-6 w-6 mr-2 text-primary" />
-              Recent Transactions (Mock)
+              <Info className="h-6 w-6 mr-2 text-primary" />
+              Investment Strategy
             </CardTitle>
-            <CardDescription>A log of recent activities related to your account in this fund.</CardDescription>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Amount/Details</TableHead>
-                  <TableHead className="text-right">Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {mockTransactions.map((tx) => (
-                  <TableRow key={tx.id}>
-                    <TableCell className="font-medium">{tx.id}</TableCell>
-                    <TableCell>{tx.date}</TableCell>
-                    <TableCell>{tx.type}</TableCell>
-                    <TableCell>{tx.amount}</TableCell>
-                    <TableCell className={`text-right font-semibold ${tx.status === "Completed" ? "text-green-400" : "text-yellow-400"}`}>
-                      {tx.status}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+              {fundDetails.strategy}
+            </p>
+          </CardContent>
+        </Card>
+      </section>
+
+      <section>
+        <Card className="shadow-xl">
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Percent className="h-6 w-6 mr-2 text-primary" />
+              Key Metrics
+            </CardTitle>
+            <CardDescription>Essential indicators for this fund.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <MetricItem metric={fundDetails.tokenPrice} />
+              <MetricItem metric={fundDetails.sharpeRatio} />
+              <MetricItem metric={fundDetails.entrySensitivity} />
+            </div>
           </CardContent>
         </Card>
       </section>
     </div>
   );
 }
+
+    
