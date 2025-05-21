@@ -4,65 +4,61 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { ChartContainer, ChartTooltipContent, ChartLegendContent, type ChartConfig } from "@/components/ui/chart";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { TrendingUp, ArrowLeft, Loader2, AlertTriangle, Info, Percent, Sigma, Activity, DollarSign } from "lucide-react"; // Added DollarSign
+import { TrendingUp, ArrowLeft, Loader2, AlertTriangle, Info, Percent, Sigma, Activity, DollarSign } from "lucide-react";
 import { useState, useEffect, use } from 'react';
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-interface FundMetric {
+interface FundMetricValue {
   value: string;
   label: string;
   asOfDate: string;
-  icon: React.ElementType;
 }
 
 interface FundDetail {
   name: string;
   strategy: string;
-  tokenPrice: FundMetric;
-  sharpeRatio: FundMetric;
-  entrySensitivity: FundMetric;
+  tokenPrice: FundMetricValue;
+  sharpeRatio: FundMetricValue;
+  entrySensitivity: FundMetricValue;
 }
-
-// Placeholder for DollarSign icon, moved before fundsDetailsMap
-const DollarSignIcon = ({className}: {className?: string}) => <DollarSign className={className} />;
 
 // Mock data for fund details - updated structure
 const fundsDetailsMap: { [key: string]: FundDetail } = {
   btc: { 
     name: "Bitcoin Fund", 
     strategy: "The Bitcoin Fund is solely and passively invested in Bitcoin. Its investment objective is to reflect the value of Bitcoin held by the Trust, less expenses and other liabilities. Bitcoin is a digital asset that is created and transmitted through the operations of the peer-to-peer Bitcoin Network, a decentralized network of computers that operates on cryptographic protocols.",
-    tokenPrice: { value: "$65,432.10", label: "Current Fund Token Price", asOfDate: "05/21/2025", icon: DollarSignIcon },
-    sharpeRatio: { value: "1.85", label: "Sharpe Ratio (Annualized)", asOfDate: "05/21/2025", icon: Sigma},
-    entrySensitivity: { value: "Low", label: "Entry Sensitivity", asOfDate: "05/21/2025", icon: Activity }
+    tokenPrice: { value: "$65,432.10", label: "Current Fund Token Price", asOfDate: "05/21/2025" },
+    sharpeRatio: { value: "1.85", label: "Sharpe Ratio (Annualized)", asOfDate: "05/21/2025"},
+    entrySensitivity: { value: "Low", label: "Entry Sensitivity", asOfDate: "05/21/2025" }
   },
   eth: { 
     name: "Ethereum Fund", 
     strategy: "The Ethereum Fund provides exposure to Ethereum, the backbone of decentralized applications and smart contracts. It aims to track ETH performance, reflecting its utility in transaction fees (gas) and as collateral in DeFi.",
-    tokenPrice: { value: "$3,567.89", label: "Current Fund Token Price", asOfDate: "05/21/2025", icon: DollarSignIcon },
-    sharpeRatio: { value: "2.10", label: "Sharpe Ratio (Annualized)", asOfDate: "05/21/2025", icon: Sigma },
-    entrySensitivity: { value: "Medium", label: "Entry Sensitivity", asOfDate: "05/21/2025", icon: Activity }
+    tokenPrice: { value: "$3,567.89", label: "Current Fund Token Price", asOfDate: "05/21/2025" },
+    sharpeRatio: { value: "2.10", label: "Sharpe Ratio (Annualized)", asOfDate: "05/21/2025" },
+    entrySensitivity: { value: "Medium", label: "Entry Sensitivity", asOfDate: "05/21/2025" }
   },
   sol: { 
     name: "Solana Fund", 
     strategy: "The Solana Fund invests in SOL, the native token of the Solana blockchain, known for its high throughput and scalability. The strategy focuses on capturing growth from Solana's expanding ecosystem of dApps and NFT marketplaces.",
-    tokenPrice: { value: "$172.45", label: "Current Fund Token Price", asOfDate: "05/21/2025", icon: DollarSignIcon },
-    sharpeRatio: { value: "1.95", label: "Sharpe Ratio (Annualized)", asOfDate: "05/21/2025", icon: Sigma },
-    entrySensitivity: { value: "High", label: "Entry Sensitivity", asOfDate: "05/21/2025", icon: Activity }
+    tokenPrice: { value: "$172.45", label: "Current Fund Token Price", asOfDate: "05/21/2025" },
+    sharpeRatio: { value: "1.95", label: "Sharpe Ratio (Annualized)", asOfDate: "05/21/2025" },
+    entrySensitivity: { value: "High", label: "Entry Sensitivity", asOfDate: "05/21/2025" }
   },
   dff: { 
     name: "Digital Future Fund", 
     strategy: "The Digital Future Fund is a diversified portfolio targeting key growth areas in the digital asset ecosystem, including Web3 infrastructure, Metaverse platforms, and decentralized identity solutions. It aims for broad exposure to innovative blockchain technologies.",
-    tokenPrice: { value: "$123.45", label: "Current Fund Token Price", asOfDate: "05/21/2025", icon: DollarSignIcon },
-    sharpeRatio: { value: "N/A", label: "Sharpe Ratio (Annualized)", asOfDate: "05/21/2025", icon: Sigma },
-    entrySensitivity: { value: "Medium", label: "Entry Sensitivity", asOfDate: "05/21/2025", icon: Activity }
+    tokenPrice: { value: "$123.45", label: "Current Fund Token Price", asOfDate: "05/21/2025" },
+    sharpeRatio: { value: "N/A", label: "Sharpe Ratio (Annualized)", asOfDate: "05/21/2025" },
+    entrySensitivity: { value: "Medium", label: "Entry Sensitivity", asOfDate: "05/21/2025" }
   },
   aia: { 
     name: "AI Agents Fund", 
     strategy: "The AI Agents Fund invests in projects at the intersection of Artificial Intelligence and blockchain, focusing on decentralized AI marketplaces, AI-powered oracles, and autonomous agent technologies. The fund seeks to capitalize on the synergy between AI and Web3.",
-    tokenPrice: { value: "$88.90", label: "Current Fund Token Price", asOfDate: "05/21/2025", icon: DollarSignIcon },
-    sharpeRatio: { value: "N/A", label: "Sharpe Ratio (Annualized)", asOfDate: "05/21/2025", icon: Sigma },
-    entrySensitivity: { value: "High", label: "Entry Sensitivity", asOfDate: "05/21/2025", icon: Activity }
+    tokenPrice: { value: "$88.90", label: "Current Fund Token Price", asOfDate: "05/21/2025" },
+    sharpeRatio: { value: "N/A", label: "Sharpe Ratio (Annualized)", asOfDate: "05/21/2025" },
+    entrySensitivity: { value: "High", label: "Entry Sensitivity", asOfDate: "05/21/2025" }
   },
 };
 
@@ -70,9 +66,9 @@ const fundsDetailsMap: { [key: string]: FundDetail } = {
 const defaultFundDetails: FundDetail = {
   name: "Selected Fund", 
   strategy: "Strategy details for this fund are currently unavailable. Please check back later or contact support for more information.",
-  tokenPrice: { value: "$0.00", label: "Current Fund Token Price", asOfDate: "N/A", icon: DollarSignIcon },
-  sharpeRatio: { value: "N/A", label: "Sharpe Ratio (Annualized)", asOfDate: "N/A", icon: Sigma },
-  entrySensitivity: { value: "N/A", label: "Entry Sensitivity", asOfDate: "N/A", icon: Activity }
+  tokenPrice: { value: "$0.00", label: "Current Fund Token Price", asOfDate: "N/A" },
+  sharpeRatio: { value: "N/A", label: "Sharpe Ratio (Annualized)", asOfDate: "N/A" },
+  entrySensitivity: { value: "N/A", label: "Entry Sensitivity", asOfDate: "N/A" }
 };
 
 const chartConfig = {
@@ -87,15 +83,14 @@ type PerformanceDataPoint = { date: string; close: number };
 const formatDateForDisplay = (tickItem: string | number) => {
   if (typeof tickItem === 'string') {
     try {
-      // Try to replace space with 'T' for more robust parsing if date includes time
       const dateStr = tickItem.includes(' ') ? tickItem.replace(' ', 'T') : tickItem;
       const date = new Date(dateStr);
-      if (isNaN(date.getTime())) { // Check if date is valid
-        return String(tickItem); // Fallback to original string if parsing fails
+      if (isNaN(date.getTime())) { 
+        return String(tickItem); 
       }
       return date.toLocaleDateString(undefined, { month: 'short', year: '2-digit' });
     } catch (e) {
-      return String(tickItem); // Fallback in case of other errors
+      return String(tickItem); 
     }
   }
   return String(tickItem);
@@ -106,12 +101,12 @@ const formatTooltipLabel = (label: string | number) => {
     try {
       const dateStr = label.includes(' ') ? label.replace(' ', 'T') : label;
       const date = new Date(dateStr);
-      if (isNaN(date.getTime())) { // Check if date is valid
-        return String(label); // Fallback to original string if parsing fails
+      if (isNaN(date.getTime())) { 
+        return String(label); 
       }
       return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: '2-digit' });
     } catch (e) {
-      return String(label); // Fallback in case of other errors
+      return String(label); 
     }
   }
   return String(label);
@@ -124,7 +119,6 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
   const [isLoadingChart, setIsLoadingChart] = useState(true);
   const [chartError, setChartError] = useState<string | null>(null);
   
-  // Resolve the params if it's a Promise (for Next.js App Router)
   const resolvedParams = use(paramsProp as { fundId: string } | Promise<{ fundId: string }>); 
 
   const fundId = resolvedParams.fundId;
@@ -135,7 +129,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
   }, []);
 
   useEffect(() => {
-    if (!fundId) return; // Don't fetch if fundId is not available
+    if (!fundId) return;
 
     setIsLoadingChart(true);
     setChartError(null); 
@@ -152,13 +146,11 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
         console.log("[Chart Data] Raw fetched data:", data);
 
         if (Array.isArray(data)) {
-          // Check if the first item has 'date' and 'close' properties
           if (data.length > 0 && data[0] && typeof data[0].date !== 'undefined' && typeof data[0].close !== 'undefined') {
             console.log("[Chart Data] Data appears valid. First item:", data[0]);
             
             let processedData = data as PerformanceDataPoint[];
-            // Downsample if too many points
-            const MAX_POINTS = 250; // Aim for around 250 points for better performance/readability
+            const MAX_POINTS = 250; 
             
             if (processedData.length > MAX_POINTS) {
               console.log(`[Chart Data] Original data has ${processedData.length} points. Downsampling to ~${MAX_POINTS}.`);
@@ -175,7 +167,6 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
             setChartData([]);
             setChartError(emptyMsg);
           } else {
-            // Data is an array, but items don't have expected properties
             const missingProps = [];
             if (data.length > 0 && data[0] && typeof data[0].date === 'undefined') missingProps.push("'date'");
             if (data.length > 0 && data[0] && typeof data[0].close === 'undefined') missingProps.push("'close'");
@@ -185,7 +176,6 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
             setChartError(errorMsg);
           }
         } else {
-          // Data is not an array
           const errorMsg = `Fetched data is not an array. Received: ${typeof data}, ${JSON.stringify(data)}`;
           console.warn(`[Chart Data] ${errorMsg}`);
           setChartData([]);
@@ -195,18 +185,17 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
       .catch(error => {
         const errorMsg = `Failed to fetch or process fund performance data: ${error.message}`;
         console.error(`[Chart Data] ${errorMsg}`);
-        setChartData([]); // Ensure chartData is empty on error
+        setChartData([]); 
         setChartError(errorMsg);
       })
       .finally(() => {
         setIsLoadingChart(false);
         console.log("[Chart Data] Finished loading chart data attempt.");
       });
-  }, [fundId]); // Add fundId as dependency
+  }, [fundId]); 
 
 
   if (!isMounted) {
-    // Skeleton loader for initial mount
     return (
       <div className="space-y-8 animate-pulse">
         <div className="flex items-center mb-6">
@@ -226,13 +215,14 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
   
   const fundName = fundDetails.name || `${fundId.toUpperCase()} Fund`;
 
-  // Helper component for metric items
-  const MetricItem = ({ metric }: { metric: FundMetric }) => (
-    <div className="flex flex-col items-center text-center p-4 border border-border/50 rounded-lg shadow-sm hover:shadow-md transition-shadow bg-card">
-      <metric.icon className="h-8 w-8 text-primary mb-2" />
-      <h3 className="text-2xl font-bold text-foreground">{metric.value}</h3>
-      <p className="text-sm text-muted-foreground">{metric.label}</p>
-      <p className="text-xs text-muted-foreground/70 mt-1">As of {metric.asOfDate}</p>
+  const MetricItem = ({ metric }: { metric: FundMetricValue }) => (
+    <div className="relative p-4 sm:p-6"> {/* feature-metrics-item equivalent */}
+      <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l-md"></div> {/* feature-metrics-item-border equivalent */}
+      <div className="pl-4"> {/* Content to the right of the border */}
+        <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-1">{metric.value}</h2>
+        <p className="text-base text-muted-foreground mb-1">{metric.label}</p>
+        <p className="text-xs text-muted-foreground/80">As of {metric.asOfDate}</p>
+      </div>
     </div>
   );
 
@@ -281,7 +271,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
                       fontSize={12}
                       tickLine={false}
                       axisLine={false}
-                      interval="preserveStartEnd" // Helps with dense data
+                      interval="preserveStartEnd" 
                       tickFormatter={formatDateForDisplay}
                     />
                     <YAxis 
@@ -289,7 +279,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
                       fontSize={12}
                       tickLine={false}
                       axisLine={false}
-                      tickFormatter={(value) => `$${value / 1000}k`} // Example: format to $10k, $20k
+                      tickFormatter={(value) => `$${value / 1000}k`} 
                     />
                     <Tooltip
                       cursor={{ fill: "hsla(var(--accent), 0.1)" }}
@@ -299,12 +289,12 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
                     <Legend content={<ChartLegendContent />} />
                     <Area
                       type="monotone"
-                      dataKey="close" // Changed from "value" to "close"
+                      dataKey="close" 
                       stroke="hsl(var(--primary))"
                       fill="hsla(var(--primary), 0.2)"
                       strokeWidth={2}
-                      dot={false} // Remove dots for dense data
-                      activeDot={false} // Remove active dots for dense data
+                      dot={false} 
+                      activeDot={false} 
                     />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -348,7 +338,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
             <CardDescription>Essential indicators for this fund.</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-4"> {/* Use gap-0 for tighter packing like example, or small gap */}
               <MetricItem metric={fundDetails.tokenPrice} />
               <MetricItem metric={fundDetails.sharpeRatio} />
               <MetricItem metric={fundDetails.entrySensitivity} />
@@ -359,6 +349,3 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
     </div>
   );
 }
-
-    
-
