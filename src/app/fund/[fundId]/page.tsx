@@ -38,7 +38,42 @@ const mockTransactions = [
   { id: "TX005", date: "2024-07-10", type: "Deposit", amount: "5.0 Units", status: "Pending" },
 ];
 
-type PerformanceDataPoint = { date: string; close: number }; // Using 'close' as the data key
+type PerformanceDataPoint = { date: string; close: number };
+
+const formatDateForDisplay = (tickItem: string | number) => {
+  if (typeof tickItem === 'string') {
+    try {
+      // Replace space with 'T' for better cross-browser parsing reliability
+      const dateStr = tickItem.includes(' ') ? tickItem.replace(' ', 'T') : tickItem;
+      const date = new Date(dateStr);
+      if (isNaN(date.getTime())) { // Check if date is valid
+        return String(tickItem); // Fallback to original if parsing fails
+      }
+      return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+    } catch (e) {
+      return String(tickItem); // Fallback for any parsing error
+    }
+  }
+  return String(tickItem);
+};
+
+const formatTooltipLabel = (label: string | number) => {
+  if (typeof label === 'string') {
+    try {
+      // Replace space with 'T' for better cross-browser parsing reliability
+      const dateStr = label.includes(' ') ? label.replace(' ', 'T') : label;
+      const date = new Date(dateStr);
+      if (isNaN(date.getTime())) { // Check if date is valid
+        return String(label); // Fallback to original if parsing fails
+      }
+      return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: '2-digit' });
+    } catch (e) {
+      return String(label); // Fallback for any parsing error
+    }
+  }
+  return String(label);
+};
+
 
 export default function FundDetailPage({ params: paramsProp }: { params: { fundId: string } | Promise<{ fundId: string }> }) {
   const [isMounted, setIsMounted] = useState(false);
@@ -76,9 +111,10 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
             setChartData(data as PerformanceDataPoint[]);
             setChartError(null);
           } else if (data.length === 0) {
-            console.warn("[Chart Data] Fetched data is an empty array.");
+            const emptyMsg = "Fetched data is an empty array. No performance data to display.";
+            console.warn(`[Chart Data] ${emptyMsg}`);
             setChartData([]);
-            setChartError("Fetched data is empty. No performance data to display.");
+            setChartError(emptyMsg);
           } else {
             const missingProps = [];
             if (typeof data[0]?.date === 'undefined') missingProps.push("'date'");
@@ -239,7 +275,8 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
                       fontSize={12}
                       tickLine={false}
                       axisLine={false}
-                      interval="preserveStartEnd" // Reduce tick clutter
+                      interval="preserveStartEnd"
+                      tickFormatter={formatDateForDisplay}
                     />
                     <YAxis 
                       stroke="hsl(var(--muted-foreground))" 
@@ -250,7 +287,8 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
                     />
                     <Tooltip
                       cursor={{ fill: "hsla(var(--accent), 0.1)" }}
-                      content={<ChartTooltipContent indicator="dot" hideLabel />}
+                      content={<ChartTooltipContent indicator="dot" />}
+                      labelFormatter={formatTooltipLabel}
                     />
                     <Legend content={<ChartLegendContent />} />
                     <Area
@@ -259,8 +297,8 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
                       stroke="hsl(var(--primary))"
                       fill="hsla(var(--primary), 0.2)"
                       strokeWidth={2}
-                      dot={false} // Remove dots for individual data points
-                      activeDot={false} // Remove active dots
+                      dot={false}
+                      activeDot={false}
                     />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -321,5 +359,7 @@ export default function FundDetailPage({ params: paramsProp }: { params: { fundI
     
   
   
+
+    
 
     
