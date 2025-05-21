@@ -11,17 +11,17 @@ import { headers } from "next/headers";
 const fkGrotesk = localFont({
   src: [
     {
-      path: '@/app/fonts/FKGrotesk-Regular.woff2', // Expects src/app/fonts/FKGrotesk-Regular.woff2
+      path: './fonts/FKGroteskNeueTrial-Regular-BF6576818c3af74.otf',
       weight: '400',
       style: 'normal',
     },
     {
-      path: '@/app/fonts/FKGrotesk-Medium.woff2', // Expects src/app/fonts/FKGrotesk-Medium.woff2
+      path: './fonts/FKGroteskNeueTrial-Medium-BF6576818c3a00a.otf',
       weight: '500',
       style: 'normal',
     },
     {
-      path: '@/app/fonts/FKGrotesk-Bold.woff2',   // Expects src/app/fonts/FKGrotesk-Bold.woff2
+      path: './fonts/FKGroteskNeueTrial-Bold-BF6576818bd3700.otf',
       weight: '700',
       style: 'normal',
     },
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#191970', // Corresponds to --background: 240 64% 2.5% (Dark Navy)
+  themeColor: '#02040A', // Corresponds to updated --background
 };
 
 export default function RootLayout({
