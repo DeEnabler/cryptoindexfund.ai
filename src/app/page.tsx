@@ -63,8 +63,8 @@ export default function HomePage() {
         </div>
         <div className="relative z-10">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight">
-            <span className="block">Secure Wealth, Built to Last</span>
-            <AnimatedGradientText text="Store of Value" className="block text-primary-foreground" highlightColor="hsl(285, 75%, 70%)" />
+            <span className="block">Timeless Wealth,</span>
+            <AnimatedGradientText text="Real Store of Value" className="block text-primary-foreground" highlightColor="hsl(285, 75%, 70%)" />
           </h1>
           <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-muted-foreground">
             CryptoIndexFund offers a decentralized crypto fund, bringing transparency and security to your investments. Join the financial revolution.
