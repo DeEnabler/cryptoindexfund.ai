@@ -64,12 +64,12 @@ export function StickyCountdownTimer() {
 
   return (
     <Link href="/airdrop" passHref legacyBehavior>
-      <a className="fixed bottom-0 left-0 right-0 bg-primary text-primary-foreground p-3 text-center text-sm md:text-base z-50 shadow-lg hover:bg-primary/90 transition-colors cursor-pointer block">
+      <a className="fixed bottom-0 left-0 right-0 bg-primary text-primary-foreground p-3 text-center text-base md:text-lg z-50 shadow-lg hover:bg-primary/90 transition-colors cursor-pointer block">
         {timeLeft.isTimeUp ? (
-          <span className="font-semibold">Our Native Token Airdrop is LIVE! Claim Yours Now!</span>
+          <span className="font-semibold">$CIF Airdrop is LIVE! Claim Yours Now!</span>
         ) : (
           <>
-            <span className="font-semibold mr-2">CryptoIndexFund Native Token Airdrop Countdown:</span>
+            <span className="font-semibold mr-2">$CIF Airdrop Countdown:</span>
             <span className="tabular-nums">
               <span className="mx-1">{formatNumber(timeLeft.days)}<span className="text-xs">d</span></span>
               <span className="mx-0.5">:</span>
