@@ -67,7 +67,7 @@ export default function HomePage() {
             <AnimatedGradientText text="Real Store of Value" className="block text-primary-foreground" highlightColor="hsl(285, 75%, 70%)" />
           </h1>
           <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-muted-foreground">
-            CryptoIndexFund offers a decentralized crypto fund, bringing transparency and security to your investments. Join the financial revolution.
+            A community-driven, on-chain digital asset index fund with risk-adjusted strategies for smoother, more stable crypto market returns.
           </p>
           <div className="mt-10 flex justify-center space-x-4">
             <Button asChild size="lg">
@@ -117,3 +117,4 @@ export default function HomePage() {
     </div>
   );
 }
+
